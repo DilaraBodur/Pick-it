@@ -26,7 +26,7 @@ Ideal für Zwischendurch, aber mit Langzeitmotivation durch Symbolauswahl und Ra
 ## ✨ Features
 
 - ✅ Realtime-Multiplayer (1–4 Spieler) via Firebase
-- ✅ Symbolpakete (je 6 Emojis pro Thema)
+- ✅ Symbolpakete (je 6 Symbole pro Thema)
 - ✅ Standardpaket ist kostenlos
 - ✅ Alle weiteren Pakete kosten echtes Geld (In-App-Kauf)
 - ✅ Kombinationslogik mit Punktesystem (z. B. Vier Gleiche, Full House)
@@ -90,7 +90,9 @@ Ideal für Zwischendurch, aber mit Langzeitmotivation durch Symbolauswahl und Ra
 - [ ] Belohnte Werbung für Zusatzjoker
 - [ ] Tägliche Belohnungen (Free-Spin)
 - [ ] Soundeffekte & Animationen
-- [ ] Eventpakete (z. B. Halloween, Winter)
+- [ ] Saisonale Symbolpakete (z.B.: Halloween)
+- [ ] **Abomodell: Werbefreiheit (monatlich)**
+- [ ] **Abomodell: +1 Joker dauerhaft**
 
 ---
 
