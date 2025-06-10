@@ -1,12 +1,16 @@
-# Name der App
+# Pick It
 
 **Füge hier einen kurzen, knackigen Slogan ein, um deine App zu bewerben.**
 
-Beschreibe hier in ein paar Sätzen, was deine App bietet.
+## Spielprinzip
+Jede:r Spieler:in erhält ein Spielfeld mit 5 Symbol-Slots, die durch Drehen verändert werden können. Einzelne Symbole lassen sich 'halten'.
+Ziel ist es, bestimmte Kombinationen zu erreichen, z.B.:
+	
+  •	Fünf Gleiche
+  •	Full House
+  •	Alle unterschiedlich
 
-Für wen ist sie geeignet? Welches Problem löst sie? Was macht deine App anders/besser als andere Apps?
-Vermeide es, hier allzusehr in technische Details zu gehen.
-
+Nach jeder Runde erfolgt eine Punktevergabe. Zwei Joker pro Runde können eingesetzt werden, wenn keine Kombination möglich ist.
 
 ## Design
 Füge hier am Ende die Screenshots deiner App ein.
