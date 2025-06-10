@@ -1,55 +1,104 @@
-# Pick It
+# 🕹️ Pick-It – Dein Multiplayer-Spiel
 
-**Füge hier einen kurzen, knackigen Slogan ein, um deine App zu bewerben.**
+> Drehe Symbole, gewinne Runden und dominiere das Spielfeld mit deinen Lieblings-Symbolen!  
+> Pick-It ist ein strategisches, schnelles Multiplayer-Spiel mit Symbolkarten und Emojis für 1–4 Spieler:innen.
 
-## Spielprinzip
-Jede:r Spieler:in erhält ein Spielfeld mit 5 Symbol-Slots, die durch Drehen verändert werden können. Einzelne Symbole lassen sich 'halten'.
-Ziel ist es, bestimmte Kombinationen zu erreichen, z.B.:
-	
-  •	Fünf Gleiche
-  •	Full House
-  •	Alle unterschiedlich
+---
 
-Nach jeder Runde erfolgt eine Punktevergabe. Zwei Joker pro Runde können eingesetzt werden, wenn keine Kombination möglich ist.
+## 🎯 Was ist Pick-It?
 
-## Design
-Füge hier am Ende die Screenshots deiner App ein.
+Pick-It ist ein Echtzeit-Multiplayer-Spiel, bei dem du mit 5 Symbolen pro Runde dein Feld drehst, gezielt Symbole festhältst und versuchst, bestimmte Kombinationen zu erfüllen – z. B. Vier Gleiche, Full House oder 5 Verschiedene.  
+Du kannst deine Lieblings-Symbole in Paketen kaufen und gegen Freund:innen oder zufällige Gegner:innen antreten.
 
-<p>
-  <img src="./img/screen1.png" width="200">
-  <img src="./img/screen2.png" width="200">
-  <img src="./img/screen3.png" width="200">
-</p>
+### Für wen?
 
+Für alle, die Spaß an Strategie und Glück haben.  
+Ideal für Zwischendurch, aber mit Langzeitmotivation durch Symbolauswahl und Rangliste.
 
-## Features
-Hier kommen alle Features rein, welche deine App bietet.
+---
 
-**Tipp: Du kannst diese Punkte mit der Zeit abhaken, sodass am Ende eine vollständige Liste entsteht.**
+## 🧑‍🎨 Design
 
-- [x] Feature 1
-- [x] Feature 2
-- [ ] ...
+> Screenshots folgen …
 
+---
 
-## Technischer Aufbau
+## ✨ Features
 
-#### Projektaufbau
-Eine kurze Beschreibung deiner Ordnerstruktur und Architektur (MVVM, Repositories) um Außenstehenden zu helfen, sich in deinem Projekt zurecht zu finden.
+- ✅ Realtime-Multiplayer (1–4 Spieler) via Firebase
+- ✅ Symbolpakete (je 6 Emojis pro Thema)
+- ✅ Standardpaket ist kostenlos
+- ✅ Alle weiteren Pakete kosten echtes Geld (In-App-Kauf)
+- ✅ Kombinationslogik mit Punktesystem (z. B. Vier Gleiche, Full House)
+- ✅ Joker-System für knifflige Runden
+- ✅ Platzwahl wie bei einem echten Spieletisch
+- ✅ Countdown-Spielstart, sobald Plätze belegt sind
+- ✅ Spielerprofile & Rangliste
+- ✅ Komplett auf Landscape optimiert
 
-#### Datenspeicherung
-Welche Daten speicherst du? Wo und wie (Firebase, Core Data)? Erkläre hier auch, warum du den jeweiligen Dienst nutzt (offline-first, Sync usw.).
+---
 
-#### API Calls
-Welche APIs verwendest du?
+## 💡 Symbolpakete & In-App-Käufe
 
-#### 3rd-Party Frameworks
-Verwendest du Frameworks/Libraries, die nicht von dir stammen?
+- 🆓 **Standardpaket**: kostenlos und sofort verfügbar
+- 💸 **Weitere Pakete**:
+  - Themen: Tier, Obst, Flaggen, Emoji, Ball, Mix usw.
+  - Preis: kostenpflichtig per In-App-Kauf
+  - Inhalt: immer 6 ausgewählte Emojis pro Paket
+  - Nach dem Kauf dauerhaft freigeschaltet
 
+---
 
-## Ausblick
-Beschreibe hier, wo die Reise nach deinem Praxisprojekt hin geht. Was möchtest du in Zukunft noch ergänzen?
+## ⚙️ Technischer Aufbau
 
-- [ ] Geplantes Feature 1
-- [ ] Geplantes Feature 2
-- [ ] ...
+### 🔧 Projektstruktur
+
+- **MVVM-Architektur**
+- **Repositories** zur Trennung von Logik & Daten
+- **ViewModels** für Spiel, Lobby, Symbolshop
+- **Jetpack Compose** für UI
+
+### 💾 Datenspeicherung
+
+- **Firebase Authentication**: Anonym, Google, Facebook
+- **Firestore**:
+  - Spielerstatus, Lobby, Spielverlauf
+- **Firebase Hosting**:
+  - Eigenes API-Backend: `symbols.json`
+- **In-App-Käufe**:
+  - Google Play Billing
+
+### 🌐 API Calls
+
+| API              | Zweck                         |
+|------------------|-------------------------------|
+| Firebase Auth    | Spieler-Login                 |
+| Firestore        | Realtime-Spielstatus          |
+| Eigene JSON-API  | Laden der Symbolpakete        |
+
+### 🔌 3rd-Party Libraries
+
+- **Retrofit** (API-Zugriff)
+- **Moshi** (JSON-Parsing)
+- **Koin** (Dependency Injection)
+
+---
+
+## 📈 Ausblick
+
+- [ ] Avatarwahl & Profilgestaltung
+- [ ] Belohnte Werbung für Zusatzjoker
+- [ ] Tägliche Belohnungen (Free-Spin)
+- [ ] Soundeffekte & Animationen
+- [ ] Eventpakete (z. B. Halloween, Winter)
+
+---
+
+## 👩‍💻 Entwicklerin
+
+**Dilara Öztas**  
+📍 Deutschland  
+🔗 GitHub: [github.com/dilaraoeztas](https://github.com/dilaraoeztas)  
+📧 Kontakt: [optional]
+
+> Dieses Spiel wurde im Rahmen eines Abschlussprojekts entwickelt. Alle Grafiken und Inhalte wurden unter Einhaltung der jeweiligen Lizenzbedingungen verwendet.
