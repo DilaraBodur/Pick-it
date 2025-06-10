@@ -1,4 +1,4 @@
-# 🕹️ Pick-It – Dein Multiplayer-Spiel
+# Pick-It – Dein Multiplayer-Spiel
 
 > Drehe Symbole, gewinne Runden und dominiere das Spielfeld mit deinen Lieblings-Symbolen!  
 > Pick-It ist ein strategisches, schnelles Multiplayer-Spiel mit Symbolkarten und Emojis für 1–4 Spieler:innen.
@@ -44,7 +44,7 @@ Ideal für Zwischendurch, aber mit Langzeitmotivation durch Symbolauswahl und Ra
 - 💸 **Weitere Pakete**:
   - Themen: Tier, Obst, Flaggen, Emoji, Ball, Mix usw.
   - Preis: kostenpflichtig per In-App-Kauf
-  - Inhalt: immer 6 ausgewählte Emojis pro Paket
+  - Inhalt: 6 Symbole pro Paket
   - Nach dem Kauf dauerhaft freigeschaltet
 
 ---
