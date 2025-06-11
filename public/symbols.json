@@ -1,0 +1,93 @@
+[
+  {
+    "packageId": "standard",
+    "name": "Standard" ,
+    "price": 0,
+    "symbols": [
+      { "id": 1, "emoji": "❤️", "name": "Herz" },
+      { "id": 2, "emoji": "👑", "name": "Krone" },
+      { "id": 3, "emoji": "🍀", "name": "Kleeblatt" },
+      { "id": 4, "emoji": "⭐️", "name": "Stern" },
+      { "id": 5, "emoji": "💎", "name": "Diamand" },
+      { "id": 6, "emoji": "🌙", "name": "Mond" }
+    ]
+  },
+  {
+    "packageId": "tier",
+    "name": "Tier",
+    "price": 1.99,
+    "symbols": [
+      { "id": 1, "emoji": "🐶", "name": "Hund" },
+      { "id": 2, "emoji": "🐱", "name": "Katze" },
+      { "id": 3, "emoji": "🐵", "name": "Affe" },
+      { "id": 4, "emoji": "🦁", "name": "Löwe" },
+      { "id": 5, "emoji": "🐰", "name": "Hase" },
+      { "id": 6, "emoji": "🐼", "name": "Panda" }
+    ]
+  },
+  {
+    "packageId": "emoji",
+    "name": "Emoji" ,
+    "price": 1.99,
+    "symbols": [
+      { "id": 1, "emoji": "😍", "name": "Lächelndes Gesicht mit Herzaugen" },
+      { "id": 2, "emoji": "😁", "name": "Strahlendes Gesicht mit lächelnden Augen" },
+      { "id": 3, "emoji": "😇", "name": "Lächelndes Gesicht mit Heiligenschein" },
+      { "id": 4, "emoji": "🥳", "name": "Party-Gesicht" },
+      { "id": 5, "emoji": "🤩", "name": "Gesicht mit sternförmigen Augen" },
+      { "id": 6, "emoji": "🤓", "name": "Lächelndes Gesicht mit Brille" }
+      ]
+      },
+      {
+        "packageId": "obst",
+        "name": "Obst" ,
+        "price": 1.99,
+        "symbols": [
+          { "id": 1, "emoji": "🍎", "name": "Apfel" },
+          { "id": 2, "emoji": "🍉", "name": "Melone" },
+          { "id": 3, "emoji": "🍒", "name": "Kirsche" },
+          { "id": 4, "emoji": "🍇", "name": "Trauben" },
+          { "id": 5, "emoji": "🥑", "name": "Avocado" },
+          { "id": 6, "emoji": "🍓", "name": "Erdbeere" }
+        ]
+      },
+      {
+        "packageId": "ball",
+        "name": "Ball" ,
+        "price": 1.99,
+        "symbols": [
+          { "id": 1, "emoji": "⚽️", "name": "Fußball" },
+          { "id": 2, "emoji": "🏀", "name": "Basketball" },
+          { "id": 3, "emoji": "🏈", "name": "American Football" },
+          { "id": 4, "emoji": "⚾️", "name": "Baseball" },
+          { "id": 5, "emoji": "🎾", "name": "Tennisball" },
+          { "id": 6, "emoji": "🏐", "name": "Volleyball" }
+        ]
+      },
+      {
+        "packageId": "mix",
+        "name": "Mix" ,
+        "price": 2.49,
+        "symbols": [
+          { "id": 1, "emoji": "🧿", "name": "Nazar" },
+          { "id": 2, "emoji": "🪬", "name": "Hamsa" },
+          { "id": 3, "emoji": "🔮", "name": "Glaskugel" },
+          { "id": 4, "emoji": "📿", "name": "Gebetsperlen" },
+          { "id": 5, "emoji": "🎀", "name": "Schleife" },
+          { "id": 6, "emoji": "💈", "name": "Friseurzunfzeichen" }
+        ]
+      },
+      {
+        "packageId": "flagge",
+        "name": "Flagge" ,
+        "price": 1.99,
+        "symbols": [
+          { "id": 1, "emoji": "🇫🇷", "name": "Flagge von Frankreich" },
+          { "id": 2, "emoji": "🇩🇪", "name": "Flagge von Deutschland" },
+          { "id": 3, "emoji": "🇹🇷", "name": "Flagge der Türkei" },
+          { "id": 4, "emoji": "🇵🇹", "name": "Flagge von Portugal" },
+          { "id": 5, "emoji": "🇺🇸", "name": "Flagge der Vereinigten Staaten" },
+          { "id": 6, "emoji": "🇪🇸", "name": "Flagge von Spanien" }
+        ]
+      }
+    ]
