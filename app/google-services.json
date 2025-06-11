@@ -7,35 +7,6 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:1015975929416:android:0f420f917707a1c69d1a7d",
-        "android_client_info": {
-          "package_name": "de.dilara_Pick_It"
-        }
-      },
-      "oauth_client": [
-        {
-          "client_id": "1015975929416-sptqdulnsdkoc02gnpofsphulud0kiro.apps.googleusercontent.com",
-          "client_type": 3
-        }
-      ],
-      "api_key": [
-        {
-          "current_key": "AIzaSyBvX0lmMk0l-GNDNFW4qLtgR7Z9DJ4E0Y8"
-        }
-      ],
-      "services": {
-        "appinvite_service": {
-          "other_platform_oauth_client": [
-            {
-              "client_id": "1015975929416-sptqdulnsdkoc02gnpofsphulud0kiro.apps.googleusercontent.com",
-              "client_type": 3
-            }
-          ]
-        }
-      }
-    },
-    {
-      "client_info": {
         "mobilesdk_app_id": "1:1015975929416:android:c4474b37695e22c49d1a7d",
         "android_client_info": {
           "package_name": "de.syntax_institut.androidabschlussprojekt"
