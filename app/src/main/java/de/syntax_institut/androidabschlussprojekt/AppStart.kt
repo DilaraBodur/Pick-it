@@ -29,7 +29,9 @@ fun AppStart(
                 modifier = Modifier.padding(innerPadding)
             ) {
                 composable("lobby") {
-                    LobbyScreen()
+                    LobbyScreen(
+                        authViewModel = authViewModel
+                    )
                 }
                 // weitere Screens wie "profil", "einstellungen"  hier hinzufügen später
             }

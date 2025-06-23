@@ -33,4 +33,8 @@ class AuthService {
             .addOnSuccessListener { onSuccess() }
             .addOnFailureListener { onError(it) }
     }
+
+    fun logout() {
+        Firebase.auth.signOut()
+    }
 }

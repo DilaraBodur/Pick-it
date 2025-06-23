@@ -43,4 +43,9 @@ class AuthViewModel(
             )
         }
     }
+
+    fun logout() {
+        authService.logout()
+        _isLoggedIn.value = false
+    }
 }
