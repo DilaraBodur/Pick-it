@@ -4,37 +4,40 @@ import com.facebook.AccessToken
 import com.google.firebase.Firebase
 import com.google.firebase.auth.FacebookAuthProvider
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.auth.auth
+import kotlinx.coroutines.tasks.await
 
 class AuthService {
-
     private val auth: FirebaseAuth = Firebase.auth
 
-    fun loginAnonym(
-        onSuccess: () -> Unit,
-        onError: (Exception) -> Unit
-    ) {
-        auth.signInAnonymously()
-            .addOnSuccessListener { onSuccess() }
-            .addOnFailureListener { onError(it) }
+    suspend fun loginAnonym(): FirebaseUser {
+        return try {
+            val result = auth.signInAnonymously().await()
+            result.user ?: throw Exception("Kein Benutzer erhalten")
+        } catch (e: Exception) {
+            throw e
+        }
     }
 
-    fun loginWithGoogle(idToken: String, onSuccess: () -> Unit, onError: (Exception) -> Unit) {
+    suspend fun loginWithGoogle(idToken: String): FirebaseUser {
         val credential = GoogleAuthProvider.getCredential(idToken, null)
-        auth.signInWithCredential(credential)
-            .addOnSuccessListener { onSuccess() }
-            .addOnFailureListener { onError(it) }
+        return try {
+            val result = auth.signInWithCredential(credential).await()
+            result.user ?: throw Exception("Kein Benutzer erhalten")
+        } catch (e: Exception) {
+            throw e
+        }
     }
 
-    fun loginWithFacebook(token: AccessToken, onSuccess: () -> Unit, onError: (Exception) -> Unit) {
+    suspend fun loginWithFacebook(token: AccessToken): FirebaseUser {
         val credential = FacebookAuthProvider.getCredential(token.token)
-        auth.signInWithCredential(credential)
-            .addOnSuccessListener { onSuccess() }
-            .addOnFailureListener { onError(it) }
-    }
-
-    fun logout() {
-        Firebase.auth.signOut()
+        return try {
+            val result = auth.signInWithCredential(credential).await()
+            result.user ?: throw Exception("Kein Benutzer erhalten")
+        } catch (e: Exception) {
+            throw e
+        }
     }
 }
