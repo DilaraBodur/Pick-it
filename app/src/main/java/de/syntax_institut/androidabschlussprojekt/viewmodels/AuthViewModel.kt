@@ -73,14 +73,15 @@ class AuthViewModel(
             _isChecking.value = true
             try {
                 val firebaseUser = authService.loginWithGoogle(idToken)
-                val username = firebaseUser.displayName ?: "Player${firebaseUser.uid.take(5)}"
-                val userModel = firebaseUser.toUserModel(username)
 
+                val fullName = firebaseUser.displayName ?: "Player"
+                val username = fullName.split(" ").firstOrNull() ?: fullName
+
+                val userModel = firebaseUser.toUserModel(username)
                 userRepository.saveUser(userModel)
                 _currentUser.value = firebaseUser
-                _currentUserModel.value = userModel
             } catch (e: Exception) {
-                Log.e("AuthViewModel", "Google Login fehlgeschlagen: ${e.message}")
+                Log.e("AuthViewModel", "Fehler beim Google Login: ${e.message}")
             } finally {
                 _isChecking.value = false
             }
@@ -92,14 +93,15 @@ class AuthViewModel(
             _isChecking.value = true
             try {
                 val firebaseUser = authService.loginWithFacebook(token)
-                val username = firebaseUser.displayName ?: "Player${firebaseUser.uid.take(5)}"
-                val userModel = firebaseUser.toUserModel(username)
 
+                val fullName = firebaseUser.displayName ?: "Player"
+                val username = fullName.split(" ").firstOrNull() ?: fullName
+
+                val userModel = firebaseUser.toUserModel(username)
                 userRepository.saveUser(userModel)
                 _currentUser.value = firebaseUser
-                _currentUserModel.value = userModel
             } catch (e: Exception) {
-                Log.e("AuthViewModel", "Facebook Login fehlgeschlagen: ${e.message}")
+                Log.e("AuthViewModel", "Fehler beim Facebook Login: ${e.message}")
             } finally {
                 _isChecking.value = false
             }

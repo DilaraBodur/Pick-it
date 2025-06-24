@@ -32,7 +32,6 @@ fun LobbyScreen(
     val userModel by authViewModel.currentUserModel.collectAsState()
 
     val username = when {
-        !userModel?.displayName.isNullOrBlank() -> userModel?.displayName
         !userModel?.username.isNullOrBlank() -> userModel?.username
         else -> "Unbekannt"
     }
