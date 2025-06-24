@@ -36,8 +36,17 @@ class AuthViewModel(
     }
 
     private fun checkIfLoggedIn() {
-        _currentUser.value = FirebaseAuth.getInstance().currentUser
-        _isChecking.value = false
+        viewModelScope.launch {
+            _isChecking.value = true
+            val firebaseUser = FirebaseAuth.getInstance().currentUser
+            _currentUser.value = firebaseUser
+
+            if (firebaseUser != null) {
+                val userModel = userRepository.getUserById(firebaseUser.uid)
+                _currentUserModel.value = userModel
+            }
+            _isChecking.value = false
+        }
     }
 
     fun loginAnonym() {
