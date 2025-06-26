@@ -4,7 +4,7 @@ import com.google.firebase.Timestamp
 import com.google.firebase.auth.FirebaseUser
 import de.syntax_institut.androidabschlussprojekt.data.model.User
 
-fun FirebaseUser.toUserModel(username: String): User {
+fun FirebaseUser.toUserModel(username: String, photoUrl: String?): User {
     val metadata = this.metadata
     val actualProviderId = this.providerData.find {
         it.providerId != "firebase"
@@ -14,7 +14,7 @@ fun FirebaseUser.toUserModel(username: String): User {
         uid = uid,
         email = email,
         displayName = displayName,
-        photoUrl = photoUrl?.toString(),
+        photoUrl = photoUrl,
         loginProvider = actualProviderId,
         username = username,
         creationTimestamp = metadata?.creationTimestamp?.let { Timestamp(it / 1000, 0) } ?: Timestamp.now(),

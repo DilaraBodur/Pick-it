@@ -2,10 +2,12 @@ package de.syntax_institut.androidabschlussprojekt.ui.screen
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
@@ -21,6 +23,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
+import de.syntax_institut.androidabschlussprojekt.ui.components.AvatarImage
 import de.syntax_institut.androidabschlussprojekt.viewmodels.AuthViewModel
 
 @Composable
@@ -36,6 +39,8 @@ fun LobbyScreen(
         else -> "Unbekannt"
     }
 
+    val avatarUrl = userModel?.photoUrl
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -43,9 +48,21 @@ fun LobbyScreen(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
-        Text(text = "Du bist eingeloggt, $username!")
 
-        Spacer(modifier = Modifier.height(16.dp))
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.Center
+        ) {
+            Text(text = "Du bist eingeloggt, $username!")
+
+            Spacer(modifier = Modifier.width(8.dp))
+
+            if (!avatarUrl.isNullOrBlank()) {
+                AvatarImage(url = avatarUrl)
+            }
+        }
+
+        Spacer(modifier = Modifier.height(24.dp))
 
         Button(onClick = {
             authViewModel.logout()

@@ -3,6 +3,7 @@ package de.syntax_institut.androidabschlussprojekt.viewmodels
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.android.identity.util.UUID
 import com.facebook.AccessToken
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
@@ -54,8 +55,11 @@ class AuthViewModel(
             _isChecking.value = true
             try {
                 val username = usernameRepository.getRandomUsername()
+                val avatarSeed = UUID.randomUUID().toString()
+                val avatarUrl = "https://api.dicebear.com/7.x/adventurer/png?seed=$avatarSeed"
                 val firebaseUser = authService.loginAnonym()
-                val userModel = firebaseUser.toUserModel(username)
+                val userModel = firebaseUser.toUserModel(username, avatarUrl)
+
 
                 userRepository.saveUser(userModel)
                 _currentUser.value = firebaseUser
@@ -77,9 +81,20 @@ class AuthViewModel(
                 val fullName = firebaseUser.displayName ?: "Player"
                 val username = fullName.split(" ").firstOrNull() ?: fullName
 
-                val userModel = firebaseUser.toUserModel(username)
+                val firebasePhotoUrl = firebaseUser.photoUrl?.toString()
+                val fallbackAvatarUrl = "https://api.dicebear.com/7.x/adventurer/png?seed=${UUID.randomUUID()}"
+
+                val avatarUrl = if (isValidGooglePhotoUrl(firebasePhotoUrl)) {
+                    firebasePhotoUrl!!
+                } else {
+                    fallbackAvatarUrl
+                }
+
+                val userModel = firebaseUser.toUserModel(username, avatarUrl)
                 userRepository.saveUser(userModel)
                 _currentUser.value = firebaseUser
+                _currentUserModel.value = userModel
+
             } catch (e: Exception) {
                 Log.e("AuthViewModel", "Fehler beim Google Login: ${e.message}")
             } finally {
@@ -97,9 +112,13 @@ class AuthViewModel(
                 val fullName = firebaseUser.displayName ?: "Player"
                 val username = fullName.split(" ").firstOrNull() ?: fullName
 
-                val userModel = firebaseUser.toUserModel(username)
+                val avatarUrl = firebaseUser.photoUrl?.toString()
+
+                val userModel = firebaseUser.toUserModel(username, avatarUrl)
                 userRepository.saveUser(userModel)
                 _currentUser.value = firebaseUser
+                _currentUserModel.value = userModel
+
             } catch (e: Exception) {
                 Log.e("AuthViewModel", "Fehler beim Facebook Login: ${e.message}")
             } finally {
@@ -107,6 +126,7 @@ class AuthViewModel(
             }
         }
     }
+
 
     fun logout() {
         FirebaseAuth.getInstance().signOut()
@@ -125,5 +145,9 @@ class AuthViewModel(
                 println("Fehler beim Löschen: ${e.message}")
             }
         }
+    }
+
+    private fun isValidGooglePhotoUrl(url: String?): Boolean {
+        return !url.isNullOrBlank() && url.contains("googleusercontent.com")
     }
 }

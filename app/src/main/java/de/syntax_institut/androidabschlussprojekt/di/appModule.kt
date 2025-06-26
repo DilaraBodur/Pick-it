@@ -8,7 +8,7 @@ import de.syntax_institut.androidabschlussprojekt.data.repository.UsernameReposi
 import de.syntax_institut.androidabschlussprojekt.service.AuthService
 import de.syntax_institut.androidabschlussprojekt.viewmodels.AuthViewModel
 import okhttp3.OkHttpClient
-import org.koin.core.module.dsl.viewModel
+import org.koin.core.module.dsl.viewModelOf
 import org.koin.dsl.module
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
@@ -39,6 +39,9 @@ val appModule = module {
 
     single { UsernameRepository(get()) }
 
-
-    viewModel { AuthViewModel(get(), get(), get()) }
+    viewModelOf(::AuthViewModel)
 }
+
+
+
+
