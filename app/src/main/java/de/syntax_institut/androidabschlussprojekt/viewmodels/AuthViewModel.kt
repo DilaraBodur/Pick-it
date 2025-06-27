@@ -58,8 +58,11 @@ class AuthViewModel(
                 val avatarSeed = UUID.randomUUID().toString()
                 val avatarUrl = "https://api.dicebear.com/7.x/adventurer/png?seed=$avatarSeed"
                 val firebaseUser = authService.loginAnonym()
-                val userModel = firebaseUser.toUserModel(username, avatarUrl)
-
+                val userModel = firebaseUser.toUserModel(
+                    username, avatarUrl,
+                    email = null,
+                    photoUrl = null
+                )
 
                 userRepository.saveUser(userModel)
                 _currentUser.value = firebaseUser
@@ -90,7 +93,11 @@ class AuthViewModel(
                     fallbackAvatarUrl
                 }
 
-                val userModel = firebaseUser.toUserModel(username, avatarUrl)
+                val userModel = firebaseUser.toUserModel(
+                    username, avatarUrl,
+                    email = firebaseUser.email,
+                    photoUrl = avatarUrl
+                )
                 userRepository.saveUser(userModel)
                 _currentUser.value = firebaseUser
                 _currentUserModel.value = userModel
@@ -114,8 +121,16 @@ class AuthViewModel(
 
                 val avatarUrl = firebaseUser.photoUrl?.toString()
 
-                val userModel = firebaseUser.toUserModel(username, avatarUrl)
-                userRepository.saveUser(userModel)
+                val userModel = avatarUrl?.let {
+                    firebaseUser.toUserModel(
+                        username, it,
+                        email = firebaseUser.email,
+                        photoUrl = avatarUrl
+                    )
+                }
+                if (userModel != null) {
+                    userRepository.saveUser(userModel)
+                }
                 _currentUser.value = firebaseUser
                 _currentUserModel.value = userModel
 
@@ -127,27 +142,30 @@ class AuthViewModel(
         }
     }
 
-    fun linkWithGoogle(idToken: String) {
+    fun linkWithGoogle(
+        idToken: String,
+        displayName: String?,
+        email: String?,
+        photoUrl: String?
+    ) {
         viewModelScope.launch {
             _isChecking.value = true
             try {
                 val firebaseUser = authService.linkWithGoogle(idToken)
 
-                val fullName = firebaseUser.displayName ?: "Player"
+                val fullName = displayName ?: "Player"
                 val username = fullName.split(" ").firstOrNull() ?: fullName
+                val avatarUrl = if (!photoUrl.isNullOrEmpty()) photoUrl
+                else "https://api.dicebear.com/7.x/adventurer/png?seed=${UUID.randomUUID()}"
 
-                val firebasePhotoUrl = firebaseUser.photoUrl?.toString()
-                val fallbackAvatarUrl = "https://api.dicebear.com/7.x/adventurer/png?seed=${UUID.randomUUID()}"
+                val userModel = firebaseUser.toUserModel(
+                    username = username,
+                    fullName = fullName,
+                    email = email,
+                    photoUrl = avatarUrl
+                )
 
-                val avatarUrl = if (isValidGooglePhotoUrl(firebasePhotoUrl)) {
-                    firebasePhotoUrl!!
-                } else {
-                    fallbackAvatarUrl
-                }
-
-                val userModel = firebaseUser.toUserModel(username, avatarUrl)
                 userRepository.saveUser(userModel)
-
                 _currentUser.value = firebaseUser
                 _currentUserModel.value = userModel
 
@@ -173,7 +191,11 @@ class AuthViewModel(
 
                 val avatarUrl = firebasePhotoUrl ?: fallbackAvatarUrl
 
-                val userModel = firebaseUser.toUserModel(username, avatarUrl)
+                val userModel = firebaseUser.toUserModel(
+                    username, avatarUrl,
+                    email = firebaseUser.email,
+                    photoUrl = avatarUrl
+                )
                 userRepository.saveUser(userModel)
 
                 _currentUser.value = firebaseUser

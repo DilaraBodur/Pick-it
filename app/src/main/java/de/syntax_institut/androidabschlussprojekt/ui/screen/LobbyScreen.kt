@@ -80,19 +80,32 @@ fun LobbyScreen(
     val isFacebookUser = userModel?.loginProvider == "facebook.com"
 
     val linkGoogleLauncher = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.StartActivityForResult()
-    ) { result ->
-        val task = GoogleSignIn.getSignedInAccountFromIntent(result.data)
-        try {
-            val account = task.getResult(ApiException::class.java)
-            val idToken = account.idToken
-            idToken?.let {
-                authViewModel.linkWithGoogle(it)
+        contract = ActivityResultContracts.StartActivityForResult(),
+        onResult = { result ->
+
+            val task = GoogleSignIn.getSignedInAccountFromIntent(result.data)
+            try {
+                val account = task.getResult(ApiException::class.java)
+
+                val idToken = account.idToken
+                val displayName = account.displayName
+                val email = account.email
+                val photoUrl = account.photoUrl?.toString()
+
+                if (idToken != null) {
+                    authViewModel.linkWithGoogle(
+                        idToken = idToken,
+                        displayName = displayName,
+                        email = email,
+                        photoUrl = photoUrl
+                    )
+                    showSettings = false
+                }
+            } catch (e: ApiException) {
+                Log.e("LobbyScreen", "Fehler bei Google Account Auswahl: ${e.message}")
             }
-        } catch (e: ApiException) {
-            Log.e("LobbyScreen", "Google-Link fehlgeschlagen: ${e.message}")
         }
-    }
+    )
 
     val facebookLinkingView: @Composable () -> Unit = {
         AndroidView(factory = {
