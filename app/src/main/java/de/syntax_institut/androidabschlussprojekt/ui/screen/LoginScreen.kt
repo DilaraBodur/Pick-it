@@ -13,7 +13,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -48,7 +47,6 @@ fun LoginScreen(
 ) {
     val context = LocalContext.current
     val user by authViewModel.currentUser.collectAsState()
-    val isLoading by authViewModel.isChecking.collectAsState()
 
     LaunchedEffect(user) {
         if (user != null) {
@@ -125,7 +123,7 @@ fun LoginScreen(
                 }
             }
 
-            Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(32.dp))
 
             AndroidView(factory = {
                 LoginButton(it).apply {
@@ -140,17 +138,6 @@ fun LoginScreen(
                     })
                 }
             })
-        }
-    }
-
-    if (isLoading) {
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .background(Color(0x88000000)),
-            contentAlignment = Alignment.Center
-        ) {
-            CircularProgressIndicator(color = Color.White)
         }
     }
 }

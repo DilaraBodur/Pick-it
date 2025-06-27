@@ -1,17 +1,32 @@
 package de.syntax_institut.androidabschlussprojekt.ui.screen
 
+import android.util.Log
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -21,62 +36,181 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import androidx.compose.ui.viewinterop.AndroidView
 import androidx.navigation.NavHostController
+import com.facebook.CallbackManager
+import com.facebook.FacebookCallback
+import com.facebook.FacebookException
+import com.facebook.login.LoginResult
+import com.facebook.login.widget.LoginButton
+import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions
+import com.google.android.gms.common.api.ApiException
+import de.syntax_institut.androidabschlussprojekt.R
 import de.syntax_institut.androidabschlussprojekt.ui.components.AvatarImage
+import de.syntax_institut.androidabschlussprojekt.ui.components.GameModeCard
 import de.syntax_institut.androidabschlussprojekt.viewmodels.AuthViewModel
 
+
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun LobbyScreen(
     authViewModel: AuthViewModel,
     navController: NavHostController
 ) {
-    var showDeleteDialog by remember { mutableStateOf(false) }
-    val userModel by authViewModel.currentUserModel.collectAsState()
+    val context = LocalContext.current
+    val callbackManager = remember { CallbackManager.Factory.create() }
 
-    val username = when {
-        !userModel?.username.isNullOrBlank() -> userModel?.username
-        else -> "Unbekannt"
+    val userModel = authViewModel.currentUserModel.collectAsState().value
+    val username = userModel?.username?.takeIf { it.isNotBlank() } ?: "Unbekannt"
+    val avatarUrl = userModel?.photoUrl
+
+    var showDeleteDialog by remember { mutableStateOf(false) }
+    var showRankingSheet by remember { mutableStateOf(false) }
+    var showSettings by remember { mutableStateOf(false) }
+
+    var selectedLanguage by remember { mutableStateOf("Deutsch") }
+    var isMusicEnabled by remember { mutableStateOf(true) }
+    var isSoundEnabled by remember { mutableStateOf(true) }
+    var isNotificationsEnabled by remember { mutableStateOf(true) }
+
+    val isGuest = userModel?.loginProvider == "firebase"
+    val isGoogleUser = userModel?.loginProvider == "google.com"
+    val isFacebookUser = userModel?.loginProvider == "facebook.com"
+
+    val linkGoogleLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.StartActivityForResult()
+    ) { result ->
+        val task = GoogleSignIn.getSignedInAccountFromIntent(result.data)
+        try {
+            val account = task.getResult(ApiException::class.java)
+            val idToken = account.idToken
+            idToken?.let {
+                authViewModel.linkWithGoogle(it)
+            }
+        } catch (e: ApiException) {
+            Log.e("LobbyScreen", "Google-Link fehlgeschlagen: ${e.message}")
+        }
     }
 
-    val avatarUrl = userModel?.photoUrl
+    val facebookLinkingView: @Composable () -> Unit = {
+        AndroidView(factory = {
+            LoginButton(it).apply {
+                setPermissions("email", "public_profile")
+                registerCallback(callbackManager, object : FacebookCallback<LoginResult> {
+                    override fun onSuccess(result: LoginResult) {
+                        authViewModel.linkWithFacebook(result.accessToken)
+                    }
+
+                    override fun onCancel() {}
+
+                    override fun onError(error: FacebookException) {
+                        Log.e("LobbyScreen", "Facebook-Link fehlgeschlagen: ${error.message}")
+                    }
+                })
+            }
+        })
+    }
+
+    if (showSettings) {
+        SettingsDialog(
+            currentLanguage = selectedLanguage,
+            onLanguageChange = { selectedLanguage = it },
+            isMusicOn = isMusicEnabled,
+            onMusicToggle = { isMusicEnabled = it },
+            isSoundOn = isSoundEnabled,
+            onSoundToggle = { isSoundEnabled = it },
+            areNotificationsOn = isNotificationsEnabled,
+            onNotificationsToggle = { isNotificationsEnabled = it },
+            isGuest = isGuest,
+            linkGoogleLauncher = linkGoogleLauncher,
+            facebookLinkingView = facebookLinkingView,
+            onDismiss = { showSettings = false },
+            onLogout = { authViewModel.logout() },
+            onDeleteAccount = { authViewModel.deleteAccount() },
+            onLinkGoogle = {
+                val googleSignInClient = GoogleSignIn.getClient(
+                    context,
+                    GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                        .requestIdToken(context.getString(R.string.default_web_client_id))
+                        .requestEmail()
+                        .build()
+                )
+                linkGoogleLauncher.launch(googleSignInClient.signInIntent)
+            },
+            onLinkFacebook = { },
+            isGoogleUser = isGoogleUser,
+            isFacebookUser = isFacebookUser
+        )
+    }
 
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(24.dp),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
+            .background(Color(0xFF083A8C))
+            .padding(16.dp)
     ) {
-
         Row(
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.Center
+            modifier = Modifier.fillMaxWidth().padding(8.dp),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
         ) {
-            Text(text = "Du bist eingeloggt, $username!")
-
-            Spacer(modifier = Modifier.width(8.dp))
-
             if (!avatarUrl.isNullOrBlank()) {
                 AvatarImage(url = avatarUrl)
+            }
+
+            Button(onClick = { showRankingSheet = true }) {
+                Text("Rangliste")
+            }
+
+            IconButton(onClick = {
+                showSettings = true
+            }) {
+                Icon(Icons.Default.Settings, contentDescription = "Einstellungen", tint = Color.White)
             }
         }
 
         Spacer(modifier = Modifier.height(24.dp))
 
-        Button(onClick = {
-            authViewModel.logout()
-            navController.navigate("login") {
-                popUpTo("lobby") { inclusive = true }
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+        ) {
+            LazyRow(
+                modifier = Modifier
+                    .align(Alignment.Center)
+                    .fillMaxWidth(),
+                contentPadding = PaddingValues(horizontal = 24.dp)
+            ) {
+                items(listOf("Online", "2 vs 2", "Solo")) { mode ->
+                    GameModeCard(
+                        title = mode,
+                        backgroundColor = Color(0xFF1565C0),
+                        onClick = { /* TODO */ },
+                        modifier = Modifier
+                    )
+                }
             }
-        }) {
-            Text(text = "Logout")
         }
+    }
 
-        Spacer(modifier = Modifier.height(16.dp))
-
-        Button(onClick = { showDeleteDialog = true }) {
-            Text(text = "Konto löschen")
+    if (showRankingSheet) {
+        ModalBottomSheet(
+            onDismissRequest = { showRankingSheet = false },
+            sheetState = rememberModalBottomSheetState()
+        ) {
+            Column(modifier = Modifier.padding(16.dp)) {
+                Text("Rangliste", fontSize = 24.sp, fontWeight = FontWeight.Bold)
+                Spacer(Modifier.height(12.dp))
+                // TODO: Ranglisten daten einbauen
+                repeat(10) { i ->
+                    Text(text = "${i + 1}. Spielername - Punkte", color = Color.White)
+                }
+            }
         }
     }
 
@@ -104,6 +238,3 @@ fun LobbyScreen(
         )
     }
 }
-
-
-

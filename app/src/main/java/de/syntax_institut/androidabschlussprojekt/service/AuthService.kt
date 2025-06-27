@@ -40,4 +40,24 @@ class AuthService {
             throw e
         }
     }
+
+    suspend fun linkWithGoogle(idToken: String): FirebaseUser {
+        val credential = GoogleAuthProvider.getCredential(idToken, null)
+        return try {
+            val result = Firebase.auth.currentUser?.linkWithCredential(credential)?.await()
+            result?.user ?: throw Exception("Google-Verknüpfung fehlgeschlagen")
+        } catch (e: Exception) {
+            throw e
+        }
+    }
+
+    suspend fun linkWithFacebook(token: AccessToken): FirebaseUser {
+        val credential = FacebookAuthProvider.getCredential(token.token)
+        return try {
+            val result = Firebase.auth.currentUser?.linkWithCredential(credential)?.await()
+            result?.user ?: throw Exception("Facebook-Verknüpfung fehlgeschlagen")
+        } catch (e: Exception) {
+            throw e
+        }
+    }
 }

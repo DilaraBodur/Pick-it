@@ -127,6 +127,66 @@ class AuthViewModel(
         }
     }
 
+    fun linkWithGoogle(idToken: String) {
+        viewModelScope.launch {
+            _isChecking.value = true
+            try {
+                val firebaseUser = authService.linkWithGoogle(idToken)
+
+                val fullName = firebaseUser.displayName ?: "Player"
+                val username = fullName.split(" ").firstOrNull() ?: fullName
+
+                val firebasePhotoUrl = firebaseUser.photoUrl?.toString()
+                val fallbackAvatarUrl = "https://api.dicebear.com/7.x/adventurer/png?seed=${UUID.randomUUID()}"
+
+                val avatarUrl = if (isValidGooglePhotoUrl(firebasePhotoUrl)) {
+                    firebasePhotoUrl!!
+                } else {
+                    fallbackAvatarUrl
+                }
+
+                val userModel = firebaseUser.toUserModel(username, avatarUrl)
+                userRepository.saveUser(userModel)
+
+                _currentUser.value = firebaseUser
+                _currentUserModel.value = userModel
+
+            } catch (e: Exception) {
+                Log.e("AuthViewModel", "Fehler beim Google-Link: ${e.message}")
+            } finally {
+                _isChecking.value = false
+            }
+        }
+    }
+
+    fun linkWithFacebook(token: AccessToken) {
+        viewModelScope.launch {
+            _isChecking.value = true
+            try {
+                val firebaseUser = authService.linkWithFacebook(token)
+
+                val fullName = firebaseUser.displayName ?: "Player"
+                val username = fullName.split(" ").firstOrNull() ?: fullName
+
+                val firebasePhotoUrl = firebaseUser.photoUrl?.toString()
+                val fallbackAvatarUrl = "https://api.dicebear.com/7.x/adventurer/png?seed=${UUID.randomUUID()}"
+
+                val avatarUrl = firebasePhotoUrl ?: fallbackAvatarUrl
+
+                val userModel = firebaseUser.toUserModel(username, avatarUrl)
+                userRepository.saveUser(userModel)
+
+                _currentUser.value = firebaseUser
+                _currentUserModel.value = userModel
+
+            } catch (e: Exception) {
+                Log.e("AuthViewModel", "Fehler beim Facebook-Link: ${e.message}")
+            } finally {
+                _isChecking.value = false
+            }
+        }
+    }
+
 
     fun logout() {
         FirebaseAuth.getInstance().signOut()
