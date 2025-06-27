@@ -7,15 +7,12 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyRow
-import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.AlertDialog
@@ -179,14 +176,14 @@ fun LobbyScreen(
         Box(
             modifier = Modifier
                 .fillMaxSize()
+                .padding(vertical = 32.dp),
+            contentAlignment = Alignment.Center
         ) {
-            LazyRow(
-                modifier = Modifier
-                    .align(Alignment.Center)
-                    .fillMaxWidth(),
-                contentPadding = PaddingValues(horizontal = 24.dp)
+            Row(
+                horizontalArrangement = Arrangement.spacedBy(24.dp),
+                verticalAlignment = Alignment.CenterVertically
             ) {
-                items(listOf("Online", "2 vs 2", "Solo")) { mode ->
+                listOf("Online", "2 vs 2", "Solo").forEach { mode ->
                     GameModeCard(
                         title = mode,
                         backgroundColor = Color(0xFF1565C0),
