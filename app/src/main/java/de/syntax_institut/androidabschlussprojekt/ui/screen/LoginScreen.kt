@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -38,14 +39,16 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
 import de.syntax_institut.androidabschlussprojekt.R
 import de.syntax_institut.androidabschlussprojekt.viewmodels.AuthViewModel
+import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun LoginScreen(
-    authViewModel: AuthViewModel,
+    authViewModel: AuthViewModel = koinViewModel(),
     navController: NavHostController
 ) {
     val context = LocalContext.current
     val user by authViewModel.currentUser.collectAsState()
+    val isLoading by authViewModel.isChecking.collectAsState()
 
     LaunchedEffect(user) {
         if (user != null) {
@@ -140,4 +143,14 @@ fun LoginScreen(
         }
     }
 
+    if (isLoading) {
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(Color(0x88000000)),
+            contentAlignment = Alignment.Center
+        ) {
+            CircularProgressIndicator(color = Color.White)
+        }
+    }
 }
