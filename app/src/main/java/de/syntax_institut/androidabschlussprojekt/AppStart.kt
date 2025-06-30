@@ -20,7 +20,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import de.syntax_institut.androidabschlussprojekt.ui.components.BottomNavBar
-import de.syntax_institut.androidabschlussprojekt.ui.screen.FriendsScreen
+import de.syntax_institut.androidabschlussprojekt.ui.dialog.FriendsScreen
 import de.syntax_institut.androidabschlussprojekt.ui.screen.InventoryScreen
 import de.syntax_institut.androidabschlussprojekt.ui.screen.LoadingScreen
 import de.syntax_institut.androidabschlussprojekt.ui.screen.LobbyScreen

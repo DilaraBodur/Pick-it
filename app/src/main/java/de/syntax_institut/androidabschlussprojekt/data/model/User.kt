@@ -10,5 +10,9 @@ data class User(
     val photoUrl: String? = null,
     val loginProvider: String = "",
     val creationTimestamp: Timestamp = Timestamp.now(),
-    val lastSignInTimestamp: Timestamp = Timestamp.now()
+    val lastSignInTimestamp: Timestamp = Timestamp.now(),
+    val countryCode: String = "",
+    val level: Int = 1,
+    val totalPoints: Int = 0,
+    val stats: PlayerStats = PlayerStats()
 )

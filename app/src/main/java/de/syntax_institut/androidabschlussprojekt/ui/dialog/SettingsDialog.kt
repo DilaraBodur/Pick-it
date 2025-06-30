@@ -1,4 +1,4 @@
-package de.syntax_institut.androidabschlussprojekt.ui.screen
+package de.syntax_institut.androidabschlussprojekt.ui.dialog
 
 import android.content.Intent
 import androidx.activity.compose.ManagedActivityResultLauncher

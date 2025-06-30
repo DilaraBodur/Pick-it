@@ -2,6 +2,8 @@ package de.syntax_institut.androidabschlussprojekt.ui.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.runtime.Composable
@@ -13,9 +15,10 @@ import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 
 
-@Composable
+/*@Composable
 fun AvatarImage(
     url: String,
+    onClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     AsyncImage(
@@ -27,5 +30,27 @@ fun AvatarImage(
             .border(2.dp, Color.Gray, CircleShape)
             .background(Color.White)
             .size(48.dp)
+            .clickable { onClick() }
     )
+}*/
+
+
+@Composable
+fun AvatarImage(
+    url: String,
+    modifier: Modifier = Modifier,
+    onClick: () -> Unit = {}
+) {
+    Box(modifier = modifier.clickable { onClick() }) {
+        AsyncImage(
+            model = url,
+            contentDescription = "Avatar",
+            modifier = Modifier
+                .size(48.dp)
+                .clip(CircleShape)
+                .background(Color.White)
+                .border(2.dp, Color.White, CircleShape),
+            contentScale = ContentScale.Crop
+        )
+    }
 }

@@ -50,6 +50,9 @@ import com.google.android.gms.common.api.ApiException
 import de.syntax_institut.androidabschlussprojekt.R
 import de.syntax_institut.androidabschlussprojekt.ui.components.AvatarImage
 import de.syntax_institut.androidabschlussprojekt.ui.components.GameModeCard
+import de.syntax_institut.androidabschlussprojekt.ui.dialog.EditProfileDialog
+import de.syntax_institut.androidabschlussprojekt.ui.dialog.ProfileDialog
+import de.syntax_institut.androidabschlussprojekt.ui.dialog.SettingsDialog
 import de.syntax_institut.androidabschlussprojekt.viewmodels.AuthViewModel
 
 
@@ -74,6 +77,15 @@ fun LobbyScreen(
     var isMusicEnabled by remember { mutableStateOf(true) }
     var isSoundEnabled by remember { mutableStateOf(true) }
     var isNotificationsEnabled by remember { mutableStateOf(true) }
+    val showProfileDialog = remember { mutableStateOf(false) }
+    val showEditDialog = remember { mutableStateOf(false) }
+
+    val availableAvatars = listOf(
+        "lion", "bear", "cat", "fox", "panda",
+        "zebra", "giraffe", "elephant", "tiger", "koala",
+        "monkey", "owl", "wolf", "deer", "dog",
+        "rabbit", "penguin", "sloth", "cow", "duck"
+    )
 
     val isGuest = userModel?.loginProvider == "firebase"
     val isGoogleUser = userModel?.loginProvider == "google.com"
@@ -170,7 +182,10 @@ fun LobbyScreen(
             verticalAlignment = Alignment.CenterVertically
         ) {
             if (!avatarUrl.isNullOrBlank()) {
-                AvatarImage(url = avatarUrl)
+                AvatarImage(
+                    url = avatarUrl,
+                    onClick = { showProfileDialog.value = true }
+                )
             }
 
             Button(onClick = { showRankingSheet = true }) {
@@ -245,6 +260,29 @@ fun LobbyScreen(
                     Text("Abbrechen")
                 }
             }
+        )
+    }
+
+    if (showProfileDialog.value) {
+        ProfileDialog(
+            user = userModel!!,
+            onDismiss = { showProfileDialog.value = false },
+            onEditClick = {
+                showProfileDialog.value = false
+                showEditDialog.value = true
+            }
+        )
+    }
+
+    if (showEditDialog.value) {
+        EditProfileDialog(
+            user = userModel!!,
+            availableAvatars = availableAvatars,
+            onSave = { name, country, avatar ->
+                authViewModel.updateUserProfile(name, country, avatar)
+                showEditDialog.value = false
+            },
+            onDismiss = { showEditDialog.value = false }
         )
     }
 }

@@ -15,6 +15,7 @@ import de.syntax_institut.androidabschlussprojekt.service.AuthService
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
+import java.util.Locale
 
 
 class AuthViewModel(
@@ -58,10 +59,15 @@ class AuthViewModel(
                 val avatarSeed = UUID.randomUUID().toString()
                 val avatarUrl = "https://api.dicebear.com/7.x/adventurer/png?seed=$avatarSeed"
                 val firebaseUser = authService.loginAnonym()
+
+                val countryCode = Locale.getDefault().country.lowercase()
+
                 val userModel = firebaseUser.toUserModel(
-                    username, avatarUrl,
+                    username = username,
+                    fullName = username,
                     email = null,
-                    photoUrl = null
+                    countryCode = countryCode,
+                    photoUrl = avatarUrl
                 )
 
                 userRepository.saveUser(userModel)
@@ -93,9 +99,13 @@ class AuthViewModel(
                     fallbackAvatarUrl
                 }
 
+                val countryCode = Locale.getDefault().country.lowercase()
+
                 val userModel = firebaseUser.toUserModel(
-                    username, avatarUrl,
+                    username = username,
+                    fullName = username,
                     email = firebaseUser.email,
+                    countryCode = countryCode,
                     photoUrl = avatarUrl
                 )
                 userRepository.saveUser(userModel)
@@ -121,16 +131,16 @@ class AuthViewModel(
 
                 val avatarUrl = firebaseUser.photoUrl?.toString()
 
-                val userModel = avatarUrl?.let {
-                    firebaseUser.toUserModel(
-                        username, it,
-                        email = firebaseUser.email,
-                        photoUrl = avatarUrl
-                    )
-                }
-                if (userModel != null) {
-                    userRepository.saveUser(userModel)
-                }
+                val countryCode = Locale.getDefault().country.lowercase()
+
+                val userModel = firebaseUser.toUserModel(
+                    username = username,
+                    fullName = username,
+                    email = firebaseUser.email,
+                    countryCode = countryCode,
+                    photoUrl = avatarUrl
+                )
+                userRepository.saveUser(userModel)
                 _currentUser.value = firebaseUser
                 _currentUserModel.value = userModel
 
@@ -158,11 +168,13 @@ class AuthViewModel(
                 val avatarUrl = if (!photoUrl.isNullOrEmpty()) photoUrl
                 else "https://api.dicebear.com/7.x/adventurer/png?seed=${UUID.randomUUID()}"
 
+                val countryCode = Locale.getDefault().country.lowercase()
                 val userModel = firebaseUser.toUserModel(
                     username = username,
                     fullName = fullName,
                     email = email,
-                    photoUrl = avatarUrl
+                    photoUrl = avatarUrl,
+                    countryCode = countryCode
                 )
 
                 userRepository.saveUser(userModel)
@@ -191,9 +203,13 @@ class AuthViewModel(
 
                 val avatarUrl = firebasePhotoUrl ?: fallbackAvatarUrl
 
+                val countryCode = Locale.getDefault().country.lowercase()
+
                 val userModel = firebaseUser.toUserModel(
-                    username, avatarUrl,
+                    username = username,
+                    fullName = username,
                     email = firebaseUser.email,
+                    countryCode = countryCode,
                     photoUrl = avatarUrl
                 )
                 userRepository.saveUser(userModel)
@@ -231,5 +247,28 @@ class AuthViewModel(
 
     private fun isValidGooglePhotoUrl(url: String?): Boolean {
         return !url.isNullOrBlank() && url.contains("googleusercontent.com")
+    }
+
+    fun updateUserProfile(name: String, countryCode: String, avatarSeed: String) {
+        viewModelScope.launch {
+            val currentUser = _currentUserModel.value
+            if (currentUser == null) {
+                Log.e("AuthViewModel", "updateUserProfile: Kein Benutzer angemeldet")
+                return@launch
+            }
+            try {
+                val updatedUser = currentUser.copy(
+                    username = name,
+                    countryCode = countryCode,
+                    photoUrl = "https://api.dicebear.com/7.x/adventurer/png?seed=$avatarSeed"
+                )
+                userRepository.saveUser(updatedUser)
+                _currentUserModel.value = updatedUser
+
+                Log.d("AuthViewModel", "Profil erfolgreich aktualisiert")
+            } catch (e: Exception) {
+                Log.e("AuthViewModel", "Fehler beim Aktualisieren des Profils: ${e.message}")
+            }
+        }
     }
 }

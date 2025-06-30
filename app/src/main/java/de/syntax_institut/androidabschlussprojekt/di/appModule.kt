@@ -18,6 +18,7 @@ val appModule = module {
     single { AuthService() }
     single { UserRepository() }
 
+
     single {
         Moshi.Builder()
             .add(KotlinJsonAdapterFactory())
@@ -41,7 +42,3 @@ val appModule = module {
 
     viewModelOf(::AuthViewModel)
 }
-
-
-
-
