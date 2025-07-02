@@ -66,6 +66,6 @@ val appModule = module {
     }
 
     viewModel {
-        InventoryViewModel(get(), get())
+        InventoryViewModel(get(), get(), get())
     }
 }

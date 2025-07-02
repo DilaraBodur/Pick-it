@@ -1,7 +1,6 @@
 package de.syntax_institut.androidabschlussprojekt.features.game.viewModels
 
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
@@ -22,8 +21,10 @@ class ShopViewModel(
         private set
 
     var isGuest by mutableStateOf(false)
+        private set
 
-    var boughtPackageTitles = mutableStateListOf<String>()
+    var boughtPackageTitles by mutableStateOf<List<String>>(emptyList())
+        private set
 
     init {
         loadData()
@@ -35,8 +36,7 @@ class ShopViewModel(
             symbolPackages = symbolsRepository.loadSymbols()
 
             authViewModel.currentUserModel.value?.uid?.let { uid ->
-                boughtPackageTitles.clear()
-                boughtPackageTitles.addAll(userRepository.getOwnedSymbolPackages(uid).map { it.packageId })
+                boughtPackageTitles = userRepository.getPurchasedPackageIds(uid)
             }
         }
     }
@@ -44,14 +44,12 @@ class ShopViewModel(
     fun buyPackage(pkg: SymbolPackage) {
         viewModelScope.launch {
             val user = authViewModel.currentUserModel.value ?: return@launch
-            val currentInventory = userRepository.getOwnedSymbolPackages(user.uid)
-            if (currentInventory.any { it.name == pkg.name }) return@launch
+            val uid = user.uid
 
-            val updatedInventory = currentInventory + pkg
-            userRepository.saveOwnedSymbolPackages(user.uid, updatedInventory)
+            if (boughtPackageTitles.contains(pkg.packageId)) return@launch
 
-            boughtPackageTitles.add(pkg.packageId)
-            loadData()
+            userRepository.addPurchasedPackageId(uid, pkg.packageId)
+            boughtPackageTitles = boughtPackageTitles + pkg.packageId
         }
     }
 }

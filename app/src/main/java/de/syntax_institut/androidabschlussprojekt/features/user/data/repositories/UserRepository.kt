@@ -1,10 +1,6 @@
 package de.syntax_institut.androidabschlussprojekt.features.user.data.repositories
 
 import com.google.firebase.firestore.FirebaseFirestore
-import com.squareup.moshi.Moshi
-import com.squareup.moshi.Types
-import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
-import de.syntax_institut.androidabschlussprojekt.features.game.data.models.SymbolPackage
 import de.syntax_institut.androidabschlussprojekt.features.user.data.models.User
 import kotlinx.coroutines.tasks.await
 
@@ -34,28 +30,38 @@ class UserRepository {
         }
     }
 
-    suspend fun getOwnedSymbolPackages(userId: String): List<SymbolPackage> {
-        val snapshot = FirebaseFirestore.getInstance().collection("users").document(userId).get().await()
-        val rawData = snapshot["ownedSymbolPackages"] ?: return emptyList()
+    suspend fun getPurchasedPackageIds(userId: String): List<String> {
+        val snapshot = FirebaseFirestore.getInstance()
+            .collection("users")
+            .document(userId)
+            .get()
+            .await()
 
-        val type = Types.newParameterizedType(List::class.java, SymbolPackage::class.java)
-        val moshi = Moshi.Builder().addLast(KotlinJsonAdapterFactory()).build()
-        val adapter = moshi.adapter<List<SymbolPackage>>(type)
+        val rawList = snapshot.get("purchasedPackages")
 
-        return adapter.fromJsonValue(rawData) ?: emptyList()
+        return if (rawList is List<*>) {
+            rawList.filterIsInstance<String>()
+        } else {
+            emptyList()
+        }
     }
 
-    suspend fun saveOwnedSymbolPackages(userId: String, packages: List<SymbolPackage>) {
+    suspend fun addPurchasedPackageId(userId: String, newPackageId: String) {
         val firestore = FirebaseFirestore.getInstance()
-        val moshi = Moshi.Builder().addLast(KotlinJsonAdapterFactory()).build()
-        val type = Types.newParameterizedType(List::class.java, SymbolPackage::class.java)
-        val adapter = moshi.adapter<List<SymbolPackage>>(type)
+        val userRef = firestore.collection("users").document(userId)
 
-        val jsonCompatibleData = adapter.toJsonValue(packages)
+        firestore.runTransaction { transaction ->
+            val snapshot = transaction.get(userRef)
+            val current = snapshot.get("purchasedPackages")
+            val currentList = if (current is List<*>) {
+                current.filterIsInstance<String>()
+            } else {
+                emptyList()
+            }
 
-        firestore.collection("users")
-            .document(userId)
-            .update("ownedSymbolPackages", jsonCompatibleData)
-            .await()
+            if (!currentList.contains(newPackageId)) {
+                transaction.update(userRef, "purchasedPackages", currentList + newPackageId)
+            }
+        }.await()
     }
 }
