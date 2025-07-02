@@ -13,7 +13,8 @@ fun FirebaseUser.toUserModel(
     level: Int = 1,
     totalPoints: Int = 0,
     countryCode: String,
-    stats: PlayerStats = PlayerStats()
+    stats: PlayerStats = PlayerStats(),
+    purchasedPackages: List<String> = emptyList()
 ): User {
     val metadata = this.metadata
     val actualProviderId = this.providerData.find {
@@ -32,6 +33,7 @@ fun FirebaseUser.toUserModel(
         level = level,
         totalPoints = totalPoints,
         countryCode = countryCode,
-        stats = stats
+        stats = stats,
+        purchasedPackages = purchasedPackages
     )
 }

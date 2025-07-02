@@ -72,10 +72,10 @@ fun AppStart(authViewModel: AuthViewModel) {
                         LobbyScreen(navController = navController, authViewModel = authViewModel)
                     }
                     composable("shop") {
-                        ShopScreen(navController = navController, authViewModel = authViewModel)
+                        ShopScreen()
                     }
                     composable("inventory") {
-                        InventoryScreen(navController = navController, authViewModel = authViewModel)
+                        InventoryScreen()
                     }
                     composable("friends") {
                         FriendsScreen(navController = navController, authViewModel = authViewModel)

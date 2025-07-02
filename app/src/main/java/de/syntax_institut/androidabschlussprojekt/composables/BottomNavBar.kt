@@ -23,10 +23,10 @@ fun BottomNavBar(
         .currentBackStackEntryAsState().value?.destination?.route
 
     val items = listOf(
-        BottomNavItem("Startseite", Icons.Default.Home, "lobby"),
-        BottomNavItem("Laden", Icons.Default.ShoppingCart, "shop"),
-        BottomNavItem("Inventar", Icons.Default.Inventory, "inventory"),
-        BottomNavItem("Freunde", Icons.Default.People, "friends")
+        BottomNavItem(route = "lobby", icon = Icons.Default.Home, label = "Startseite"),
+        BottomNavItem(route = "shop", icon = Icons.Default.ShoppingCart, label = "Laden"),
+        BottomNavItem(route = "inventory", icon = Icons.Default.Inventory, label = "Inventar"),
+        BottomNavItem(route = "friends", icon = Icons.Default.People, label = "Freunde")
     )
 
     NavigationBar(
@@ -38,8 +38,11 @@ fun BottomNavBar(
                 onClick = {
                     if (currentRoute != item.route) {
                         navController.navigate(item.route) {
-                            popUpTo("lobby") { inclusive = false }
+                            popUpTo(navController.graph.startDestinationId) {
+                                saveState = true
+                            }
                             launchSingleTop = true
+                            restoreState = true
                         }
                     }
                 },
