@@ -20,7 +20,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import de.syntax_institut.androidabschlussprojekt.composables.BottomNavBar
-import de.syntax_institut.androidabschlussprojekt.features.user.screens.FriendsScreen
+import de.syntax_institut.androidabschlussprojekt.features.user.screens.FriendsDialog
 import de.syntax_institut.androidabschlussprojekt.features.game.screens.InventoryScreen
 import de.syntax_institut.androidabschlussprojekt.features.game.screens.LoadingScreen
 import de.syntax_institut.androidabschlussprojekt.features.game.screens.LobbyScreen
@@ -78,7 +78,7 @@ fun AppStart(authViewModel: AuthViewModel) {
                         InventoryScreen()
                     }
                     composable("friends") {
-                        FriendsScreen(navController = navController, authViewModel = authViewModel)
+                        FriendsDialog()
                     }
                 }
             }

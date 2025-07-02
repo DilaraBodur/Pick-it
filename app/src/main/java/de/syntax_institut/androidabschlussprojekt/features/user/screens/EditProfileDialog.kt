@@ -42,12 +42,15 @@ import de.syntax_institut.androidabschlussprojekt.composables.CountryDropdown
 fun EditProfileDialog(
     user: User,
     availableAvatars: List<String>,
-    onSave: (String, String, String) -> Unit,
+    onSave: (String, String, String?) -> Unit,
     onDismiss: () -> Unit
 ) {
     var username by remember { mutableStateOf(user.username) }
     var selectedCountry by remember { mutableStateOf(user.countryCode) }
-    var selectedAvatar by remember { mutableStateOf(user.photoUrl ?: "") }
+
+    var selectedAvatar by remember {
+        mutableStateOf(user.photoUrl?.substringAfter("seed=") ?: "")
+    }
 
     Dialog(onDismissRequest = onDismiss) {
         Surface(
@@ -122,7 +125,13 @@ fun EditProfileDialog(
 
                 Button(
                     onClick = {
-                        onSave(username, selectedCountry, selectedAvatar)
+                        val avatarSeed: String? = if (selectedAvatar.startsWith("https://")) {
+                            null
+                        } else {
+                            selectedAvatar
+                        }
+
+                        onSave(username, selectedCountry, avatarSeed)
                         onDismiss()
                     },
                     modifier = Modifier.fillMaxWidth()

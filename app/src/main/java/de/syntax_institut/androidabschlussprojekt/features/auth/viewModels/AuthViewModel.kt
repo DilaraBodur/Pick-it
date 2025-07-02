@@ -103,7 +103,7 @@ class AuthViewModel(
 
                 val userModel = firebaseUser.toUserModel(
                     username = username,
-                    fullName = username,
+                    fullName = fullName,
                     email = firebaseUser.email,
                     countryCode = countryCode,
                     photoUrl = avatarUrl
@@ -135,7 +135,7 @@ class AuthViewModel(
 
                 val userModel = firebaseUser.toUserModel(
                     username = username,
-                    fullName = username,
+                    fullName = fullName,
                     email = firebaseUser.email,
                     countryCode = countryCode,
                     photoUrl = avatarUrl
@@ -207,7 +207,7 @@ class AuthViewModel(
 
                 val userModel = firebaseUser.toUserModel(
                     username = username,
-                    fullName = username,
+                    fullName = fullName,
                     email = firebaseUser.email,
                     countryCode = countryCode,
                     photoUrl = avatarUrl
@@ -249,23 +249,36 @@ class AuthViewModel(
         return !url.isNullOrBlank() && url.contains("googleusercontent.com")
     }
 
-    fun updateUserProfile(name: String, countryCode: String, avatarSeed: String) {
+    fun updateUserProfile(name: String, countryCode: String, avatarSeed: String?) {
         viewModelScope.launch {
             val currentUser = _currentUserModel.value
             if (currentUser == null) {
                 Log.e("AuthViewModel", "updateUserProfile: Kein Benutzer angemeldet")
                 return@launch
             }
+
             try {
+                val newPhotoUrl = if (!avatarSeed.isNullOrBlank() && !avatarSeed.startsWith("https")) {
+                    "https://api.dicebear.com/7.x/adventurer/png?seed=$avatarSeed"
+                } else {
+                    currentUser.photoUrl
+                }
+
                 val updatedUser = currentUser.copy(
                     username = name,
                     countryCode = countryCode,
-                    photoUrl = "https://api.dicebear.com/7.x/adventurer/png?seed=$avatarSeed"
+                    photoUrl = newPhotoUrl
                 )
-                userRepository.saveUser(updatedUser)
-                _currentUserModel.value = updatedUser
 
-                Log.d("AuthViewModel", "Profil erfolgreich aktualisiert")
+                userRepository.saveUser(updatedUser,
+                    onSuccess = {
+                        _currentUserModel.value = updatedUser
+                        Log.d("AuthViewModel", "Profil erfolgreich aktualisiert")
+                    },
+                    onError = {
+                        Log.e("AuthViewModel", "Fehler beim Speichern des Users: ${it.message}")
+                    }
+                )
             } catch (e: Exception) {
                 Log.e("AuthViewModel", "Fehler beim Aktualisieren des Profils: ${e.message}")
             }
