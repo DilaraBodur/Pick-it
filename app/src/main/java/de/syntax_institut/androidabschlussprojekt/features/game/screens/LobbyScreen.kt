@@ -49,9 +49,13 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
 import de.syntax_institut.androidabschlussprojekt.R
 import de.syntax_institut.androidabschlussprojekt.composables.AvatarImage
+import de.syntax_institut.androidabschlussprojekt.composables.BottomNavBar
 import de.syntax_institut.androidabschlussprojekt.features.user.screens.EditProfileDialog
 import de.syntax_institut.androidabschlussprojekt.features.user.screens.ProfileDialog
 import de.syntax_institut.androidabschlussprojekt.features.auth.viewModels.AuthViewModel
+import de.syntax_institut.androidabschlussprojekt.features.user.friends.screens.FriendsDialog
+import de.syntax_institut.androidabschlussprojekt.features.user.friends.viewModels.FriendsViewModel
+import org.koin.androidx.compose.koinViewModel
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -77,6 +81,8 @@ fun LobbyScreen(
     var isNotificationsEnabled by remember { mutableStateOf(true) }
     val showProfileDialog = remember { mutableStateOf(false) }
     val showEditDialog = remember { mutableStateOf(false) }
+
+    val showFriendsDialog = remember { mutableStateOf(false) }
 
     val availableAvatars = listOf(
         "lion", "bear", "cat", "fox", "panda",
@@ -219,6 +225,11 @@ fun LobbyScreen(
                 }
             }
         }
+
+        BottomNavBar(
+            navController = navController,
+            showFriendsDialogState = showFriendsDialog
+        )
     }
 
     if (showRankingSheet) {
@@ -281,6 +292,14 @@ fun LobbyScreen(
                 showEditDialog.value = false
             },
             onDismiss = { showEditDialog.value = false }
+        )
+    }
+
+    if (showFriendsDialog.value) {
+        FriendsDialog(
+            authViewModel = authViewModel,
+            friendsViewModel = koinViewModel<FriendsViewModel>(),
+            onDismiss = { showFriendsDialog.value = false }
         )
     }
 }

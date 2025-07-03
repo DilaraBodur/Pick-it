@@ -13,6 +13,7 @@ fun FirebaseUser.toUserModel(
     level: Int = 1,
     totalPoints: Int = 0,
     countryCode: String,
+    friends: List<String> = emptyList(),
     stats: PlayerStats = PlayerStats(),
     purchasedPackages: List<String> = emptyList()
 ): User {
@@ -33,6 +34,7 @@ fun FirebaseUser.toUserModel(
         level = level,
         totalPoints = totalPoints,
         countryCode = countryCode,
+        friends = friends,
         stats = stats,
         purchasedPackages = purchasedPackages
     )

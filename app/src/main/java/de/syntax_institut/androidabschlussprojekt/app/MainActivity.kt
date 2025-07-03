@@ -9,7 +9,7 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
 import de.syntax_institut.androidabschlussprojekt.core.theme.AndroidAbschlussprojektTheme
 import de.syntax_institut.androidabschlussprojekt.features.auth.viewModels.AuthViewModel
-import org.koin.androidx.viewmodel.ext.android.getViewModel
+import org.koin.androidx.compose.koinViewModel
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -24,7 +24,7 @@ class MainActivity : ComponentActivity() {
 
         setContent {
             AndroidAbschlussprojektTheme {
-                val authViewModel: AuthViewModel = getViewModel()
+                val authViewModel: AuthViewModel = koinViewModel()
 
                 AppStart(
                     authViewModel = authViewModel

@@ -12,6 +12,7 @@ data class User(
     val creationTimestamp: Timestamp = Timestamp.now(),
     val lastSignInTimestamp: Timestamp = Timestamp.now(),
     val countryCode: String = "",
+    val friends: List<String> = emptyList(),
     val level: Int = 1,
     val totalPoints: Int = 0,
     val stats: PlayerStats = PlayerStats(),

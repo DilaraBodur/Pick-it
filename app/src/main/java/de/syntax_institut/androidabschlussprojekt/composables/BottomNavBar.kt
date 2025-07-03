@@ -10,6 +10,7 @@ import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.ui.graphics.Color
 import androidx.navigation.NavController
 import androidx.navigation.compose.currentBackStackEntryAsState
@@ -17,7 +18,8 @@ import de.syntax_institut.androidabschlussprojekt.features.navigation.BottomNavI
 
 @Composable
 fun BottomNavBar(
-    navController: NavController
+    navController: NavController,
+    showFriendsDialogState: MutableState<Boolean>
 ) {
     val currentRoute = navController
         .currentBackStackEntryAsState().value?.destination?.route
@@ -36,11 +38,11 @@ fun BottomNavBar(
             NavigationBarItem(
                 selected = currentRoute == item.route,
                 onClick = {
-                    if (currentRoute != item.route) {
+                    if (item.route == "friends") {
+                        showFriendsDialogState.value = true
+                    } else if (currentRoute != item.route) {
                         navController.navigate(item.route) {
-                            popUpTo(navController.graph.startDestinationId) {
-                                saveState = true
-                            }
+                            popUpTo(navController.graph.startDestinationId) { saveState = true }
                             launchSingleTop = true
                             restoreState = true
                         }

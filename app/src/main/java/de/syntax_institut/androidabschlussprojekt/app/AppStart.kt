@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -20,13 +21,15 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import de.syntax_institut.androidabschlussprojekt.composables.BottomNavBar
-import de.syntax_institut.androidabschlussprojekt.features.user.screens.FriendsDialog
+import de.syntax_institut.androidabschlussprojekt.features.auth.viewModels.AuthViewModel
 import de.syntax_institut.androidabschlussprojekt.features.game.screens.InventoryScreen
 import de.syntax_institut.androidabschlussprojekt.features.game.screens.LoadingScreen
 import de.syntax_institut.androidabschlussprojekt.features.game.screens.LobbyScreen
 import de.syntax_institut.androidabschlussprojekt.features.game.screens.LoginScreen
 import de.syntax_institut.androidabschlussprojekt.features.game.screens.ShopScreen
-import de.syntax_institut.androidabschlussprojekt.features.auth.viewModels.AuthViewModel
+import de.syntax_institut.androidabschlussprojekt.features.user.friends.screens.FriendsDialog
+import de.syntax_institut.androidabschlussprojekt.features.user.friends.viewModels.FriendsViewModel
+import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun AppStart(authViewModel: AuthViewModel) {
@@ -39,8 +42,25 @@ fun AppStart(authViewModel: AuthViewModel) {
 
     val isLoading by authViewModel.isChecking.collectAsState()
     val showBottomBar = currentDestination in listOf("lobby", "shop", "inventory", "friends")
+    val showFriendsDialog = remember { mutableStateOf(false) }
+    if (showFriendsDialog.value) {
+        FriendsDialog(
+            authViewModel = authViewModel,
+            friendsViewModel = koinViewModel(),
+            onDismiss = { showFriendsDialog.value = false }
+        )
+    }
 
     val backgroundColor = Color(0xFF083A8C)
+
+    val friendsViewModel: FriendsViewModel = koinViewModel()
+    val currentUserId = authViewModel.currentUserModel.collectAsState().value?.uid
+
+    LaunchedEffect(currentUserId) {
+        currentUserId?.let {
+            friendsViewModel.startListeningToFriends()
+        }
+    }
 
     Box(
         modifier = Modifier
@@ -54,7 +74,10 @@ fun AppStart(authViewModel: AuthViewModel) {
                 containerColor = backgroundColor,
                 bottomBar = {
                     if (showBottomBar) {
-                        BottomNavBar(navController = navController)
+                        BottomNavBar(
+                            navController = navController,
+                            showFriendsDialogState = showFriendsDialog
+                        )
                     }
                 }
             ) { innerPadding ->
@@ -76,9 +99,6 @@ fun AppStart(authViewModel: AuthViewModel) {
                     }
                     composable("inventory") {
                         InventoryScreen()
-                    }
-                    composable("friends") {
-                        FriendsDialog()
                     }
                 }
             }

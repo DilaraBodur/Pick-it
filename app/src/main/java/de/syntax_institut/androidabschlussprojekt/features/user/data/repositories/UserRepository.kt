@@ -1,5 +1,6 @@
 package de.syntax_institut.androidabschlussprojekt.features.user.data.repositories
 
+import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import de.syntax_institut.androidabschlussprojekt.features.user.data.models.User
 import kotlinx.coroutines.tasks.await
@@ -15,6 +16,25 @@ class UserRepository {
 
     fun deleteUser(uid: String) {
         usersCollection.document(uid).delete()
+    }
+
+    fun addFriend(userId: String, friendId: String) {
+        usersCollection
+            .document(userId)
+            .update("friends", FieldValue.arrayUnion(friendId))
+    }
+
+    fun getUserByUsername(username: String, onResult: (User?) -> Unit) {
+        usersCollection
+            .whereEqualTo("username", username)
+            .get()
+            .addOnSuccessListener { result ->
+                val user = result.documents.firstOrNull()?.toObject(User::class.java)
+                onResult(user)
+            }
+            .addOnFailureListener {
+                onResult(null)
+            }
     }
 
     suspend fun getUserById(uid: String): User? {

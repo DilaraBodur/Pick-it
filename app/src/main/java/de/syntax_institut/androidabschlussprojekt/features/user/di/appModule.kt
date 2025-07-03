@@ -10,6 +10,8 @@ import de.syntax_institut.androidabschlussprojekt.features.game.viewModels.Inven
 import de.syntax_institut.androidabschlussprojekt.features.game.viewModels.ShopViewModel
 import de.syntax_institut.androidabschlussprojekt.features.user.data.repositories.UserRepository
 import de.syntax_institut.androidabschlussprojekt.features.user.data.repositories.UsernameRepository
+import de.syntax_institut.androidabschlussprojekt.features.user.friends.data.repositories.FriendsRepository
+import de.syntax_institut.androidabschlussprojekt.features.user.friends.viewModels.FriendsViewModel
 import de.syntax_institut.androidabschlussprojekt.features.user.remote.UsernameApi
 import okhttp3.OkHttpClient
 import org.koin.core.module.dsl.viewModel
@@ -21,6 +23,7 @@ import retrofit2.converter.moshi.MoshiConverterFactory
 val appModule = module {
     single { AuthService() }
     single { UserRepository() }
+    single { FriendsRepository() }
 
     single {
         Moshi.Builder()
@@ -68,4 +71,9 @@ val appModule = module {
     viewModel {
         InventoryViewModel(get(), get(), get())
     }
+
+    viewModel {
+        FriendsViewModel(get(), get(), get(), get())
+    }
+
 }
