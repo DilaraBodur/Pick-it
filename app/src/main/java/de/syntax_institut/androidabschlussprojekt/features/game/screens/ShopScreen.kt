@@ -18,13 +18,13 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import de.syntax_institut.androidabschlussprojekt.features.game.viewModels.InventoryViewModel
 import de.syntax_institut.androidabschlussprojekt.features.game.viewModels.ShopViewModel
 import org.koin.androidx.compose.koinViewModel
 
@@ -35,7 +35,8 @@ fun ShopScreen(
     val packages = viewModel.symbolPackages
     val isGuest = viewModel.isGuest
     val boughtTitles = viewModel.boughtPackageTitles
-    val inventoryViewModel: InventoryViewModel = koinViewModel()
+
+    val activePackageId = viewModel.activePackageId.collectAsState()
 
     Column(modifier = Modifier.fillMaxSize().padding(16.dp)) {
         Text("Shop", fontSize = 24.sp, fontWeight = FontWeight.Bold)
@@ -53,6 +54,16 @@ fun ShopScreen(
         LazyColumn {
             items(packages) { symbolPackage ->
                 val alreadyBought = boughtTitles.contains(symbolPackage.packageId)
+                val isActive = symbolPackage.packageId == activePackageId.value
+
+                val buttonText = when {
+                    symbolPackage.packageId == "standard" && activePackageId.value == "standard" -> "Aktiv"
+                    symbolPackage.packageId == "standard" && activePackageId.value != "standard" -> "Verwenden"
+
+                    isActive -> "Aktiv"
+                    alreadyBought -> "Verwenden"
+                    else -> "Kaufen"
+                }
 
                 Card(
                     modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp),
@@ -74,28 +85,25 @@ fun ShopScreen(
 
                         Spacer(Modifier.height(8.dp))
 
-                        Box(
-                            modifier = Modifier.fillMaxWidth(),
-                            contentAlignment = Alignment.CenterEnd
-                        ) {
-                            if (alreadyBought) {
-                                Text(
-                                    text = "Gekauft",
-                                    color = Color.Blue,
-                                    fontWeight = FontWeight.Bold
-                                )
-                            } else {
-                                Button(
-                                    onClick = {
-                                        viewModel.buyPackage(symbolPackage)
-                                        inventoryViewModel.loadInventory() },
+                        Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.CenterEnd) {
+                            when (buttonText) {
+                                "Kaufen" -> Button(
+                                    onClick = { viewModel.buyPackage(symbolPackage) },
                                     enabled = !isGuest
                                 ) {
                                     Text("Kaufen")
                                 }
+
+                                "Verwenden" -> Button(
+                                    onClick = { viewModel.updateActivePackage(symbolPackage.packageId) },
+                                    enabled = !isGuest
+                                ) {
+                                    Text("Verwenden")
+                                }
+
+                                "Aktiv" -> Text(text = "Aktiv", color = Color.Green, fontWeight = FontWeight.Bold)
                             }
                         }
-
                     }
                 }
             }

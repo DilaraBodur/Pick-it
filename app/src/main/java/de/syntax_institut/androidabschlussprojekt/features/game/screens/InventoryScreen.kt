@@ -35,8 +35,8 @@ fun InventoryScreen(
     viewModel: InventoryViewModel = koinViewModel()
 ) {
 
-
     val packages by viewModel.ownedPackages.collectAsState()
+    val activePackageId by viewModel.activePackageId.collectAsState()
 
     LaunchedEffect(Unit) {
         viewModel.loadInventory()
@@ -52,6 +52,8 @@ fun InventoryScreen(
         } else {
             LazyColumn {
                 items(packages) { symbolPackage ->
+                    val isActive = symbolPackage.packageId == activePackageId
+
                     Card(
                         modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp),
                         elevation = CardDefaults.cardElevation(4.dp)
@@ -73,10 +75,10 @@ fun InventoryScreen(
                             Spacer(Modifier.height(8.dp))
 
                             Button(
-                                onClick = { viewModel.updateActivePackage(symbolPackage.packageId) },
+                                onClick = { if (!isActive) viewModel.updateActivePackage(symbolPackage.packageId) },
                                 modifier = Modifier.align(Alignment.End)
                             ) {
-                                Text(text = "Verwenden")
+                                Text(text = if (isActive) "Aktiv" else "Verwenden")
                             }
                         }
                     }

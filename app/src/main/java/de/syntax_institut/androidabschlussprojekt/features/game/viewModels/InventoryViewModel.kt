@@ -7,7 +7,10 @@ import de.syntax_institut.androidabschlussprojekt.features.game.data.models.Symb
 import de.syntax_institut.androidabschlussprojekt.features.game.data.repositories.SymbolsRepository
 import de.syntax_institut.androidabschlussprojekt.features.user.data.repositories.UserRepository
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
 class InventoryViewModel(
@@ -18,6 +21,10 @@ class InventoryViewModel(
 
     private val _ownedPackages = MutableStateFlow<List<SymbolPackage>>(emptyList())
     val ownedPackages: StateFlow<List<SymbolPackage>> = _ownedPackages
+
+    val activePackageId: StateFlow<String> = authViewModel.currentUserModel
+        .map { it?.activePackageId ?: "standard" }
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), "standard")
 
     init {
         viewModelScope.launch {
