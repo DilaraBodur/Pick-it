@@ -10,14 +10,14 @@ import com.google.firebase.auth.auth
 import kotlinx.coroutines.tasks.await
 
 class AuthService {
-    private val auth: FirebaseAuth = Firebase.auth
+    private val auth: FirebaseAuth = FirebaseAuth.getInstance()
 
-    suspend fun loginAnonym(): FirebaseUser {
+    suspend fun loginAnonym(): FirebaseUser? {
         return try {
             val result = auth.signInAnonymously().await()
-            result.user ?: throw Exception("Kein Benutzer erhalten")
+            result.user
         } catch (e: Exception) {
-            throw e
+            null
         }
     }
 

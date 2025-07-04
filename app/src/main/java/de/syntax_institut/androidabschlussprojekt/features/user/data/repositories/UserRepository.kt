@@ -8,6 +8,17 @@ import kotlinx.coroutines.tasks.await
 class UserRepository {
     private val usersCollection = FirebaseFirestore.getInstance().collection("users")
 
+
+    suspend fun addFriendBothWays(userId: String, friendId: String) {
+        val userRef = usersCollection.document(userId)
+        val friendRef = usersCollection.document(friendId)
+
+        FirebaseFirestore.getInstance().runBatch { batch ->
+            batch.update(userRef, "friends", FieldValue.arrayUnion(friendId))
+            batch.update(friendRef, "friends", FieldValue.arrayUnion(userId))
+        }.await()
+    }
+
     fun saveUser(user: User, onSuccess: () -> Unit = {}, onError: (Exception) -> Unit = {}) {
         usersCollection.document(user.uid).set(user)
             .addOnSuccessListener { onSuccess() }
@@ -16,12 +27,6 @@ class UserRepository {
 
     fun deleteUser(uid: String) {
         usersCollection.document(uid).delete()
-    }
-
-    fun addFriend(userId: String, friendId: String) {
-        usersCollection
-            .document(userId)
-            .update("friends", FieldValue.arrayUnion(friendId))
     }
 
     fun getUserByUsername(username: String, onResult: (User?) -> Unit) {

@@ -54,7 +54,7 @@ fun FriendsDialog(
 
                 Spacer(Modifier.height(8.dp))
 
-                if (selectedTab == "friends" || !isFacebookLogin) {
+                if (selectedTab == "PickIt" || !isFacebookLogin) {
                     if (pickItFriends.isEmpty()) {
                         Text("Du hast noch keine Pick-It Freunde.")
                     } else {
@@ -71,8 +71,12 @@ fun FriendsDialog(
 
                     Spacer(Modifier.height(8.dp))
 
-                    Button(onClick = { showAddFriendDialog = true }, modifier = Modifier.fillMaxWidth()) {
-                        Text("Freund hinzufügen")
+                    Button(
+                        onClick = { showAddFriendDialog = true },
+                        enabled = currentUser != null,
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        Text(text = "Freund hinzufügen")
                     }
                 } else {
                     Text("Facebook-Freunde anzeigen (kommt)")
@@ -90,17 +94,23 @@ fun FriendsDialog(
     if (showAddFriendDialog) {
         AddFriendDialog(
             onConfirm = { username ->
-                Log.d("AddFriend", "Button wurde geklickt mit Username: $username")
-                friendsViewModel.addFriendByUsername(username) {
-                    Log.d("AddFriend", "onSuccess wurde ausgelöst")
-                    showAddFriendDialog = false
-                    // Optional: Snackbar oder Toast
-                }
+                val myId = authViewModel.currentUserModel.value?.uid ?: return@AddFriendDialog
+
+                friendsViewModel.addFriendByUsername(
+                    myId = myId,
+                    username = username,
+                    onSuccess = {
+                        Log.d("AddFriend", "Freund wurde hinzugefügt")
+                        showAddFriendDialog = false
+                    },
+                    onError = {
+                        Log.e("AddFriend", "Freund konnte nicht hinzugefügt werden")
+                    }
+                )
             },
             onDismiss = { showAddFriendDialog = false }
         )
     }
-
 }
 
 

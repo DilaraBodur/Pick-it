@@ -42,6 +42,17 @@ fun AppStart(authViewModel: AuthViewModel) {
 
     val isLoading by authViewModel.isChecking.collectAsState()
     val showBottomBar = currentDestination in listOf("lobby", "shop", "inventory", "friends")
+
+    val friendsViewModel: FriendsViewModel = koinViewModel()
+
+    LaunchedEffect(authViewModel.currentUserModel.collectAsState().value) {
+        friendsViewModel.clearFriends()
+        val userId = authViewModel.currentUserModel.value?.uid
+        if (userId != null) {
+            friendsViewModel.startListeningToFriends(userId)
+        }
+    }
+
     val showFriendsDialog = remember { mutableStateOf(false) }
     if (showFriendsDialog.value) {
         FriendsDialog(
@@ -52,15 +63,6 @@ fun AppStart(authViewModel: AuthViewModel) {
     }
 
     val backgroundColor = Color(0xFF083A8C)
-
-    val friendsViewModel: FriendsViewModel = koinViewModel()
-    val currentUserId = authViewModel.currentUserModel.collectAsState().value?.uid
-
-    LaunchedEffect(currentUserId) {
-        currentUserId?.let {
-            friendsViewModel.startListeningToFriends()
-        }
-    }
 
     Box(
         modifier = Modifier

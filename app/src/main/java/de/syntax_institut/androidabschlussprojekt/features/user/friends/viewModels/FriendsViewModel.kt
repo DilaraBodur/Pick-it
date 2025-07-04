@@ -2,6 +2,7 @@ package de.syntax_institut.androidabschlussprojekt.features.user.friends.viewMod
 
 import android.app.Application
 import android.content.Intent
+import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.firebase.firestore.ListenerRegistration
@@ -26,28 +27,43 @@ class FriendsViewModel(
 
     private var listenerRegistration: ListenerRegistration? = null
 
-    init {
-        startListeningToFriends()
-    }
+    fun addFriendByUsername(
+        myId: String,
+        username: String,
+        onSuccess: () -> Unit,
+        onError: () -> Unit
+    ) {
+        viewModelScope.launch {
+            try {
+                userRepository.getUserByUsername(username) { friendUser ->
+                    val friendId = friendUser?.uid
 
-    fun addFriendByUsername(username: String, onSuccess: () -> Unit) {
-        userRepository.getUserByUsername(username) { friendUser ->
-            val myId = authViewModel.currentUserModel.value?.uid ?: return@getUserByUsername
-            val friendId = friendUser?.uid
+                    Log.d("AddFriend", "myId: $myId, friendId: $friendId")
 
-            if (friendId != null && myId != friendId) {
-                userRepository.addFriend(myId, friendId)
-                userRepository.addFriend(friendId, myId)
-
-                startListeningToFriends()
-
-                onSuccess()
+                    if (!friendId.isNullOrEmpty() && myId != friendId) {
+                        viewModelScope.launch {
+                            try {
+                                userRepository.addFriendBothWays(myId, friendId)
+                                onSuccess()
+                            } catch (e: Exception) {
+                                Log.e("AddFriend", "Fehler beim Speichern des Freundes", e)
+                                onError()
+                            }
+                        }
+                    } else {
+                        Log.e("AddFriend", "Freund konnte nicht hinzugefügt werden")
+                        onError()
+                    }
+                }
+            } catch (e: Exception) {
+                Log.e("AddFriend", "Fehler beim Laden des Freundes", e)
+                onError()
             }
         }
     }
 
-    fun startListeningToFriends() {
-        val userId = authViewModel.currentUserModel.value?.uid ?: return
+    fun startListeningToFriends(userId: String) {
+        listenerRegistration?.remove()
         listenerRegistration = friendsRepository.listenToPickItFriends(userId) { friends ->
             _pickItFriends.value = friends
         }
@@ -84,5 +100,10 @@ class FriendsViewModel(
     override fun onCleared() {
         super.onCleared()
         listenerRegistration?.remove()
+    }
+
+    fun clearFriends() {
+        listenerRegistration?.remove()
+        _pickItFriends.value = emptyList()
     }
 }

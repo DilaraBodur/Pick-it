@@ -35,9 +35,7 @@ fun AddFriendDialog(
             color = Color.White,
             modifier = Modifier.padding(16.dp)
         ) {
-            Column(
-                modifier = Modifier.padding(16.dp)
-            ) {
+            Column(modifier = Modifier.padding(16.dp)) {
                 Text(
                     text = "Freund hinzufügen",
                     style = MaterialTheme.typography.titleMedium
@@ -55,13 +53,13 @@ fun AddFriendDialog(
                 Spacer(modifier = Modifier.height(16.dp))
 
                 Button(
-                    onClick = {
-                        onConfirm(username.trim())
-                    },
+                    onClick = { onConfirm(username.trim()) },
                     modifier = Modifier.fillMaxWidth()
                 ) {
                     Text("Freund hinzufügen")
                 }
+
+                Spacer(modifier = Modifier.height(8.dp))
 
                 TextButton(
                     onClick = onDismiss,

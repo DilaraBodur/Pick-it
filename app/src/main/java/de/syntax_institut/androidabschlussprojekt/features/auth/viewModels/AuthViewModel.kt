@@ -7,11 +7,11 @@ import com.android.identity.util.UUID
 import com.facebook.AccessToken
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
+import de.syntax_institut.androidabschlussprojekt.features.auth.service.AuthService
 import de.syntax_institut.androidabschlussprojekt.features.user.data.models.User
-import de.syntax_institut.androidabschlussprojekt.features.user.remote.toUserModel
 import de.syntax_institut.androidabschlussprojekt.features.user.data.repositories.UserRepository
 import de.syntax_institut.androidabschlussprojekt.features.user.data.repositories.UsernameRepository
-import de.syntax_institut.androidabschlussprojekt.features.auth.service.AuthService
+import de.syntax_institut.androidabschlussprojekt.features.user.remote.toUserModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
@@ -33,6 +33,7 @@ class AuthViewModel(
     private val _currentUserModel = MutableStateFlow<User?>(null)
     val currentUserModel: StateFlow<User?> = _currentUserModel
 
+
     init {
         checkIfLoggedIn()
     }
@@ -45,7 +46,9 @@ class AuthViewModel(
 
             if (firebaseUser != null) {
                 val userModel = userRepository.getUserById(firebaseUser.uid)
-                _currentUserModel.value = userModel
+                _currentUserModel.value = null
+            } else {
+                _currentUserModel.value = null
             }
             _isChecking.value = false
         }
@@ -62,13 +65,13 @@ class AuthViewModel(
 
                 val countryCode = Locale.getDefault().country.lowercase()
 
-                val userModel = firebaseUser.toUserModel(
+                val userModel = firebaseUser?.toUserModel(
                     username = username,
                     fullName = username,
                     email = null,
                     countryCode = countryCode,
                     photoUrl = avatarUrl
-                )
+                ) ?: return@launch
 
                 userRepository.saveUser(userModel)
                 _currentUser.value = firebaseUser
@@ -229,6 +232,7 @@ class AuthViewModel(
     fun logout() {
         FirebaseAuth.getInstance().signOut()
         _currentUser.value = null
+        _currentUserModel.value = null
     }
 
     fun deleteAccount() {
