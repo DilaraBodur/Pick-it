@@ -46,7 +46,7 @@ class AuthViewModel(
 
             if (firebaseUser != null) {
                 val userModel = userRepository.getUserById(firebaseUser.uid)
-                _currentUserModel.value = null
+                _currentUserModel.value = userModel
             } else {
                 _currentUserModel.value = null
             }
@@ -104,12 +104,16 @@ class AuthViewModel(
 
                 val countryCode = Locale.getDefault().country.lowercase()
 
+                val existingUser = userRepository.getUserById(firebaseUser.uid)
+                val existingFriends = existingUser?.friends ?: emptyList()
+
                 val userModel = firebaseUser.toUserModel(
                     username = username,
                     fullName = fullName,
                     email = firebaseUser.email,
                     countryCode = countryCode,
-                    photoUrl = avatarUrl
+                    photoUrl = avatarUrl,
+                    friends = existingFriends
                 )
                 userRepository.saveUser(userModel)
                 _currentUser.value = firebaseUser
@@ -255,11 +259,9 @@ class AuthViewModel(
 
     fun updateUserProfile(name: String, countryCode: String, avatarSeed: String?) {
         viewModelScope.launch {
-            val currentUser = _currentUserModel.value
-            if (currentUser == null) {
-                Log.e("AuthViewModel", "updateUserProfile: Kein Benutzer angemeldet")
-                return@launch
-            }
+            val currentUser = _currentUserModel.value ?: return@launch
+
+            val existingUser = userRepository.getUserById(currentUser.uid) ?: return@launch
 
             try {
                 val newPhotoUrl = if (!avatarSeed.isNullOrBlank() && !avatarSeed.startsWith("https")) {
@@ -268,7 +270,7 @@ class AuthViewModel(
                     currentUser.photoUrl
                 }
 
-                val updatedUser = currentUser.copy(
+                val updatedUser = existingUser.copy(
                     username = name,
                     countryCode = countryCode,
                     photoUrl = newPhotoUrl
