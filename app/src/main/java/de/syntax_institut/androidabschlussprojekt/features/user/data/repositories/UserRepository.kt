@@ -89,4 +89,23 @@ class UserRepository {
             }
         }.await()
     }
+
+    suspend fun removeFriendBothWays(userId: String, friendId: String) {
+        val userRef = usersCollection.document(userId)
+        val friendRef = usersCollection.document(friendId)
+
+        FirebaseFirestore.getInstance().runTransaction { transaction ->
+            val userSnapshot = transaction.get(userRef)
+            val friendSnapshot = transaction.get(friendRef)
+
+            val userFriends = userSnapshot.get("friends") as? List<String> ?: emptyList()
+            val friendFriends = friendSnapshot.get("friends") as? List<String> ?: emptyList()
+
+            val updatedUserFriends = userFriends - friendId
+            val updatedFriendFriends = friendFriends - userId
+
+            transaction.update(userRef, "friends", updatedUserFriends)
+            transaction.update(friendRef, "friends", updatedFriendFriends)
+        }.await()
+    }
 }

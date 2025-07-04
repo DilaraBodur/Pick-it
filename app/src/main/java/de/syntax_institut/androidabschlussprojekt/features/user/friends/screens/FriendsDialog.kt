@@ -63,7 +63,9 @@ fun FriendsDialog(
                                 FriendListItem(
                                     friend = friend,
                                     friendsViewModel = friendsViewModel,
-                                    onRemove = { friendsViewModel.removeFriend(friend.uid) }
+                                    onRemove = {
+                                        friendsViewModel.removeFriend(friend.uid)
+                                    }
                                 )
                             }
                         }

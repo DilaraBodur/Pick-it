@@ -70,11 +70,16 @@ class FriendsViewModel(
     }
 
 
-
-    fun removeFriend(friendId: String) {
+    fun removeFriend(friendId: String, onResult: () -> Unit = {}) {
         val userId = authViewModel.currentUserModel.value?.uid ?: return
+
         viewModelScope.launch {
-            friendsRepository.removePickItFriend(userId, friendId)
+            try {
+                userRepository.removeFriendBothWays(userId, friendId)
+                onResult()
+            } catch (e: Exception) {
+                Log.e("RemoveFriend", "Fehler beim Entfernen des Freundes: ${e.message}")
+            }
         }
     }
 
