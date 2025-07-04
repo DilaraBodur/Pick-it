@@ -68,12 +68,35 @@ class GameViewModel(
         val highestCount = counts.firstOrNull() ?: 0
         val distinctCount = symbolCounts.size
 
+        val currentSymbol = _currentSymbols.value.firstOrNull() ?: return
+
         val points = when {
-            highestCount == 5 -> calculatePointsUseCase.calculatePoints(_currentSymbols.value.first(), 5, _currentRound.value)
-            highestCount == 4 -> calculatePointsUseCase.calculatePoints(_currentSymbols.value.first(), 4, _currentRound.value)
-            counts.contains(3) && counts.contains(2) -> 3000
-            distinctCount == 5 -> 3000
-            highestCount == 3 -> calculatePointsUseCase.calculatePoints(_currentSymbols.value.first(), 3, _currentRound.value)
+            highestCount == 5 -> calculatePointsUseCase.calculatePoints(
+                symbol = currentSymbol,
+                combinationType = "5er",
+                round = _currentRound.value
+            )
+            highestCount == 4 -> calculatePointsUseCase.calculatePoints(
+                symbol = currentSymbol,
+                combinationType = "4er",
+                round = _currentRound.value
+            )
+            counts.contains(3) && counts.contains(2) ->
+                calculatePointsUseCase.calculatePoints(
+                    symbol = currentSymbol,
+                    combinationType = "fullhouse",
+                    round = _currentRound.value
+                )
+            distinctCount == 5 -> calculatePointsUseCase.calculatePoints(
+                symbol = currentSymbol,
+                combinationType = "5verschiedene",
+                round = _currentRound.value
+            )
+            highestCount == 3 -> calculatePointsUseCase.calculatePoints(
+                symbol = currentSymbol,
+                combinationType = "3er",
+                round = _currentRound.value
+            )
             else -> 0
         }
 

@@ -2,17 +2,20 @@ package de.syntax_institut.androidabschlussprojekt.features.game.domain.usecases
 
 import de.syntax_institut.androidabschlussprojekt.features.game.data.models.Symbol
 
+
 class CalculatePointsUseCase {
 
-    fun calculatePoints(symbol: Symbol, sameSymbolCount: Int, round: Int): Int {
-        val basePoints = symbol.basePoints
-
-        val comboMultiplier = when (sameSymbolCount) {
-            2 -> 0.8
-            3 -> 1.0
-            4 -> 1.5
-            5 -> 2.0
-            else -> 0.0
+    fun calculatePoints(
+        symbol: Symbol,
+        combinationType: String,
+        round: Int
+    ): Int {
+        val specialPoints = when (combinationType.lowercase()) {
+            "4er" -> 3200
+            "5er" -> 4000
+            "fullhouse" -> 3000
+            "5verschiedene" -> 3000
+            else -> symbol.basePoints
         }
 
         val roundMultiplier = when (round) {
@@ -24,6 +27,6 @@ class CalculatePointsUseCase {
             else -> 1.0
         }
 
-        return (basePoints * comboMultiplier * roundMultiplier).toInt()
+        return (specialPoints * roundMultiplier).toInt()
     }
 }
