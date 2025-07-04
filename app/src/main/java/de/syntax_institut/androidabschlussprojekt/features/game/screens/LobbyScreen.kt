@@ -191,7 +191,9 @@ fun LobbyScreen(
             .padding(16.dp)
     ) {
         Row(
-            modifier = Modifier.fillMaxWidth().padding(8.dp),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(8.dp),
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
@@ -229,7 +231,13 @@ fun LobbyScreen(
                     GameModeCard(
                         title = mode,
                         backgroundColor = Color(0xFF1565C0),
-                        onClick = { /* TODO */ },
+                        onClick = {
+                            when (mode) {
+                                "Online" -> { /* TODO: Online implementieren */ }
+                                "2 vs 2" -> { /* TODO: 2 vs 2 implementieren */ }
+                                "Solo" -> navController.navigate("game_solo")
+                            }
+                        },
                         modifier = Modifier
                     )
                 }

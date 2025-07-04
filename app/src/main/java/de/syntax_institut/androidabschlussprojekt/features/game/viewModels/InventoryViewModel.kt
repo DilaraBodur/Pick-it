@@ -32,10 +32,17 @@ class InventoryViewModel(
     fun loadInventory() {
         viewModelScope.launch {
             val userId = authViewModel.currentUserModel.value?.uid ?: return@launch
-
             val allPackages = symbolsRepository.loadSymbols()
             val purchasedIds = userRepository.getPurchasedPackageIds(userId)
             _ownedPackages.value = allPackages.filter { it.packageId in purchasedIds }
+        }
+    }
+
+    fun updateActivePackage(packageId: String) {
+        val userId = authViewModel.currentUserModel.value?.uid ?: return
+        viewModelScope.launch {
+            userRepository.updateActivePackage(userId, packageId)
+            authViewModel.refreshUser()
         }
     }
 }

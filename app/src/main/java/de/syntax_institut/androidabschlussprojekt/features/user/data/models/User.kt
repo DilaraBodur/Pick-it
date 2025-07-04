@@ -16,5 +16,6 @@ data class User(
     val level: Int = 1,
     val totalPoints: Int = 0,
     val stats: PlayerStats = PlayerStats(),
-    val purchasedPackages: List<String> = emptyList()
+    val purchasedPackages: List<String> = emptyList(),
+    val activePackageId: String = "standard"
 )

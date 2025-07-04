@@ -6,6 +6,8 @@ import de.syntax_institut.androidabschlussprojekt.features.auth.service.AuthServ
 import de.syntax_institut.androidabschlussprojekt.features.auth.viewModels.AuthViewModel
 import de.syntax_institut.androidabschlussprojekt.features.game.data.remote.SymbolsApi
 import de.syntax_institut.androidabschlussprojekt.features.game.data.repositories.SymbolsRepository
+import de.syntax_institut.androidabschlussprojekt.features.game.domain.usecases.CalculatePointsUseCase
+import de.syntax_institut.androidabschlussprojekt.features.game.viewModels.GameViewModel
 import de.syntax_institut.androidabschlussprojekt.features.game.viewModels.InventoryViewModel
 import de.syntax_institut.androidabschlussprojekt.features.game.viewModels.ShopViewModel
 import de.syntax_institut.androidabschlussprojekt.features.user.data.repositories.UserRepository
@@ -24,6 +26,8 @@ val appModule = module {
     single { AuthService() }
     single { UserRepository() }
     single { FriendsRepository() }
+    single { SymbolsRepository(get()) }
+    single { CalculatePointsUseCase() }
 
     single {
         Moshi.Builder()
@@ -74,6 +78,10 @@ val appModule = module {
 
     viewModel {
         FriendsViewModel(get(), get(), get(), get())
+    }
+
+    viewModel {
+        GameViewModel(get(), get(), get(), get())
     }
 
 }

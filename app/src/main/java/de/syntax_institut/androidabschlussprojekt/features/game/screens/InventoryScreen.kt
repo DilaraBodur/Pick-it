@@ -34,6 +34,8 @@ import org.koin.androidx.compose.koinViewModel
 fun InventoryScreen(
     viewModel: InventoryViewModel = koinViewModel()
 ) {
+
+
     val packages by viewModel.ownedPackages.collectAsState()
 
     LaunchedEffect(Unit) {
@@ -71,11 +73,10 @@ fun InventoryScreen(
                             Spacer(Modifier.height(8.dp))
 
                             Button(
-                                onClick = { // TODO: Aktion zum verwenden hinzufügen
-                                },
+                                onClick = { viewModel.updateActivePackage(symbolPackage.packageId) },
                                 modifier = Modifier.align(Alignment.End)
                             ) {
-                                Text("Verwenden")
+                                Text(text = "Verwenden")
                             }
                         }
                     }
@@ -84,3 +85,4 @@ fun InventoryScreen(
         }
     }
 }
+

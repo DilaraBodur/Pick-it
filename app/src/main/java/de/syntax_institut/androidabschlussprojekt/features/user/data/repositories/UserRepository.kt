@@ -108,4 +108,9 @@ class UserRepository {
             transaction.update(friendRef, "friends", updatedFriendFriends)
         }.await()
     }
+
+    suspend fun updateActivePackage(userId: String, packageId: String) {
+        val userDoc = FirebaseFirestore.getInstance().collection("users").document(userId)
+        userDoc.update("activePackageId", packageId)
+    }
 }

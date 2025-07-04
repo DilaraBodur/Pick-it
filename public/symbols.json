@@ -4,12 +4,12 @@
     "name": "Standard" ,
     "price": 0,
     "symbols": [
-      { "id": 1, "emoji": "❤️", "name": "Herz" },
-      { "id": 2, "emoji": "👑", "name": "Krone" },
-      { "id": 3, "emoji": "🍀", "name": "Kleeblatt" },
-      { "id": 4, "emoji": "⭐️", "name": "Stern" },
-      { "id": 5, "emoji": "💎", "name": "Diamand" },
-      { "id": 6, "emoji": "🌙", "name": "Mond" }
+      { "id": 1, "emoji": "❤️", "name": "Herz", "basePoints": 300 },
+      { "id": 2, "emoji": "👑", "name": "Krone", "basePoints": 300 },
+      { "id": 3, "emoji": "🍀", "name": "Kleeblatt", "basePoints": 300 },
+      { "id": 4, "emoji": "⭐️", "name": "Stern", "basePoints": 300 },
+      { "id": 5, "emoji": "💎", "name": "Diamand", "basePoints": 300 },
+      { "id": 6, "emoji": "🌙", "name": "Mond", "basePoints": 300 }
     ]
   },
   {
@@ -17,12 +17,12 @@
     "name": "Tier",
     "price": 1.99,
     "symbols": [
-      { "id": 1, "emoji": "🐶", "name": "Hund" },
-      { "id": 2, "emoji": "🐱", "name": "Katze" },
-      { "id": 3, "emoji": "🐵", "name": "Affe" },
-      { "id": 4, "emoji": "🦁", "name": "Löwe" },
-      { "id": 5, "emoji": "🐰", "name": "Hase" },
-      { "id": 6, "emoji": "🐼", "name": "Panda" }
+      { "id": 1, "emoji": "🐶", "name": "Hund", "basePoints": 300 },
+      { "id": 2, "emoji": "🐱", "name": "Katze", "basePoints": 300 },
+      { "id": 3, "emoji": "🐵", "name": "Affe", "basePoints": 300 },
+      { "id": 4, "emoji": "🦁", "name": "Löwe", "basePoints": 300 },
+      { "id": 5, "emoji": "🐰", "name": "Hase", "basePoints": 300 },
+      { "id": 6, "emoji": "🐼", "name": "Panda", "basePoints": 300 }
     ]
   },
   {
@@ -30,12 +30,12 @@
     "name": "Emoji" ,
     "price": 1.99,
     "symbols": [
-      { "id": 1, "emoji": "😍", "name": "Lächelndes Gesicht mit Herzaugen" },
-      { "id": 2, "emoji": "😁", "name": "Strahlendes Gesicht mit lächelnden Augen" },
-      { "id": 3, "emoji": "😇", "name": "Lächelndes Gesicht mit Heiligenschein" },
-      { "id": 4, "emoji": "🥳", "name": "Party-Gesicht" },
-      { "id": 5, "emoji": "🤩", "name": "Gesicht mit sternförmigen Augen" },
-      { "id": 6, "emoji": "🤓", "name": "Lächelndes Gesicht mit Brille" }
+      { "id": 1, "emoji": "😍", "name": "Lächelndes Gesicht mit Herzaugen", "basePoints": 300 },
+      { "id": 2, "emoji": "😁", "name": "Strahlendes Gesicht mit lächelnden Augen", "basePoints": 300 },
+      { "id": 3, "emoji": "😇", "name": "Lächelndes Gesicht mit Heiligenschein", "basePoints": 300 },
+      { "id": 4, "emoji": "🥳", "name": "Party-Gesicht", "basePoints": 300 },
+      { "id": 5, "emoji": "🤩", "name": "Gesicht mit sternförmigen Augen", "basePoints": 300 },
+      { "id": 6, "emoji": "🤓", "name": "Lächelndes Gesicht mit Brille", "basePoints": 300 }
       ]
       },
       {
@@ -43,12 +43,12 @@
         "name": "Obst" ,
         "price": 1.99,
         "symbols": [
-          { "id": 1, "emoji": "🍎", "name": "Apfel" },
-          { "id": 2, "emoji": "🍉", "name": "Melone" },
-          { "id": 3, "emoji": "🍒", "name": "Kirsche" },
-          { "id": 4, "emoji": "🍇", "name": "Trauben" },
-          { "id": 5, "emoji": "🥑", "name": "Avocado" },
-          { "id": 6, "emoji": "🍓", "name": "Erdbeere" }
+          { "id": 1, "emoji": "🍎", "name": "Apfel", "basePoints": 300 },
+          { "id": 2, "emoji": "🍉", "name": "Melone", "basePoints": 300 },
+          { "id": 3, "emoji": "🍒", "name": "Kirsche", "basePoints": 300 },
+          { "id": 4, "emoji": "🍇", "name": "Trauben", "basePoints": 300 },
+          { "id": 5, "emoji": "🥑", "name": "Avocado", "basePoints": 300 },
+          { "id": 6, "emoji": "🍓", "name": "Erdbeere", "basePoints": 300 }
         ]
       },
       {
@@ -56,12 +56,12 @@
         "name": "Ball" ,
         "price": 1.99,
         "symbols": [
-          { "id": 1, "emoji": "⚽️", "name": "Fußball" },
-          { "id": 2, "emoji": "🏀", "name": "Basketball" },
-          { "id": 3, "emoji": "🏈", "name": "American Football" },
-          { "id": 4, "emoji": "⚾️", "name": "Baseball" },
-          { "id": 5, "emoji": "🎾", "name": "Tennisball" },
-          { "id": 6, "emoji": "🏐", "name": "Volleyball" }
+          { "id": 1, "emoji": "⚽️", "name": "Fußball", "basePoints": 300 },
+          { "id": 2, "emoji": "🏀", "name": "Basketball", "basePoints": 300 },
+          { "id": 3, "emoji": "🏈", "name": "American Football", "basePoints": 300 },
+          { "id": 4, "emoji": "⚾️", "name": "Baseball", "basePoints": 300 },
+          { "id": 5, "emoji": "🎾", "name": "Tennisball", "basePoints": 300 },
+          { "id": 6, "emoji": "🏐", "name": "Volleyball", "basePoints": 300 }
         ]
       },
       {
@@ -69,12 +69,12 @@
         "name": "Mix" ,
         "price": 2.49,
         "symbols": [
-          { "id": 1, "emoji": "🧿", "name": "Nazar" },
-          { "id": 2, "emoji": "🪬", "name": "Hamsa" },
-          { "id": 3, "emoji": "🔮", "name": "Glaskugel" },
-          { "id": 4, "emoji": "📿", "name": "Gebetsperlen" },
-          { "id": 5, "emoji": "🎀", "name": "Schleife" },
-          { "id": 6, "emoji": "💈", "name": "Friseurzunfzeichen" }
+          { "id": 1, "emoji": "🧿", "name": "Nazar", "basePoints": 300 },
+          { "id": 2, "emoji": "🪬", "name": "Hamsa", "basePoints": 300 },
+          { "id": 3, "emoji": "🔮", "name": "Glaskugel", "basePoints": 300 },
+          { "id": 4, "emoji": "📿", "name": "Gebetsperlen", "basePoints": 300 },
+          { "id": 5, "emoji": "🎀", "name": "Schleife", "basePoints": 300 },
+          { "id": 6, "emoji": "💈", "name": "Friseurzunfzeichen", "basePoints": 300 }
         ]
       },
       {
@@ -82,12 +82,12 @@
         "name": "Flagge" ,
         "price": 1.99,
         "symbols": [
-          { "id": 1, "emoji": "🇫🇷", "name": "Flagge von Frankreich" },
-          { "id": 2, "emoji": "🇩🇪", "name": "Flagge von Deutschland" },
-          { "id": 3, "emoji": "🇹🇷", "name": "Flagge der Türkei" },
-          { "id": 4, "emoji": "🇵🇹", "name": "Flagge von Portugal" },
-          { "id": 5, "emoji": "🇺🇸", "name": "Flagge der Vereinigten Staaten" },
-          { "id": 6, "emoji": "🇪🇸", "name": "Flagge von Spanien" }
+          { "id": 1, "emoji": "🇫🇷", "name": "Flagge von Frankreich", "basePoints": 300 },
+          { "id": 2, "emoji": "🇩🇪", "name": "Flagge von Deutschland", "basePoints": 300 },
+          { "id": 3, "emoji": "🇹🇷", "name": "Flagge der Türkei", "basePoints": 300 },
+          { "id": 4, "emoji": "🇵🇹", "name": "Flagge von Portugal", "basePoints": 300 },
+          { "id": 5, "emoji": "🇺🇸", "name": "Flagge der Vereinigten Staaten", "basePoints": 300 },
+          { "id": 6, "emoji": "🇪🇸", "name": "Flagge von Spanien", "basePoints": 300 }
         ]
       }
     ]

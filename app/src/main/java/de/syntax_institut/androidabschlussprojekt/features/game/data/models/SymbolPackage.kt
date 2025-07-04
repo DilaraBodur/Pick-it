@@ -14,5 +14,6 @@ data class SymbolPackage(
 data class Symbol(
     val id: Int,
     val emoji: String,
-    val name: String
+    val name: String,
+    val basePoints: Int
 )

@@ -290,4 +290,12 @@ class AuthViewModel(
             }
         }
     }
+
+    fun refreshUser() {
+        viewModelScope.launch {
+            val userId = currentUserModel.value?.uid ?: return@launch
+            val user = userRepository.getUserById(userId)
+            _currentUserModel.value = user
+        }
+    }
 }
