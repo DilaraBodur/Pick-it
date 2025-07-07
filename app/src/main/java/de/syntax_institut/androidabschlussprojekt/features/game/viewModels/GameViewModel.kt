@@ -3,6 +3,8 @@ package de.syntax_institut.androidabschlussprojekt.features.game.viewModels
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import de.syntax_institut.androidabschlussprojekt.features.auth.viewModels.AuthViewModel
+import de.syntax_institut.androidabschlussprojekt.features.game.data.models.MissionItem
+import de.syntax_institut.androidabschlussprojekt.features.game.data.models.MissionType
 import de.syntax_institut.androidabschlussprojekt.features.game.data.models.Symbol
 import de.syntax_institut.androidabschlussprojekt.features.game.data.models.SymbolPackage
 import de.syntax_institut.androidabschlussprojekt.features.game.data.repositories.SymbolsRepository
@@ -37,6 +39,9 @@ class GameViewModel(
     private val _gameFinished = MutableStateFlow(false)
     val gameFinished: StateFlow<Boolean> = _gameFinished
 
+    private val _missionItems = MutableStateFlow<List<MissionItem>>(emptyList())
+    val missionItems: StateFlow<List<MissionItem>> = _missionItems
+
     init {
         loadAllPackages()
     }
@@ -51,6 +56,17 @@ class GameViewModel(
     fun loadActivePackage() {
         val activePackageId = authViewModel.currentUserModel.value?.activePackageId ?: "standard"
         _selectedPackage.value = _allPackages.value.find { it.packageId == activePackageId }
+
+        val symbols = _selectedPackage.value?.symbols.orEmpty()
+        _missionItems.value = symbols.map { symbol ->
+            MissionItem(
+                id = symbol.id.toString(),
+                type = MissionType.THREE,
+                symbol = symbol,
+                isCompleted = false
+            )
+        }
+
         spinSymbols()
     }
 
@@ -65,10 +81,9 @@ class GameViewModel(
         val symbolCounts = _currentSymbols.value.groupingBy { it.id }.eachCount()
         val counts = symbolCounts.values.sortedDescending()
 
+        val currentSymbol = _currentSymbols.value.firstOrNull() ?: return
         val highestCount = counts.firstOrNull() ?: 0
         val distinctCount = symbolCounts.size
-
-        val currentSymbol = _currentSymbols.value.firstOrNull() ?: return
 
         val points = when {
             highestCount == 5 -> calculatePointsUseCase.calculatePoints(
@@ -76,31 +91,42 @@ class GameViewModel(
                 combinationType = "5er",
                 round = _currentRound.value
             )
+
             highestCount == 4 -> calculatePointsUseCase.calculatePoints(
                 symbol = currentSymbol,
                 combinationType = "4er",
                 round = _currentRound.value
             )
-            counts.contains(3) && counts.contains(2) ->
-                calculatePointsUseCase.calculatePoints(
-                    symbol = currentSymbol,
-                    combinationType = "fullhouse",
-                    round = _currentRound.value
-                )
+
+            counts.contains(3) && counts.contains(2) -> calculatePointsUseCase.calculatePoints(
+                symbol = currentSymbol,
+                combinationType = "fullhouse",
+                round = _currentRound.value
+            )
+
             distinctCount == 5 -> calculatePointsUseCase.calculatePoints(
                 symbol = currentSymbol,
                 combinationType = "5verschiedene",
                 round = _currentRound.value
             )
-            highestCount == 3 -> calculatePointsUseCase.calculatePoints(
-                symbol = currentSymbol,
-                combinationType = "3er",
-                round = _currentRound.value
-            )
+
+            highestCount == 3 -> {
+                val symbolId = currentSymbol.id
+                _missionItems.value = _missionItems.value.map { mission ->
+                    if (mission.symbol?.id == symbolId) mission.copy(isCompleted = true) else mission
+                }
+
+                calculatePointsUseCase.calculatePoints(
+                    symbol = currentSymbol,
+                    combinationType = "3er",
+                    round = _currentRound.value
+                )
+            }
+
             else -> 0
         }
 
-        _totalPoints.value += points
+        _totalPoints.value = points
     }
 
     fun nextRound() {

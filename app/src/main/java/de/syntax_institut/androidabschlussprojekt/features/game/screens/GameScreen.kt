@@ -24,7 +24,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import androidx.navigation.compose.rememberNavController
 import de.syntax_institut.androidabschlussprojekt.features.game.viewModels.GameViewModel
 import org.koin.androidx.compose.koinViewModel
 
