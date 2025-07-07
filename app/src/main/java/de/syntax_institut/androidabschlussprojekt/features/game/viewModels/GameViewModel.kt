@@ -42,6 +42,9 @@ class GameViewModel(
     private val _missionItems = MutableStateFlow<List<MissionItem>>(emptyList())
     val missionItems: StateFlow<List<MissionItem>> = _missionItems
 
+    private val _currentReels = MutableStateFlow<List<List<Symbol>>>(emptyList())
+    val currentReels: StateFlow<List<List<Symbol>>> = _currentReels
+
     init {
         loadAllPackages()
     }
@@ -67,21 +70,30 @@ class GameViewModel(
             )
         }
 
-        spinSymbols()
+        spinReels()
     }
 
-    fun spinSymbols() {
+    fun spinReels() {
         val symbols = _selectedPackage.value?.symbols.orEmpty()
         if (symbols.isNotEmpty()) {
-            _currentSymbols.value = List(5) { symbols.random() }
+            val newReels = List(5) {
+                List(3) { symbols.random() }
+            }
+            _currentReels.value = newReels
         }
     }
 
     fun evaluateCombination() {
-        val symbolCounts = _currentSymbols.value.groupingBy { it.id }.eachCount()
+        val currentSymbols = _currentReels.value.mapNotNull { reel ->
+            reel.getOrNull(1)
+        }
+
+        if (currentSymbols.isEmpty()) return
+
+        val symbolCounts = currentSymbols.groupingBy { it.id }.eachCount()
         val counts = symbolCounts.values.sortedDescending()
 
-        val currentSymbol = _currentSymbols.value.firstOrNull() ?: return
+        val currentSymbol = currentSymbols.firstOrNull() ?: return
         val highestCount = counts.firstOrNull() ?: 0
         val distinctCount = symbolCounts.size
 
@@ -91,38 +103,26 @@ class GameViewModel(
                 combinationType = "5er",
                 round = _currentRound.value
             )
-
             highestCount == 4 -> calculatePointsUseCase.calculatePoints(
                 symbol = currentSymbol,
                 combinationType = "4er",
                 round = _currentRound.value
             )
-
             counts.contains(3) && counts.contains(2) -> calculatePointsUseCase.calculatePoints(
                 symbol = currentSymbol,
                 combinationType = "fullhouse",
                 round = _currentRound.value
             )
-
             distinctCount == 5 -> calculatePointsUseCase.calculatePoints(
                 symbol = currentSymbol,
                 combinationType = "5verschiedene",
                 round = _currentRound.value
             )
-
-            highestCount == 3 -> {
-                val symbolId = currentSymbol.id
-                _missionItems.value = _missionItems.value.map { mission ->
-                    if (mission.symbol?.id == symbolId) mission.copy(isCompleted = true) else mission
-                }
-
-                calculatePointsUseCase.calculatePoints(
-                    symbol = currentSymbol,
-                    combinationType = "3er",
-                    round = _currentRound.value
-                )
-            }
-
+            highestCount == 3 -> calculatePointsUseCase.calculatePoints(
+                symbol = currentSymbol,
+                combinationType = "3er",
+                round = _currentRound.value
+            )
             else -> 0
         }
 
@@ -132,7 +132,7 @@ class GameViewModel(
     fun nextRound() {
         if (_currentRound.value < 5) {
             _currentRound.value += 1
-            spinSymbols()
+            spinReels()
         } else {
             _gameFinished.value = true
         }
@@ -141,6 +141,6 @@ class GameViewModel(
     fun resetGame() {
         _currentRound.value = 1
         _totalPoints.value = 0
-        spinSymbols()
+        spinReels()
     }
 }
