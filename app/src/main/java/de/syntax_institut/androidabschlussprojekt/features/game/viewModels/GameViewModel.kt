@@ -57,18 +57,72 @@ class GameViewModel(
     }
 
     fun loadActivePackage() {
-        val activePackageId = authViewModel.currentUserModel.value?.activePackageId ?: "standard"
+        val activePackageId = authViewModel.currentUserModel.value?.activePackageId ?: "Standard"
         _selectedPackage.value = _allPackages.value.find { it.packageId == activePackageId }
 
         val symbols = _selectedPackage.value?.symbols.orEmpty()
-        _missionItems.value = symbols.map { symbol ->
-            MissionItem(
-                id = symbol.id.toString(),
-                type = MissionType.THREE,
-                symbol = symbol,
-                isCompleted = false
+
+        val generatedMissions = mutableListOf<MissionItem>()
+
+        symbols.take(6).forEachIndexed { index, symbol ->
+            generatedMissions.add(
+                MissionItem(
+                    id = "three_$index",
+                    type = MissionType.THREE,
+                    symbol = symbol,
+                    isCompleted = false
+                )
             )
         }
+
+        repeat(2) { index ->
+            generatedMissions.add(
+                MissionItem(
+                    id = "joker_$index",
+                    type = MissionType.JOKER,
+                    symbol = symbols.getOrNull(index) ?: symbols.firstOrNull() ?: Symbol(id = 0, emoji = "❓", name = "?", basePoints = 0),
+                    isCompleted = false
+                )
+            )
+        }
+
+        generatedMissions.add(
+            MissionItem(
+                id = "fullhouse",
+                type = MissionType.FULLHOUSE,
+                symbol = symbols.firstOrNull() ?: Symbol(id = 0, emoji = "❓", name = "?", basePoints = 0),
+                isCompleted = false
+            )
+        )
+
+        generatedMissions.add(
+            MissionItem(
+                id = "five_diff",
+                type = MissionType.FIVE_DIFF,
+                symbol = symbols.firstOrNull() ?: Symbol(id = 0, emoji = "❓", name = "?", basePoints = 0),
+                isCompleted = false
+            )
+        )
+
+        generatedMissions.add(
+            MissionItem(
+                id = "four",
+                type = MissionType.FOUR,
+                symbol = symbols.firstOrNull() ?: Symbol(id = 0, emoji = "❓", name = "?", basePoints = 0),
+                isCompleted = false
+            )
+        )
+
+        generatedMissions.add(
+            MissionItem(
+                id = "five",
+                type = MissionType.FIVE,
+                symbol = symbols.firstOrNull() ?: Symbol(id = 0, emoji = "❓", name = "?", basePoints = 0),
+                isCompleted = false
+            )
+        )
+
+        _missionItems.value = generatedMissions
 
         spinReels()
     }

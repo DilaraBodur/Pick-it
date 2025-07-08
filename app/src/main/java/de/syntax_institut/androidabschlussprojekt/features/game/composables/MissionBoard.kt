@@ -1,7 +1,10 @@
 package de.syntax_institut.androidabschlussprojekt.features.game.composables
 
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -21,38 +24,51 @@ import de.syntax_institut.androidabschlussprojekt.features.game.data.models.Symb
 import de.syntax_institut.androidabschlussprojekt.features.game.viewModels.GameViewModel
 
 @Composable
-fun MissionBoard(viewModel: GameViewModel) {
+fun MissionBoard(viewModel: GameViewModel, modifier: Modifier = Modifier) {
     val missions = viewModel.missionItems.collectAsState().value
 
+    val missionTypes = listOf(
+        MissionType.THREE,
+        MissionType.JOKER,
+        MissionType.FULLHOUSE,
+        MissionType.FIVE_DIFF,
+        MissionType.FOUR,
+        MissionType.FIVE
+    )
+
     Card(
-        modifier = Modifier
-            .padding(8.dp)
-            .fillMaxWidth(),
+        modifier = modifier,
         shape = RoundedCornerShape(12.dp),
         colors = CardDefaults.cardColors(containerColor = Color(0xFF4B007D))
     ) {
         Column(
-            modifier = Modifier.padding(12.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(12.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.SpaceEvenly
         ) {
-            missions.filter { it.type == MissionType.THREE }
-                .chunked(2).forEach { rowItems ->
-                    MissionRow(rowItems)
+            missionTypes.forEach { type ->
+                val filtered = missions.filter { it.type == type }
+                if (filtered.isNotEmpty()) {
+                    filtered.chunked(2).forEach { rowItems ->
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth(),
+                            horizontalArrangement = Arrangement.spacedBy(8.dp),
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            rowItems.forEach { mission ->
+                                MissionItemBox(
+                                    mission = mission,
+                                    modifier = Modifier
+                                        .weight(1f)
+                                )
+                            }
+                        }
+                    }
                 }
-
-            Spacer(Modifier.height(8.dp))
-
-            missions.filter { it.type == MissionType.JOKER }
-                .chunked(2).forEach { rowItems ->
-                    MissionRow(rowItems)
-                }
-
-            Spacer(Modifier.height(8.dp))
-
-            missions.filter { it.type !in listOf(MissionType.THREE, MissionType.JOKER) }
-                .chunked(2).forEach { rowItems ->
-                    MissionRow(rowItems)
-                }
+            }
         }
     }
 }
@@ -75,7 +91,6 @@ fun MissionBoardPreview() {
         MissionItem("fourer", MissionType.FOUR, null, false),
         MissionItem("fiver", MissionType.FIVE, null, false),
     )
-
     Card(
         modifier = Modifier
             .padding(16.dp)

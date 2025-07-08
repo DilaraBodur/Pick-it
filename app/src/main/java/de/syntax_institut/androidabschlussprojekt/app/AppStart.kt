@@ -22,7 +22,7 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import de.syntax_institut.androidabschlussprojekt.composables.BottomNavBar
 import de.syntax_institut.androidabschlussprojekt.features.auth.viewModels.AuthViewModel
-import de.syntax_institut.androidabschlussprojekt.features.game.screens.GameScreen
+import de.syntax_institut.androidabschlussprojekt.features.game.composables.GameBoardScreen
 import de.syntax_institut.androidabschlussprojekt.features.game.screens.InventoryScreen
 import de.syntax_institut.androidabschlussprojekt.features.game.screens.LoadingScreen
 import de.syntax_institut.androidabschlussprojekt.features.game.screens.LobbyScreen
@@ -105,7 +105,7 @@ fun AppStart(authViewModel: AuthViewModel) {
                     }
 
                     composable("game_solo") {
-                        GameScreen(navController = navController)
+                        GameBoardScreen(viewModel = koinViewModel(), onExit = { navController.navigate("lobby") { popUpTo("lobby") { inclusive = true } } })
                     }
                 }
             }
