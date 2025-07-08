@@ -36,7 +36,7 @@ fun GameBoardScreen(
         ) {
             Column(
                 modifier = Modifier
-                    .weight(0.7f)
+                    .weight(0.6f)
                     .fillMaxHeight(),
                 verticalArrangement = Arrangement.SpaceBetween
             ) {
@@ -62,7 +62,7 @@ fun GameBoardScreen(
             MissionBoard(
                 viewModel = viewModel,
                 modifier = Modifier
-                    .weight(0.3f)
+                    .weight(0.4f)
                     .fillMaxHeight()
             )
         }

@@ -40,7 +40,7 @@ fun SlotComposableWithReels(viewModel: GameViewModel, modifier: Modifier = Modif
                     verticalArrangement = Arrangement.SpaceEvenly,
                     horizontalAlignment = Alignment.CenterHorizontally,
                     modifier = Modifier
-                        .aspectRatio(0.6f)
+                        .aspectRatio(0.5f)
                         .background(Color(0xFF222222), RoundedCornerShape(8.dp))
                         .padding(8.dp)
                 ) {
