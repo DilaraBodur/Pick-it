@@ -11,7 +11,11 @@ import de.syntax_institut.androidabschlussprojekt.features.game.data.repositorie
 import de.syntax_institut.androidabschlussprojekt.features.game.domain.usecases.CalculatePointsUseCase
 import de.syntax_institut.androidabschlussprojekt.features.user.data.repositories.UserRepository
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
 class GameViewModel(
@@ -44,6 +48,22 @@ class GameViewModel(
 
     private val _currentReels = MutableStateFlow<List<List<Symbol>>>(emptyList())
     val currentReels: StateFlow<List<List<Symbol>>> = _currentReels
+
+    private val _currentPoints = MutableStateFlow(0)
+    val currentPoints: StateFlow<Int> = _currentPoints
+
+    private val _requiredPoints = MutableStateFlow(10000)
+    val requiredPoints: StateFlow<Int> = _requiredPoints
+
+    private val _timeProgress = MutableStateFlow(1f)
+    val timeProgress: StateFlow<Float> = _timeProgress.asStateFlow()
+
+    private val _bonusProgress = MutableStateFlow(0f)
+    val bonusProgress: StateFlow<Float> =
+        combine(_currentPoints, _requiredPoints) { current, required ->
+            (current.toFloat() / required.toFloat()).coerceIn(0f, 1f)
+        }.stateIn(viewModelScope, SharingStarted.Eagerly, 0f)
+
 
     init {
         loadAllPackages()
@@ -80,7 +100,12 @@ class GameViewModel(
                 MissionItem(
                     id = "joker_$index",
                     type = MissionType.JOKER,
-                    symbol = symbols.getOrNull(index) ?: symbols.firstOrNull() ?: Symbol(id = 0, emoji = "❓", name = "?", basePoints = 0),
+                    symbol = symbols.getOrNull(index) ?: symbols.firstOrNull() ?: Symbol(
+                        id = 0,
+                        emoji = "❓",
+                        name = "?",
+                        basePoints = 0
+                    ),
                     isCompleted = false
                 )
             )
@@ -90,7 +115,12 @@ class GameViewModel(
             MissionItem(
                 id = "fullhouse",
                 type = MissionType.FULLHOUSE,
-                symbol = symbols.firstOrNull() ?: Symbol(id = 0, emoji = "❓", name = "?", basePoints = 0),
+                symbol = symbols.firstOrNull() ?: Symbol(
+                    id = 0,
+                    emoji = "❓",
+                    name = "?",
+                    basePoints = 0
+                ),
                 isCompleted = false
             )
         )
@@ -99,7 +129,12 @@ class GameViewModel(
             MissionItem(
                 id = "five_diff",
                 type = MissionType.FIVE_DIFF,
-                symbol = symbols.firstOrNull() ?: Symbol(id = 0, emoji = "❓", name = "?", basePoints = 0),
+                symbol = symbols.firstOrNull() ?: Symbol(
+                    id = 0,
+                    emoji = "❓",
+                    name = "?",
+                    basePoints = 0
+                ),
                 isCompleted = false
             )
         )
@@ -108,7 +143,12 @@ class GameViewModel(
             MissionItem(
                 id = "four",
                 type = MissionType.FOUR,
-                symbol = symbols.firstOrNull() ?: Symbol(id = 0, emoji = "❓", name = "?", basePoints = 0),
+                symbol = symbols.firstOrNull() ?: Symbol(
+                    id = 0,
+                    emoji = "❓",
+                    name = "?",
+                    basePoints = 0
+                ),
                 isCompleted = false
             )
         )
@@ -117,7 +157,12 @@ class GameViewModel(
             MissionItem(
                 id = "five",
                 type = MissionType.FIVE,
-                symbol = symbols.firstOrNull() ?: Symbol(id = 0, emoji = "❓", name = "?", basePoints = 0),
+                symbol = symbols.firstOrNull() ?: Symbol(
+                    id = 0,
+                    emoji = "❓",
+                    name = "?",
+                    basePoints = 0
+                ),
                 isCompleted = false
             )
         )
@@ -135,6 +180,29 @@ class GameViewModel(
             }
             _currentReels.value = newReels
         }
+    }
+
+    fun updatePoints(newPoints: Int) {
+        _currentPoints.value = newPoints
+    }
+
+    fun updateRequiredPoints(newRequired: Int) {
+        _requiredPoints.value = newRequired
+    }
+
+    fun increaseBonusProgress(points: Float) {
+        val newProgress = (_bonusProgress.value + points).coerceIn(0f, 1f)
+        _bonusProgress.value = newProgress
+    }
+
+    fun decreaseTimeProgress(step: Float) {
+        val newProgress = (_timeProgress.value - step).coerceIn(0f, 1f)
+        _timeProgress.value = newProgress
+    }
+
+    fun resetProgress() {
+        _timeProgress.value = 1f
+        _bonusProgress.value = 0f
     }
 
     fun evaluateCombination() {
@@ -157,31 +225,37 @@ class GameViewModel(
                 combinationType = "5er",
                 round = _currentRound.value
             )
+
             highestCount == 4 -> calculatePointsUseCase.calculatePoints(
                 symbol = currentSymbol,
                 combinationType = "4er",
                 round = _currentRound.value
             )
+
             counts.contains(3) && counts.contains(2) -> calculatePointsUseCase.calculatePoints(
                 symbol = currentSymbol,
                 combinationType = "fullhouse",
                 round = _currentRound.value
             )
+
             distinctCount == 5 -> calculatePointsUseCase.calculatePoints(
                 symbol = currentSymbol,
                 combinationType = "5verschiedene",
                 round = _currentRound.value
             )
+
             highestCount == 3 -> calculatePointsUseCase.calculatePoints(
                 symbol = currentSymbol,
                 combinationType = "3er",
                 round = _currentRound.value
             )
+
             else -> 0
         }
 
         _totalPoints.value = points
     }
+
 
     fun nextRound() {
         if (_currentRound.value < 5) {
@@ -198,3 +272,6 @@ class GameViewModel(
         spinReels()
     }
 }
+
+
+
