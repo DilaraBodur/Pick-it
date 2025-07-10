@@ -311,49 +311,65 @@ class GameViewModel(
 
         val symbolCounts = currentSymbols.groupingBy { it.id }.eachCount()
         val distinctCount = symbolCounts.size
-        val highestCount = symbolCounts.values.maxOrNull() ?: 0
+        val maxCount = symbolCounts.values.maxOrNull() ?: 0
 
         val updatedMissions = _missionItems.value.map { mission ->
 
             when (mission.type) {
-                MissionType.THREE -> {
-                    val count = symbolCounts[mission.symbol?.id] ?: 0
-                    if (count >= 3 && !mission.isCompleted) {
-                        mission.copy(
-                            isCompleted = true,
-                            basePoints = calculatePointsUseCase.calculatePoints(
-                                symbol = mission.symbol!!,
-                                combinationType = "3er",
-                                round = _currentRound.value
-                            )
-                        )
-                    } else mission
-                }
-
-                MissionType.FOUR -> {
-                    val maxCount = symbolCounts.values.maxOrNull() ?: 0
-                    if (maxCount >= 4 && !mission.isCompleted) {
-                        mission.copy(
-                            isCompleted = true,
-                            basePoints = calculatePointsUseCase.calculatePoints(
-                                symbol = mission.symbol ?: currentSymbols.first(),
-                                combinationType = "4er",
-                                round = _currentRound.value
-                            )
-                        )
-                    } else mission
-                }
 
                 MissionType.FIVE -> {
-                    val maxCount = symbolCounts.values.maxOrNull() ?: 0
-                    if (maxCount >= 5 && !mission.isCompleted) {
+                    val count = symbolCounts[mission.symbol?.id] ?: 0
+                    if (count >= 5 && !mission.isCompleted) {
                         mission.copy(
                             isCompleted = true,
                             basePoints = calculatePointsUseCase.calculatePoints(
                                 symbol = mission.symbol ?: currentSymbols.first(),
                                 combinationType = "5er",
                                 round = _currentRound.value
-                            )
+                            ),
+                            symbol = mission.symbol ?: currentSymbols.first(),
+                            combinationType = "5er",
+                            round = _currentRound.value
+                        )
+                    } else mission
+                }
+
+                MissionType.FOUR -> {
+                    val count = symbolCounts[mission.symbol?.id] ?: 0
+                    if (count >= 4 && !mission.isCompleted) {
+                        val combination = if (count >= 5) "5er" else "4er"
+                        mission.copy(
+                            isCompleted = true,
+                            basePoints = calculatePointsUseCase.calculatePoints(
+                                symbol = mission.symbol ?: currentSymbols.first(),
+                                combinationType = combination,
+                                round = _currentRound.value
+                            ),
+                            symbol = mission.symbol ?: currentSymbols.first(),
+                            combinationType = combination,
+                            round = _currentRound.value
+                        )
+                    } else mission
+                }
+
+                MissionType.THREE -> {
+                    val count = symbolCounts[mission.symbol?.id] ?: 0
+                    if (count >= 3 && !mission.isCompleted) {
+                        val combination = when {
+                            count >= 5 -> "5er"
+                            count >= 4 -> "4er"
+                            else -> "3er"
+                        }
+                        mission.copy(
+                            isCompleted = true,
+                            basePoints = calculatePointsUseCase.calculatePoints(
+                                symbol = mission.symbol!!,
+                                combinationType = combination,
+                                round = _currentRound.value
+                            ),
+                            symbol = mission.symbol,
+                            combinationType = combination,
+                            round = _currentRound.value
                         )
                     } else mission
                 }
@@ -366,7 +382,10 @@ class GameViewModel(
                                 symbol = mission.symbol ?: currentSymbols.first(),
                                 combinationType = "fullhouse",
                                 round = _currentRound.value
-                            )
+                            ),
+                            symbol = mission.symbol ?: currentSymbols.first(),
+                            combinationType = "fullhouse",
+                            round = _currentRound.value
                         )
                     } else mission
                 }
@@ -379,73 +398,58 @@ class GameViewModel(
                                 symbol = mission.symbol ?: currentSymbols.first(),
                                 combinationType = "5verschiedene",
                                 round = _currentRound.value
-                            )
+                            ),
+                            symbol = mission.symbol ?: currentSymbols.first(),
+                            combinationType = "5verschiedene",
+                            round = _currentRound.value
                         )
                     } else mission
                 }
 
                 MissionType.JOKER -> {
                     if (!mission.isCompleted) {
-                        var jokerPoints: Int
-                        var combinationType: String
+                        val (jokerPoints, combinationType) = when {
+                            maxCount >= 5 -> calculatePointsUseCase.calculatePoints(
+                                symbol = currentSymbols.firstOrNull() ?: mission.symbol!!,
+                                combinationType = "5er",
+                                round = _currentRound.value
+                            ) to "5er"
 
-                        when {
-                            (symbolCounts.values.maxOrNull() ?: 0) >= 5 -> {
-                                jokerPoints = calculatePointsUseCase.calculatePoints(
-                                    symbol = currentSymbols.firstOrNull() ?: mission.symbol!!,
-                                    combinationType = "5er",
-                                    round = _currentRound.value
-                                )
-                                combinationType = "5er"
-                            }
-                            (symbolCounts.values.maxOrNull() ?: 0) >= 4 -> {
-                                jokerPoints = calculatePointsUseCase.calculatePoints(
-                                    symbol = currentSymbols.firstOrNull() ?: mission.symbol!!,
-                                    combinationType = "4er",
-                                    round = _currentRound.value
-                                )
-                                combinationType = "4er"
-                            }
-                            symbolCounts.values.contains(3) && symbolCounts.values.contains(2) -> {
-                                jokerPoints = calculatePointsUseCase.calculatePoints(
-                                    symbol = currentSymbols.firstOrNull() ?: mission.symbol!!,
-                                    combinationType = "fullhouse",
-                                    round = _currentRound.value
-                                )
-                                combinationType = "fullhouse"
-                            }
-                            (symbolCounts.values.maxOrNull() ?: 0) >= 3 -> {
-                                jokerPoints = calculatePointsUseCase.calculatePoints(
-                                    symbol = currentSymbols.firstOrNull() ?: mission.symbol!!,
-                                    combinationType = "3er",
-                                    round = _currentRound.value
-                                )
-                                combinationType = "3er"
-                            }
-                            distinctCount >= 5 -> {
-                                jokerPoints = calculatePointsUseCase.calculatePoints(
-                                    symbol = currentSymbols.firstOrNull() ?: mission.symbol!!,
-                                    combinationType = "5verschiedene",
-                                    round = _currentRound.value
-                                )
-                                combinationType = "5verschiedene"
-                            }
-                            else -> {
-                                jokerPoints = calculatePointsUseCase.calculateJokerPoints(_currentRound.value)
-                                combinationType = "Joker"
-                            }
+                            maxCount >= 4 -> calculatePointsUseCase.calculatePoints(
+                                symbol = currentSymbols.firstOrNull() ?: mission.symbol!!,
+                                combinationType = "4er",
+                                round = _currentRound.value
+                            ) to "4er"
+
+                            symbolCounts.values.contains(3) && symbolCounts.values.contains(2) -> calculatePointsUseCase.calculatePoints(
+                                symbol = currentSymbols.firstOrNull() ?: mission.symbol!!,
+                                combinationType = "fullhouse",
+                                round = _currentRound.value
+                            ) to "fullhouse"
+
+                            maxCount >= 3 -> calculatePointsUseCase.calculatePoints(
+                                symbol = currentSymbols.firstOrNull() ?: mission.symbol!!,
+                                combinationType = "3er",
+                                round = _currentRound.value
+                            ) to "3er"
+
+                            distinctCount >= 5 -> calculatePointsUseCase.calculatePoints(
+                                symbol = currentSymbols.firstOrNull() ?: mission.symbol!!,
+                                combinationType = "5verschiedene",
+                                round = _currentRound.value
+                            ) to "5verschiedene"
+
+                            else -> calculatePointsUseCase.calculateJokerPoints(_currentRound.value) to "Joker"
                         }
 
                         mission.copy(
                             isCompleted = true,
                             basePoints = jokerPoints,
-                            symbol = mission.symbol,
+                            symbol = mission.symbol ?: currentSymbols.firstOrNull(),
                             combinationType = combinationType,
                             round = _currentRound.value
                         )
-                    } else {
-                        mission
-                    }
+                    } else mission
                 }
             }
         }
