@@ -42,18 +42,25 @@ fun SlotComposableWithReels(viewModel: GameViewModel, modifier: Modifier = Modif
             horizontalArrangement = Arrangement.SpaceEvenly,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            currentReels.forEach { reel ->
+            currentReels.forEachIndexed { index, reel ->
+                val isHeld = viewModel.heldSymbols.collectAsState().value.contains(index)
+
                 if (isSpinning) {
                     SpinningReel(
                         symbols = reel,
                         isSpinning = true,
-                        spinDuration = 3000
+                        spinDuration = 3000,
+                        isHeld = isHeld,
+                        onToggleHold = { viewModel.toggleHold(index) }
                     )
                 } else {
-                    SlotReel(reelSymbols = reel)
+                    SlotReel(
+                        reelSymbols = reel,
+                        isHeld = isHeld,
+                        onToggleHold = { viewModel.toggleHold(index) }
+                    )
                 }
             }
         }
-
     }
 }

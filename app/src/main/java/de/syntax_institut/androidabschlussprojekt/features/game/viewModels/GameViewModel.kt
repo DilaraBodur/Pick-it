@@ -76,8 +76,23 @@ class GameViewModel(
     private var totalTimeMs: Long = 120_000L
     private var intervalMs: Long = 100L
 
+    private val _heldSymbols = MutableStateFlow<Set<Int>>(emptySet())
+    val heldSymbols: StateFlow<Set<Int>> = _heldSymbols
+
+
+
     init {
         loadAllPackages()
+    }
+
+    fun toggleHold(index: Int) {
+        val current = _heldSymbols.value.toMutableSet()
+        if (current.contains(index)) {
+            current.remove(index)
+        } else {
+            current.add(index)
+        }
+        _heldSymbols.value = current
     }
 
     fun startSpin() {
@@ -89,11 +104,17 @@ class GameViewModel(
         }
     }
 
-    fun spinReels() {
+    private fun spinReels() {
         val symbols = _selectedPackage.value?.symbols.orEmpty()
         if (symbols.isNotEmpty()) {
-            val newReels = List(5) {
-                List(3) { symbols.random() }
+            val held = _heldSymbols.value
+
+            val newReels = List(size = 5) { index ->
+                if (held.contains(index)) {
+                    _currentReels.value.getOrNull(index) ?: List(3) { symbols.random() }
+                } else {
+                    List(3) { symbols.random() }
+                }
             }
             _currentReels.value = newReels
         }
@@ -106,7 +127,7 @@ class GameViewModel(
         }
     }
 
-    fun loadActivePackage() {
+    private fun loadActivePackage() {
         val activePackageId = authViewModel.currentUserModel.value?.activePackageId ?: "Standard"
         _selectedPackage.value = _allPackages.value.find { it.packageId == activePackageId }
 

@@ -1,7 +1,10 @@
 package de.syntax_institut.androidabschlussprojekt.features.game.composables
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.width
@@ -17,14 +20,25 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import de.syntax_institut.androidabschlussprojekt.features.game.data.models.Symbol
 
+
 @Composable
-fun SlotReel(reelSymbols: List<Symbol>) {
+fun SlotReel(
+    reelSymbols: List<Symbol>,
+    isHeld: Boolean,
+    onToggleHold: () -> Unit
+) {
     Box(
         modifier = Modifier
             .width(90.dp)
             .height(150.dp)
             .clip(RoundedCornerShape(12.dp))
             .background(Color(0xFF222222))
+            .clickable { onToggleHold() }
+            .border(
+                width = if (isHeld) 3.dp else 0.dp,
+                color = if (isHeld) Color.LightGray else Color.Transparent,
+                shape = RoundedCornerShape(12.dp)
+            )
             .clipToBounds()
     ) {
         Box(
@@ -60,6 +74,22 @@ fun SlotReel(reelSymbols: List<Symbol>) {
                 fontSize = 48.sp,
                 color = Color.White
             )
+        }
+
+        if (isHeld) {
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(Color(0xAA000000))
+                    .align(Alignment.Center)
+            ) {
+                Text(
+                    text = "HOLD",
+                    color = Color.White,
+                    fontSize = 16.sp,
+                    modifier = Modifier.align(Alignment.Center)
+                )
+            }
         }
     }
 }

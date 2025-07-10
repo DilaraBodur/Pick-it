@@ -13,18 +13,25 @@ import kotlinx.coroutines.delay
 fun SpinningReel(
     symbols: List<Symbol>,
     isSpinning: Boolean,
-    spinDuration: Int = 2000
+    spinDuration: Int = 2000,
+    isHeld: Boolean,
+    onToggleHold: () -> Unit
 ) {
     var displayedSymbols by remember { mutableStateOf(symbols) }
 
     LaunchedEffect(isSpinning) {
-        if (isSpinning) {
+        if (isSpinning && !isHeld) {
             val startTime = System.currentTimeMillis()
             while (System.currentTimeMillis() - startTime < spinDuration) {
-                displayedSymbols = List(3) { symbols.random() }
+                displayedSymbols = List(size = 3) { symbols.random() }
                 delay(100)
             }
         }
     }
-    SlotReel(reelSymbols = displayedSymbols)
+
+    SlotReel(
+        reelSymbols = displayedSymbols,
+        isHeld = isHeld,
+        onToggleHold = onToggleHold
+    )
 }
