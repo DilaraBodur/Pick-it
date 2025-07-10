@@ -1,6 +1,7 @@
 package de.syntax_institut.androidabschlussprojekt.features.game.composables
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
@@ -21,15 +22,18 @@ import de.syntax_institut.androidabschlussprojekt.features.game.data.models.Miss
 fun MissionItemBox(mission: MissionItem, modifier: Modifier = Modifier) {
     val shape = RoundedCornerShape(6.dp)
 
+    val backgroundColor = Color(0xFF1565C0)
+
     Box(
         contentAlignment = Alignment.Center,
         modifier = modifier
+            .border(width = 1.dp, color = Color.Black, shape = shape)
             .shadow(
                 elevation = if (mission.isCompleted) 8.dp else 0.dp,
                 shape = shape,
                 clip = false
             )
-            .background(Color(0xFF8A2BE2), shape)
+            .background(backgroundColor, shape)
             .padding(vertical = 8.dp)
     ) {
         when (mission.type) {
