@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -18,7 +19,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import de.syntax_institut.androidabschlussprojekt.features.auth.viewModels.AuthViewModel
 import de.syntax_institut.androidabschlussprojekt.features.game.viewModels.GameViewModel
+import org.koin.androidx.compose.koinViewModel
 
 
 @Composable
@@ -39,6 +42,10 @@ fun HeaderSection(
     val currentPoints = viewModel.currentPoints.collectAsState().value
     val requiredPoints = viewModel.requiredPoints.collectAsState().value
     val progress by viewModel.progress
+
+    val authViewModel: AuthViewModel = koinViewModel()
+    val username = authViewModel.currentUserModel.collectAsState().value?.username ?: "Gast"
+    val totalPoints = viewModel.totalPoints.collectAsState().value
 
     LaunchedEffect(Unit) {
         viewModel.startTimer()
@@ -63,6 +70,17 @@ fun HeaderSection(
                     .height(24.dp)
                     .padding(start = 8.dp)
             )
+
+            Box(
+                modifier = headerButtonSizeModifier
+                    .border(1.dp, Color.White, RoundedCornerShape(12.dp)),
+                contentAlignment = Alignment.Center
+            ) {
+                Text(
+                    text = username,
+                    color = Color.White
+                )
+            }
         }
 
         Row(
@@ -87,6 +105,17 @@ fun HeaderSection(
                     .height(24.dp)
                     .padding(start = 8.dp)
             )
+
+            Box(
+                modifier = headerButtonSizeModifier
+                    .border(1.dp, Color.White, RoundedCornerShape(12.dp)),
+                contentAlignment = Alignment.Center
+            ) {
+                Text(
+                    text = "$totalPoints",
+                    color = Color.White
+                )
+            }
         }
     }
 }

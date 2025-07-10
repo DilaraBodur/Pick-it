@@ -242,6 +242,7 @@ class GameViewModel(
         _missionItems.value = generatedMissions
 
         spinReels()
+        evaluateCombination()
     }
 
 
