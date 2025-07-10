@@ -16,7 +16,7 @@ import de.syntax_institut.androidabschlussprojekt.features.game.viewModels.GameV
 
 @Composable
 fun DrawButtons(viewModel: GameViewModel, modifier: Modifier = Modifier) {
-    val isSpinning by viewModel.isSpinning.collectAsState()
+    val spinCount by viewModel.spinCount.collectAsState()
 
     Row(
         modifier = modifier
@@ -27,20 +27,18 @@ fun DrawButtons(viewModel: GameViewModel, modifier: Modifier = Modifier) {
     ) {
         Button(
             onClick = { viewModel.startSpin() },
-            modifier = Modifier
-                .weight(1f)
-                .fillMaxWidth()
+            enabled = spinCount < 1,
+            modifier = Modifier.weight(1f).fillMaxWidth()
         ) {
-            Text(text = if (isSpinning) "..." else "Draw")
+            Text(text = "Draw")
         }
 
         Button(
-            onClick = { viewModel.evaluateCombination() },
-            modifier = Modifier
-                .weight(1f)
-                .fillMaxWidth()
+            onClick = { viewModel.startSpin() },
+            enabled = spinCount < 2,
+            modifier = Modifier.weight(1f).fillMaxWidth()
         ) {
-            Text(text = "Kombination prüfen")
+            Text(text = "Draw")
         }
     }
 }

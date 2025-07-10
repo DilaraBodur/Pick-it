@@ -82,6 +82,11 @@ class GameViewModel(
     private val _heldSymbols = MutableStateFlow<Set<Int>>(emptySet())
     val heldSymbols: StateFlow<Set<Int>> = _heldSymbols
 
+    private val _spinCount = MutableStateFlow(0)
+    val spinCount: StateFlow<Int> = _spinCount
+
+    private val _jokerUnlocked = MutableStateFlow(false)
+    val jokerUnlocked: StateFlow<Boolean> = _jokerUnlocked
 
 
     init {
@@ -99,13 +104,36 @@ class GameViewModel(
     }
 
     fun startSpin() {
+        if (_spinCount.value >= 2) return
+
         _isSpinning.value = true
         viewModelScope.launch {
             delay(2000)
             spinReels()
             evaluateCombination()
+
+            _spinCount.value += 1
             _isSpinning.value = false
+
+            val noMissionCompleted = _missionItems.value.none { it.isCompleted && !it.isClaimed }
+            if (_spinCount.value >= 2 && noMissionCompleted) {
+                val updatedMissions = _missionItems.value.map {
+                    if (it.type == MissionType.JOKER) it.copy(isCompleted = true) else it
+                }
+                _missionItems.value = updatedMissions
+                _jokerUnlocked.value = true
+            }
         }
+    }
+
+    private fun resetSpinCountAndJoker() {
+        _spinCount.value = 0
+        _jokerUnlocked.value = false
+
+        val resetMissions = _missionItems.value.map {
+            if (it.type == MissionType.JOKER && !it.isClaimed) it.copy(isCompleted = false) else it
+        }
+        _missionItems.value = resetMissions
     }
 
     private fun spinReels() {
@@ -342,6 +370,7 @@ class GameViewModel(
 
         _heldSymbols.value = emptySet()
         startSpin()
+        resetSpinCountAndJoker()
     }
 
     fun nextRound() {
