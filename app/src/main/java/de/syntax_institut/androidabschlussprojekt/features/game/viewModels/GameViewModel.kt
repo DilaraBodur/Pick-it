@@ -58,8 +58,13 @@ class GameViewModel(
     private val _currentPoints = MutableStateFlow(0)
     val currentPoints: StateFlow<Int> = _currentPoints
 
-    private val _requiredPoints = MutableStateFlow(10000)
+    private val _requiredPoints = MutableStateFlow(100)
     val requiredPoints: StateFlow<Int> = _requiredPoints
+
+    private val _roundBonus = MutableStateFlow(0)
+    val roundBonus: StateFlow<Int> = _roundBonus
+
+    private val _bonusGivenForRound = MutableStateFlow(false)
 
     private val _timeProgress = MutableStateFlow(1f)
     val timeProgress: StateFlow<Float> = _timeProgress.asStateFlow()
@@ -150,6 +155,31 @@ class GameViewModel(
             }
             _currentReels.value = newReels
         }
+    }
+
+    fun updateRequiredPointsForRound(round: Int) {
+        val calculatedPoints = 10000 + (round - 1) * 3000
+        _requiredPoints.value = calculatedPoints
+        _currentRound.value = round
+
+        _bonusGivenForRound.value = false
+    }
+
+    fun checkAndApplyBonus() {
+        val current = _currentPoints.value
+        val required = _requiredPoints.value
+
+        if (current >= required) {
+            val bonus = calculateBonusForRound(_currentRound.value)
+            _roundBonus.value = bonus
+            _totalPoints.value += bonus
+
+            _bonusGivenForRound
+        }
+    }
+
+    private fun calculateBonusForRound(round: Int): Int {
+        return 1000 + (round - 1) * 500
     }
 
     private fun loadAllPackages() {
@@ -368,6 +398,8 @@ class GameViewModel(
 
         increaseBonusProgress(mission.basePoints.toFloat())
         updatePoints(_currentPoints.value + mission.basePoints)
+
+        checkAndApplyBonus()
 
         _heldSymbols.value = emptySet()
         startSpin()

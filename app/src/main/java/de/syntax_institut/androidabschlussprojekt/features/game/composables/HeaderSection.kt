@@ -39,13 +39,15 @@ fun HeaderSection(
         .padding(horizontal = 12.dp, vertical = 6.dp)
 
     val bonusProgress = viewModel.bonusProgress.collectAsState().value
+    val totalPoints = viewModel.totalPoints.collectAsState().value
     val currentPoints = viewModel.currentPoints.collectAsState().value
     val requiredPoints = viewModel.requiredPoints.collectAsState().value
     val progress by viewModel.progress
 
+    val displayedPoints = totalPoints + currentPoints
+
     val authViewModel: AuthViewModel = koinViewModel()
     val username = authViewModel.currentUserModel.collectAsState().value?.username ?: "Gast"
-    val totalPoints = viewModel.totalPoints.collectAsState().value
 
     LaunchedEffect(Unit) {
         viewModel.startTimer()
@@ -100,6 +102,7 @@ fun HeaderSection(
                 progress = bonusProgress,
                 currentPoints = currentPoints,
                 requiredPoints = requiredPoints,
+                rondBonus = viewModel.roundBonus.collectAsState().value,
                 modifier = Modifier
                     .weight(1f)
                     .height(24.dp)
@@ -112,7 +115,7 @@ fun HeaderSection(
                 contentAlignment = Alignment.Center
             ) {
                 Text(
-                    text = "$totalPoints",
+                    text = "$displayedPoints",
                     color = Color.White
                 )
             }

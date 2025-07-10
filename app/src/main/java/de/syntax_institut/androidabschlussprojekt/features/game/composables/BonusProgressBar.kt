@@ -22,8 +22,10 @@ fun BonusProgressBar(
     progress: Float,
     currentPoints: Int,
     requiredPoints: Int,
+    rondBonus: Int,
     modifier: Modifier = Modifier
 ) {
+    val totalDisplayPoints = currentPoints + rondBonus
     Box(
         modifier = modifier
             .height(28.dp)
@@ -39,7 +41,7 @@ fun BonusProgressBar(
         )
 
         Text(
-            text = "$currentPoints / $requiredPoints",
+            text = "$totalDisplayPoints / $requiredPoints",
             color = Color.Black,
             fontSize = 12.sp,
             fontWeight = FontWeight.Bold,
