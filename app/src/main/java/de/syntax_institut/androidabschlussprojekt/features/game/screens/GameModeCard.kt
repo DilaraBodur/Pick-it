@@ -27,8 +27,8 @@ fun GameModeCard(
 ) {
     Card(
         modifier = modifier
-            .width(160.dp)
-            .height(100.dp)
+            .width(250.dp)
+            .height(280.dp)
             .padding(horizontal = 16.dp),
         shape = RoundedCornerShape(16.dp),
         colors = CardDefaults.cardColors(
@@ -43,7 +43,7 @@ fun GameModeCard(
             Text(
                 text = title,
                 color = Color.White,
-                fontSize = 20.sp,
+                fontSize = 24.sp,
                 fontWeight = FontWeight.Bold
             )
         }
