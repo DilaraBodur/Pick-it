@@ -55,8 +55,6 @@ fun GameBoardScreen(
                         .weight(1f)
                 )
 
-
-
                 DrawButtons(
                     viewModel = viewModel,
                     modifier = Modifier

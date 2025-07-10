@@ -1,5 +1,7 @@
 package de.syntax_institut.androidabschlussprojekt.features.game.viewModels
 
+import androidx.compose.runtime.State
+import androidx.compose.runtime.mutableFloatStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import de.syntax_institut.androidabschlussprojekt.features.auth.viewModels.AuthViewModel
@@ -67,6 +69,12 @@ class GameViewModel(
 
     private val _isSpinning = MutableStateFlow(false)
     val isSpinning: StateFlow<Boolean> = _isSpinning
+
+    private val _progress = mutableFloatStateOf(1f)
+    val progress: State<Float> = _progress
+
+    private var totalTimeMs: Long = 120_000L
+    private var intervalMs: Long = 100L
 
     init {
         loadAllPackages()
@@ -195,7 +203,6 @@ class GameViewModel(
     }
 
 
-
     fun updatePoints(newPoints: Int) {
         _currentPoints.value = newPoints
     }
@@ -285,6 +292,23 @@ class GameViewModel(
         _totalPoints.value = 0
         spinReels()
     }
+
+
+    fun startTimer() {
+        viewModelScope.launch {
+            val steps = totalTimeMs / intervalMs
+            for (i in steps downTo 0) {
+                _progress.value = i / steps.toFloat()
+                delay(intervalMs)
+            }
+            _progress.value = 0f
+        }
+    }
+
+    fun resetTimer() {
+        _progress.value = 1f
+    }
+
 }
 
 
