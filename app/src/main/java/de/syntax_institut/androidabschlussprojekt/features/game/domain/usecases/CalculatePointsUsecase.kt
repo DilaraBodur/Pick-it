@@ -29,4 +29,17 @@ class CalculatePointsUseCase {
 
         return (specialPoints * roundMultiplier).toInt()
     }
+
+    fun calculateJokerPoints(round: Int): Int {
+        val baseJokerPoints = 180
+        val multiplier = when (round) {
+            1 -> 1.0
+            2 -> 1.2
+            3 -> 1.4
+            4 -> 1.6
+            5 -> 1.8
+            else -> 1.0
+        }
+        return (baseJokerPoints * multiplier).toInt()
+    }
 }

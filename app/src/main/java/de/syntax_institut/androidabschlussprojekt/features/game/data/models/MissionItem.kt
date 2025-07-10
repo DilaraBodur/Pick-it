@@ -7,7 +7,9 @@ data class MissionItem(
     val symbol: Symbol?,
     val isCompleted: Boolean,
     var basePoints: Int = 0,
-    var isClaimed: Boolean = false
+    var isClaimed: Boolean = false,
+    val combinationType: String = "",
+    val round: Int = 1
 )
 
 enum class MissionType {

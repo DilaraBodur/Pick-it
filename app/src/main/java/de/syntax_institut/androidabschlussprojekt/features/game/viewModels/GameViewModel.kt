@@ -171,7 +171,7 @@ class GameViewModel(
         _bonusGivenForRound.value = false
     }
 
-    fun checkAndApplyBonus() {
+    private fun checkAndApplyBonus() {
         val current = _currentPoints.value
         val required = _requiredPoints.value
 
@@ -305,7 +305,7 @@ class GameViewModel(
         _bonusProgress.value = 0f
     }
 
-    fun evaluateCombination() {
+    private fun evaluateCombination() {
         val currentSymbols = _currentReels.value.mapNotNull { it.getOrNull(1) }
         if (currentSymbols.isEmpty()) return
 
@@ -384,7 +384,69 @@ class GameViewModel(
                     } else mission
                 }
 
-                MissionType.JOKER -> mission // Joker später extra behandeln (Wenn beide Drehungen gespielt wurden und keines der Missione passt)
+                MissionType.JOKER -> {
+                    if (!mission.isCompleted) {
+                        var jokerPoints: Int
+                        var combinationType: String
+
+                        when {
+                            (symbolCounts.values.maxOrNull() ?: 0) >= 5 -> {
+                                jokerPoints = calculatePointsUseCase.calculatePoints(
+                                    symbol = currentSymbols.firstOrNull() ?: mission.symbol!!,
+                                    combinationType = "5er",
+                                    round = _currentRound.value
+                                )
+                                combinationType = "5er"
+                            }
+                            (symbolCounts.values.maxOrNull() ?: 0) >= 4 -> {
+                                jokerPoints = calculatePointsUseCase.calculatePoints(
+                                    symbol = currentSymbols.firstOrNull() ?: mission.symbol!!,
+                                    combinationType = "4er",
+                                    round = _currentRound.value
+                                )
+                                combinationType = "4er"
+                            }
+                            symbolCounts.values.contains(3) && symbolCounts.values.contains(2) -> {
+                                jokerPoints = calculatePointsUseCase.calculatePoints(
+                                    symbol = currentSymbols.firstOrNull() ?: mission.symbol!!,
+                                    combinationType = "fullhouse",
+                                    round = _currentRound.value
+                                )
+                                combinationType = "fullhouse"
+                            }
+                            (symbolCounts.values.maxOrNull() ?: 0) >= 3 -> {
+                                jokerPoints = calculatePointsUseCase.calculatePoints(
+                                    symbol = currentSymbols.firstOrNull() ?: mission.symbol!!,
+                                    combinationType = "3er",
+                                    round = _currentRound.value
+                                )
+                                combinationType = "3er"
+                            }
+                            distinctCount >= 5 -> {
+                                jokerPoints = calculatePointsUseCase.calculatePoints(
+                                    symbol = currentSymbols.firstOrNull() ?: mission.symbol!!,
+                                    combinationType = "5verschiedene",
+                                    round = _currentRound.value
+                                )
+                                combinationType = "5verschiedene"
+                            }
+                            else -> {
+                                jokerPoints = calculatePointsUseCase.calculateJokerPoints(_currentRound.value)
+                                combinationType = "Joker"
+                            }
+                        }
+
+                        mission.copy(
+                            isCompleted = true,
+                            basePoints = jokerPoints,
+                            symbol = mission.symbol,
+                            combinationType = combinationType,
+                            round = _currentRound.value
+                        )
+                    } else {
+                        mission
+                    }
+                }
             }
         }
 
