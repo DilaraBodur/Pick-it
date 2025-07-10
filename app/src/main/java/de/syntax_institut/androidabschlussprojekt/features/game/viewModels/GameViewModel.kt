@@ -49,6 +49,9 @@ class GameViewModel(
     private val _missionItems = MutableStateFlow<List<MissionItem>>(emptyList())
     val missionItems: StateFlow<List<MissionItem>> = _missionItems
 
+    private val _completedMissions = MutableStateFlow<Set<String>>(emptySet())
+    val completedMissions: StateFlow<Set<String>> = _completedMissions
+
     private val _currentReels = MutableStateFlow<List<List<Symbol>>>(emptyList())
     val currentReels: StateFlow<List<List<Symbol>>> = _currentReels
 
@@ -100,6 +103,7 @@ class GameViewModel(
         viewModelScope.launch {
             delay(2000)
             spinReels()
+            evaluateCombination()
             _isSpinning.value = false
         }
     }
@@ -135,29 +139,30 @@ class GameViewModel(
 
         val generatedMissions = mutableListOf<MissionItem>()
 
-        symbols.take(6).forEachIndexed { index, symbol ->
+        val symbolsToUse = symbols.take(6)
+
+        symbolsToUse.forEachIndexed { index, symbol ->
             generatedMissions.add(
                 MissionItem(
                     id = "three_$index",
                     type = MissionType.THREE,
                     symbol = symbol,
-                    isCompleted = false
+                    isCompleted = false,
+                    basePoints = 0,
+                    isClaimed = false
                 )
             )
         }
 
-        repeat(2) { index ->
+        repeat(times = 2) { index ->
             generatedMissions.add(
                 MissionItem(
                     id = "joker_$index",
                     type = MissionType.JOKER,
-                    symbol = symbols.getOrNull(index) ?: symbols.firstOrNull() ?: Symbol(
-                        id = 0,
-                        emoji = "❓",
-                        name = "?",
-                        basePoints = 0
-                    ),
-                    isCompleted = false
+                    symbol = symbols.firstOrNull(),
+                    isCompleted = false,
+                    basePoints = 0,
+                    isClaimed = false
                 )
             )
         }
@@ -166,13 +171,10 @@ class GameViewModel(
             MissionItem(
                 id = "fullhouse",
                 type = MissionType.FULLHOUSE,
-                symbol = symbols.firstOrNull() ?: Symbol(
-                    id = 0,
-                    emoji = "❓",
-                    name = "?",
-                    basePoints = 0
-                ),
-                isCompleted = false
+                symbol = symbols.firstOrNull(),
+                isCompleted = false,
+                basePoints = 0,
+                isClaimed = false
             )
         )
 
@@ -180,13 +182,10 @@ class GameViewModel(
             MissionItem(
                 id = "five_diff",
                 type = MissionType.FIVE_DIFF,
-                symbol = symbols.firstOrNull() ?: Symbol(
-                    id = 0,
-                    emoji = "❓",
-                    name = "?",
-                    basePoints = 0
-                ),
-                isCompleted = false
+                symbol = symbols.firstOrNull(),
+                isCompleted = false,
+                basePoints = 0,
+                isClaimed = false
             )
         )
 
@@ -194,13 +193,10 @@ class GameViewModel(
             MissionItem(
                 id = "four",
                 type = MissionType.FOUR,
-                symbol = symbols.firstOrNull() ?: Symbol(
-                    id = 0,
-                    emoji = "❓",
-                    name = "?",
-                    basePoints = 0
-                ),
-                isCompleted = false
+                symbol = symbols.firstOrNull(),
+                isCompleted = false,
+                basePoints = 0,
+                isClaimed = false
             )
         )
 
@@ -208,13 +204,10 @@ class GameViewModel(
             MissionItem(
                 id = "five",
                 type = MissionType.FIVE,
-                symbol = symbols.firstOrNull() ?: Symbol(
-                    id = 0,
-                    emoji = "❓",
-                    name = "?",
-                    basePoints = 0
-                ),
-                isCompleted = false
+                symbol = symbols.firstOrNull(),
+                isCompleted = false,
+                basePoints = 0,
+                isClaimed = false
             )
         )
 
@@ -224,7 +217,7 @@ class GameViewModel(
     }
 
 
-    fun updatePoints(newPoints: Int) {
+    private fun updatePoints(newPoints: Int) {
         _currentPoints.value = newPoints
     }
 
@@ -232,7 +225,7 @@ class GameViewModel(
         _requiredPoints.value = newRequired
     }
 
-    fun increaseBonusProgress(points: Float) {
+    private fun increaseBonusProgress(points: Float) {
         val newProgress = (_bonusProgress.value + points).coerceIn(0f, 1f)
         _bonusProgress.value = newProgress
     }
@@ -248,56 +241,108 @@ class GameViewModel(
     }
 
     fun evaluateCombination() {
-        val currentSymbols = _currentReels.value.mapNotNull { reel ->
-            reel.getOrNull(1)
-        }
-
+        val currentSymbols = _currentReels.value.mapNotNull { it.getOrNull(1) }
         if (currentSymbols.isEmpty()) return
 
         val symbolCounts = currentSymbols.groupingBy { it.id }.eachCount()
-        val counts = symbolCounts.values.sortedDescending()
-
-        val currentSymbol = currentSymbols.firstOrNull() ?: return
-        val highestCount = counts.firstOrNull() ?: 0
         val distinctCount = symbolCounts.size
+        val highestCount = symbolCounts.values.maxOrNull() ?: 0
 
-        val points = when {
-            highestCount == 5 -> calculatePointsUseCase.calculatePoints(
-                symbol = currentSymbol,
-                combinationType = "5er",
-                round = _currentRound.value
-            )
+        val updatedMissions = _missionItems.value.map { mission ->
 
-            highestCount == 4 -> calculatePointsUseCase.calculatePoints(
-                symbol = currentSymbol,
-                combinationType = "4er",
-                round = _currentRound.value
-            )
+            when (mission.type) {
+                MissionType.THREE -> {
+                    val count = symbolCounts[mission.symbol?.id] ?: 0
+                    if (count >= 3 && !mission.isCompleted) {
+                        mission.copy(
+                            isCompleted = true,
+                            basePoints = calculatePointsUseCase.calculatePoints(
+                                symbol = mission.symbol!!,
+                                combinationType = "3er",
+                                round = _currentRound.value
+                            )
+                        )
+                    } else mission
+                }
 
-            counts.contains(3) && counts.contains(2) -> calculatePointsUseCase.calculatePoints(
-                symbol = currentSymbol,
-                combinationType = "fullhouse",
-                round = _currentRound.value
-            )
+                MissionType.FOUR -> {
+                    val maxCount = symbolCounts.values.maxOrNull() ?: 0
+                    if (maxCount >= 4 && !mission.isCompleted) {
+                        mission.copy(
+                            isCompleted = true,
+                            basePoints = calculatePointsUseCase.calculatePoints(
+                                symbol = mission.symbol ?: currentSymbols.first(),
+                                combinationType = "4er",
+                                round = _currentRound.value
+                            )
+                        )
+                    } else mission
+                }
 
-            distinctCount == 5 -> calculatePointsUseCase.calculatePoints(
-                symbol = currentSymbol,
-                combinationType = "5verschiedene",
-                round = _currentRound.value
-            )
+                MissionType.FIVE -> {
+                    val maxCount = symbolCounts.values.maxOrNull() ?: 0
+                    if (maxCount >= 5 && !mission.isCompleted) {
+                        mission.copy(
+                            isCompleted = true,
+                            basePoints = calculatePointsUseCase.calculatePoints(
+                                symbol = mission.symbol ?: currentSymbols.first(),
+                                combinationType = "5er",
+                                round = _currentRound.value
+                            )
+                        )
+                    } else mission
+                }
 
-            highestCount == 3 -> calculatePointsUseCase.calculatePoints(
-                symbol = currentSymbol,
-                combinationType = "3er",
-                round = _currentRound.value
-            )
+                MissionType.FULLHOUSE -> {
+                    if (symbolCounts.values.contains(3) && symbolCounts.values.contains(2) && !mission.isCompleted) {
+                        mission.copy(
+                            isCompleted = true,
+                            basePoints = calculatePointsUseCase.calculatePoints(
+                                symbol = mission.symbol ?: currentSymbols.first(),
+                                combinationType = "fullhouse",
+                                round = _currentRound.value
+                            )
+                        )
+                    } else mission
+                }
 
-            else -> 0
+                MissionType.FIVE_DIFF -> {
+                    if (distinctCount >= 5 && !mission.isCompleted) {
+                        mission.copy(
+                            isCompleted = true,
+                            basePoints = calculatePointsUseCase.calculatePoints(
+                                symbol = mission.symbol ?: currentSymbols.first(),
+                                combinationType = "5verschiedene",
+                                round = _currentRound.value
+                            )
+                        )
+                    } else mission
+                }
+
+                MissionType.JOKER -> mission // Joker später extra behandeln (Wenn beide Drehungen gespielt wurden und keines der Missione passt)
+            }
         }
 
-        _totalPoints.value = points
+        _missionItems.value = updatedMissions
     }
 
+    fun claimMission(mission: MissionItem) {
+        val updatedMissions = _missionItems.value.map {
+            when {
+                it.id == mission.id -> it.copy(isClaimed = true)
+                it.isCompleted && !it.isClaimed -> it.copy(isCompleted = false)
+                else -> it
+            }
+        }
+
+        _missionItems.value = updatedMissions
+
+        increaseBonusProgress(mission.basePoints.toFloat())
+        updatePoints(_currentPoints.value + mission.basePoints)
+
+        _heldSymbols.value = emptySet()
+        startSpin()
+    }
 
     fun nextRound() {
         if (_currentRound.value < 5) {

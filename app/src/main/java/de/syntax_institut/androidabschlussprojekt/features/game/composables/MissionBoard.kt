@@ -64,8 +64,12 @@ fun MissionBoard(viewModel: GameViewModel, modifier: Modifier = Modifier) {
                             rowItems.forEach { mission ->
                                 MissionItemBox(
                                     mission = mission,
-                                    modifier = Modifier
-                                        .weight(1f)
+                                    modifier = Modifier.weight(1f),
+                                    onClick = {
+                                        if (mission.isCompleted && !mission.isClaimed) {
+                                            viewModel.claimMission(mission)
+                                        }
+                                    }
                                 )
                             }
                         }
