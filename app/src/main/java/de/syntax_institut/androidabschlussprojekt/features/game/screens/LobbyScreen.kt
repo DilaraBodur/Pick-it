@@ -21,6 +21,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.ModalBottomSheet
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.rememberModalBottomSheetState
@@ -184,70 +185,78 @@ fun LobbyScreen(
         )
     }
 
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(Color(0xFF083A8C))
-            .padding(16.dp)
-    ) {
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(8.dp),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            if (!avatarUrl.isNullOrBlank()) {
-                AvatarImage(
-                    url = avatarUrl,
-                    onClick = { showProfileDialog.value = true }
+    Scaffold(
+        bottomBar = {
+            BottomNavBar(
+                navController = navController,
+                showFriendsDialogState = showFriendsDialog
                 )
-            }
-
-            Button(onClick = { showRankingSheet = true }) {
-                Text("Rangliste")
-            }
-
-            IconButton(onClick = {
-                showSettings = true
-            }) {
-                Icon(Icons.Default.Settings, contentDescription = "Einstellungen", tint = Color.White)
-            }
         }
-
-        Spacer(modifier = Modifier.height(24.dp))
-
-        Box(
+    ) { innerPadding ->
+        Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(vertical = 32.dp),
-            contentAlignment = Alignment.Center
+                .background(Color(0xFF083A8C))
+                .padding(
+                    bottom = innerPadding.calculateBottomPadding(),
+                    top = 16.dp,
+                    start = 16.dp,
+                    end = 16.dp
+                )
         ) {
             Row(
-                horizontalArrangement = Arrangement.spacedBy(24.dp),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(8.dp),
+                horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                listOf("Online", "2 vs 2", "Solo").forEach { mode ->
-                    GameModeCard(
-                        title = mode,
-                        backgroundColor = Color(0xFF1565C0),
-                        onClick = {
-                            when (mode) {
-                                "Online" -> { /* TODO: Online implementieren */ }
-                                "2 vs 2" -> { /* TODO: 2 vs 2 implementieren */ }
-                                "Solo" -> navController.navigate("game_solo")
-                            }
-                        },
-                        modifier = Modifier
+                if (!avatarUrl.isNullOrBlank()) {
+                    AvatarImage(
+                        url = avatarUrl,
+                        onClick = { showProfileDialog.value = true }
                     )
+                }
+
+                Button(onClick = { showRankingSheet = true }) {
+                    Text("Rangliste")
+                }
+
+                IconButton(onClick = {
+                    showSettings = true
+                }) {
+                    Icon(Icons.Default.Settings, contentDescription = "Einstellungen", tint = Color.White)
+                }
+            }
+
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(horizontal = 32.dp, vertical = 24.dp),
+                contentAlignment = Alignment.Center
+            ) {
+                Row(
+                    horizontalArrangement = Arrangement.spacedBy(24.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+
+                    ) {
+                    listOf("Online", "2 vs 2", "Solo").forEach { mode ->
+                        GameModeCard(
+                            title = mode,
+                            backgroundColor = Color(0xFF1565C0),
+                            onClick = {
+                                when (mode) {
+                                    "Online" -> { /* TODO: Online implementieren */ }
+                                    "2 vs 2" -> { /* TODO: 2 vs 2 implementieren */ }
+                                    "Solo" -> navController.navigate("game_solo")
+                                }
+                            },
+                            modifier = Modifier
+                        )
+                    }
                 }
             }
         }
-
-        BottomNavBar(
-            navController = navController,
-            showFriendsDialogState = showFriendsDialog
-        )
     }
 
     if (showRankingSheet) {
