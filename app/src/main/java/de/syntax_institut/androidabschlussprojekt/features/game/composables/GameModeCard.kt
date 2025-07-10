@@ -1,4 +1,4 @@
-package de.syntax_institut.androidabschlussprojekt.features.game.screens
+package de.syntax_institut.androidabschlussprojekt.features.game.composables
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize

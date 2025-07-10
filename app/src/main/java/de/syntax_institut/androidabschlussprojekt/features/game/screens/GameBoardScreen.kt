@@ -1,4 +1,4 @@
-package de.syntax_institut.androidabschlussprojekt.features.game.composables
+package de.syntax_institut.androidabschlussprojekt.features.game.screens
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -15,6 +15,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import de.syntax_institut.androidabschlussprojekt.features.game.composables.DrawButtons
+import de.syntax_institut.androidabschlussprojekt.features.game.composables.HeaderSection
+import de.syntax_institut.androidabschlussprojekt.features.game.composables.MissionBoard
+import de.syntax_institut.androidabschlussprojekt.features.game.composables.SlotComposableWithReels
 import de.syntax_institut.androidabschlussprojekt.features.game.viewModels.GameViewModel
 
 

@@ -55,6 +55,7 @@ import de.syntax_institut.androidabschlussprojekt.composables.BottomNavBar
 import de.syntax_institut.androidabschlussprojekt.features.user.screens.EditProfileDialog
 import de.syntax_institut.androidabschlussprojekt.features.user.screens.ProfileDialog
 import de.syntax_institut.androidabschlussprojekt.features.auth.viewModels.AuthViewModel
+import de.syntax_institut.androidabschlussprojekt.features.game.composables.GameModeCard
 import de.syntax_institut.androidabschlussprojekt.features.user.friends.screens.FriendsDialog
 import de.syntax_institut.androidabschlussprojekt.features.user.friends.viewModels.FriendsViewModel
 import org.koin.androidx.compose.koinViewModel
