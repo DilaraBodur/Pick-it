@@ -47,7 +47,7 @@ fun SlotComposableWithReels(viewModel: GameViewModel, modifier: Modifier = Modif
                     reel.forEach { symbol ->
                         Text(
                             text = symbol.emoji,
-                            fontSize = 36.sp,
+                            fontSize = 55.sp,
                             color = Color.White
                         )
                     }

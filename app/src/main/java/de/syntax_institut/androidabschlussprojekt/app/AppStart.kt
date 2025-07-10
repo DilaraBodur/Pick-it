@@ -89,7 +89,7 @@ fun AppStart(authViewModel: AuthViewModel) {
                     startDestination = if (user != null) "lobby" else "login",
                     modifier = Modifier
                         .fillMaxSize()
-                        .padding(innerPadding)
+                        .padding(top = innerPadding.calculateTopPadding())
                 ) {
                     composable("login") {
                         LoginScreen(navController = navController, authViewModel = authViewModel)
