@@ -39,12 +39,12 @@ fun HeaderSection(
         .padding(horizontal = 12.dp, vertical = 6.dp)
 
     val bonusProgress = viewModel.bonusProgress.collectAsState().value
-    val totalPoints = viewModel.totalPoints.collectAsState().value
     val currentPoints = viewModel.currentPoints.collectAsState().value
     val requiredPoints = viewModel.requiredPoints.collectAsState().value
+    val roundBonus = viewModel.roundBonus.collectAsState().value
     val progress by viewModel.progress
 
-    val displayedPoints = totalPoints + currentPoints
+    val displayedPoints = currentPoints + roundBonus
 
     val authViewModel: AuthViewModel = koinViewModel()
     val username = authViewModel.currentUserModel.collectAsState().value?.username ?: "Gast"
@@ -102,7 +102,7 @@ fun HeaderSection(
                 progress = bonusProgress,
                 currentPoints = currentPoints,
                 requiredPoints = requiredPoints,
-                rondBonus = viewModel.roundBonus.collectAsState().value,
+                rondBonus = roundBonus,
                 modifier = Modifier
                     .weight(1f)
                     .height(24.dp)

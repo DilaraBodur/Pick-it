@@ -108,16 +108,22 @@ class GameViewModel(
         _heldSymbols.value = current
     }
 
-    fun startSpin() {
-        if (_spinCount.value >= 2) return
+    fun startSpin(isAutoSpin: Boolean = false) {
+        if (_spinCount.value >= 2 && !isAutoSpin) return
 
-        _isSpinning.value = true
+        if (!isAutoSpin) {
+            _spinCount.value += 1
+            _isSpinning.value = true
+        }
+
         viewModelScope.launch {
-            delay(2000)
+            if (isAutoSpin) {
+                _isSpinning.value = true
+            }
+            delay(timeMillis = 2000)
             spinReels()
             evaluateCombination()
 
-            _spinCount.value += 1
             _isSpinning.value = false
 
             val noMissionCompleted = _missionItems.value.none { it.isCompleted && !it.isClaimed }
@@ -402,8 +408,8 @@ class GameViewModel(
         checkAndApplyBonus()
 
         _heldSymbols.value = emptySet()
-        startSpin()
         resetSpinCountAndJoker()
+        startSpin(isAutoSpin = true)
     }
 
     fun nextRound() {

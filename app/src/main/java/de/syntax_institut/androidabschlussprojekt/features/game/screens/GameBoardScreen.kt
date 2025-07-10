@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
@@ -29,6 +30,9 @@ fun GameBoardScreen(
 ) {
     val backgroundColor = Color(0xFF083A8C)
 
+    LaunchedEffect(Unit) {
+        viewModel.startSpin(isAutoSpin = true)
+    }
     Box(
         modifier = Modifier
             .fillMaxSize()
