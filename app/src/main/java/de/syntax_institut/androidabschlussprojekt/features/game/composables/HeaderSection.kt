@@ -69,10 +69,7 @@ fun HeaderSection(
                     .border(1.dp, Color.White, RoundedCornerShape(12.dp)),
                 contentAlignment = Alignment.Center
             ) {
-                Text(
-                    text = "Runde ${viewModel.currentRound.collectAsState().value} / 5",
-                    color = Color.White
-                )
+                RoundInfo(viewModel)
             }
 
             BonusProgressBar(

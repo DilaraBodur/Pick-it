@@ -19,6 +19,7 @@ fun TimeProgressBar(
     modifier: Modifier = Modifier
 ) {
     val coercedProgress = progress.coerceIn(0f, 1f)
+    val purpleColor = Color(0xFF9C27B0)
 
     Box(
         modifier = modifier
@@ -32,7 +33,7 @@ fun TimeProgressBar(
                 .fillMaxHeight()
                 .fillMaxWidth(coercedProgress)
                 .clip(RoundedCornerShape(8.dp))
-                .background(Color.Green)
+                .background(purpleColor)
         )
     }
 }
