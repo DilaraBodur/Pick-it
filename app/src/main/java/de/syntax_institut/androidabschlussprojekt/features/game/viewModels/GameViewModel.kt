@@ -10,6 +10,7 @@ import de.syntax_institut.androidabschlussprojekt.features.game.data.models.Symb
 import de.syntax_institut.androidabschlussprojekt.features.game.data.repositories.SymbolsRepository
 import de.syntax_institut.androidabschlussprojekt.features.game.domain.usecases.CalculatePointsUseCase
 import de.syntax_institut.androidabschlussprojekt.features.user.data.repositories.UserRepository
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -64,9 +65,30 @@ class GameViewModel(
             (current.toFloat() / required.toFloat()).coerceIn(0f, 1f)
         }.stateIn(viewModelScope, SharingStarted.Eagerly, 0f)
 
+    private val _isSpinning = MutableStateFlow(false)
+    val isSpinning: StateFlow<Boolean> = _isSpinning
 
     init {
         loadAllPackages()
+    }
+
+    fun startSpin() {
+        _isSpinning.value = true
+        viewModelScope.launch {
+            delay(2000)
+            spinReels()
+            _isSpinning.value = false
+        }
+    }
+
+    fun spinReels() {
+        val symbols = _selectedPackage.value?.symbols.orEmpty()
+        if (symbols.isNotEmpty()) {
+            val newReels = List(5) {
+                List(3) { symbols.random() }
+            }
+            _currentReels.value = newReels
+        }
     }
 
     private fun loadAllPackages() {
@@ -172,15 +194,7 @@ class GameViewModel(
         spinReels()
     }
 
-    fun spinReels() {
-        val symbols = _selectedPackage.value?.symbols.orEmpty()
-        if (symbols.isNotEmpty()) {
-            val newReels = List(5) {
-                List(3) { symbols.random() }
-            }
-            _currentReels.value = newReels
-        }
-    }
+
 
     fun updatePoints(newPoints: Int) {
         _currentPoints.value = newPoints

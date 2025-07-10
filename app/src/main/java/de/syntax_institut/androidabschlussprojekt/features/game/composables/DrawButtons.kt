@@ -7,6 +7,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -14,20 +16,22 @@ import de.syntax_institut.androidabschlussprojekt.features.game.viewModels.GameV
 
 @Composable
 fun DrawButtons(viewModel: GameViewModel, modifier: Modifier = Modifier) {
+    val isSpinning by viewModel.isSpinning.collectAsState()
+
     Row(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
             .padding(horizontal = 16.dp),
         horizontalArrangement = Arrangement.spacedBy(16.dp, Alignment.CenterHorizontally),
         verticalAlignment = Alignment.CenterVertically
     ) {
         Button(
-            onClick = { viewModel.spinReels() },
+            onClick = { viewModel.startSpin() },
             modifier = Modifier
                 .weight(1f)
                 .fillMaxWidth()
         ) {
-            Text(text = "Draw")
+            Text(text = if (isSpinning) "..." else "Draw")
         }
 
         Button(

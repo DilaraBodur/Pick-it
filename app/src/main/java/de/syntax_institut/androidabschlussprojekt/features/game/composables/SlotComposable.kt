@@ -22,6 +22,7 @@ import de.syntax_institut.androidabschlussprojekt.features.game.viewModels.GameV
 @Composable
 fun SlotComposableWithReels(viewModel: GameViewModel, modifier: Modifier = Modifier) {
     val currentReels by viewModel.currentReels.collectAsState()
+    val isSpinning by viewModel.isSpinning.collectAsState()
 
     val backgroundColor = Color(0xFF1565C0)
 
@@ -42,7 +43,15 @@ fun SlotComposableWithReels(viewModel: GameViewModel, modifier: Modifier = Modif
             verticalAlignment = Alignment.CenterVertically
         ) {
             currentReels.forEach { reel ->
-                SlotReel(reelSymbols = reel)
+                if (isSpinning) {
+                    SpinningReel(
+                        symbols = reel,
+                        isSpinning = true,
+                        spinDuration = 3000
+                    )
+                } else {
+                    SlotReel(reelSymbols = reel)
+                }
             }
         }
 
