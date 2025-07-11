@@ -318,7 +318,7 @@ class GameViewModel(
             when (mission.type) {
 
                 MissionType.FIVE -> {
-                    val count = symbolCounts[mission.symbol?.id] ?: 0
+                    val count = symbolCounts[mission.symbol?.id] ?: symbolCounts.values.maxOrNull() ?: 0
                     if (count >= 5 && !mission.isCompleted) {
                         mission.copy(
                             isCompleted = true,
@@ -335,7 +335,7 @@ class GameViewModel(
                 }
 
                 MissionType.FOUR -> {
-                    val count = symbolCounts[mission.symbol?.id] ?: 0
+                    val count = symbolCounts[mission.symbol?.id] ?: symbolCounts.values.maxOrNull() ?: 0
                     if (count >= 4 && !mission.isCompleted) {
                         val combination = if (count >= 5) "5er" else "4er"
                         mission.copy(
