@@ -57,6 +57,7 @@ fun HeaderSection(
     Column(
         modifier = modifier
             .fillMaxWidth()
+            .padding(top = 8.dp)
     ) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
@@ -69,13 +70,13 @@ fun HeaderSection(
                 progress = progress,
                 modifier = Modifier
                     .weight(1f)
-                    .height(24.dp)
+                    .height(40.dp)
                     .padding(start = 8.dp)
             )
 
             Box(
                 modifier = headerButtonSizeModifier
-                    .border(1.dp, Color.White, RoundedCornerShape(12.dp)),
+                    .border(1.dp, Color.Black, RoundedCornerShape(12.dp)),
                 contentAlignment = Alignment.Center
             ) {
                 Text(
@@ -92,7 +93,7 @@ fun HeaderSection(
         ) {
             Box(
                 modifier = headerButtonSizeModifier
-                    .border(1.dp, Color.White, RoundedCornerShape(12.dp)),
+                    .border(1.dp, Color.Black, RoundedCornerShape(12.dp)),
                 contentAlignment = Alignment.Center
             ) {
                 RoundInfo(viewModel)
@@ -105,13 +106,13 @@ fun HeaderSection(
                 rondBonus = roundBonus,
                 modifier = Modifier
                     .weight(1f)
-                    .height(24.dp)
+                    .height(40.dp)
                     .padding(start = 8.dp)
             )
 
             Box(
                 modifier = headerButtonSizeModifier
-                    .border(1.dp, Color.White, RoundedCornerShape(12.dp)),
+                    .border(1.dp, Color.Black, RoundedCornerShape(12.dp)),
                 contentAlignment = Alignment.Center
             ) {
                 Text(

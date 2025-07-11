@@ -23,7 +23,7 @@ fun TimeProgressBar(
 
     Box(
         modifier = modifier
-            .height(8.dp)
+            .height(40.dp)
             .clip(RoundedCornerShape(8.dp))
             .background(Color.LightGray),
         contentAlignment = Alignment.CenterStart

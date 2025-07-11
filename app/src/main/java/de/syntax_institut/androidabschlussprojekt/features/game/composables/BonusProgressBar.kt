@@ -28,7 +28,7 @@ fun BonusProgressBar(
     val totalDisplayPoints = currentPoints + rondBonus
     Box(
         modifier = modifier
-            .height(28.dp)
+            .height(40.dp)
             .clip(RoundedCornerShape(8.dp))
             .background(Color.Gray)
     ) {
@@ -43,7 +43,7 @@ fun BonusProgressBar(
         Text(
             text = "$totalDisplayPoints / $requiredPoints",
             color = Color.Black,
-            fontSize = 12.sp,
+            fontSize = 16.sp,
             fontWeight = FontWeight.Bold,
             modifier = Modifier.align(Alignment.Center)
         )

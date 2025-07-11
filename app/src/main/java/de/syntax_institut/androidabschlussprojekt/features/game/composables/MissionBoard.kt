@@ -41,13 +41,12 @@ fun MissionBoard(viewModel: GameViewModel, modifier: Modifier = Modifier) {
 
     Card(
         modifier = modifier,
-        shape = RoundedCornerShape(12.dp),
         colors = CardDefaults.cardColors(containerColor = backgroundColor)
     ) {
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(12.dp),
+                .padding(vertical = 8.dp, horizontal = 8.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.SpaceEvenly
         ) {
@@ -57,14 +56,15 @@ fun MissionBoard(viewModel: GameViewModel, modifier: Modifier = Modifier) {
                     filtered.chunked(2).forEach { rowItems ->
                         Row(
                             modifier = Modifier
-                                .fillMaxWidth(),
+
+                                .height(50.dp),
                             horizontalArrangement = Arrangement.spacedBy(8.dp),
                             verticalAlignment = Alignment.CenterVertically
                         ) {
                             rowItems.forEach { mission ->
                                 MissionItemBox(
                                     mission = mission,
-                                    modifier = Modifier.weight(1f),
+                                    modifier = Modifier.weight(1f).height(40.dp),
                                     onClick = {
                                         if (mission.isCompleted && !mission.isClaimed) {
                                             viewModel.claimMission(mission)

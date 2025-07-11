@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -18,10 +19,11 @@ fun MissionRow(rowItems: List<MissionItem>) {
         verticalAlignment = Alignment.CenterVertically,
         modifier = Modifier
             .fillMaxWidth()
+            .height(50.dp)
             .padding(vertical = 4.dp)
     ) {
         rowItems.forEach { mission ->
-            MissionItemBox(mission, Modifier.weight(1f))
+            MissionItemBox(mission, Modifier.height(40.dp).weight(1f))
         }
 
         if (rowItems.size == 1) {
