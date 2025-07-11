@@ -12,8 +12,8 @@ class CalculatePointsUseCase {
     ): Int {
         val specialPoints = when (combinationType.lowercase()) {
             "4er" -> 3200
-            "5er" -> 4000
-            "fullhouse" -> 3000
+            "5er" -> 5000
+            "fullhouse" -> 3200
             "5verschiedene" -> 3000
             else -> symbol.basePoints
         }
