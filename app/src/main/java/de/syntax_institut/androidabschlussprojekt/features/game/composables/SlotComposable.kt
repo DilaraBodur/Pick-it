@@ -11,6 +11,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -25,6 +26,13 @@ fun SlotComposableWithReels(viewModel: GameViewModel, modifier: Modifier = Modif
     val isSpinning by viewModel.isSpinning.collectAsState()
 
     val backgroundColor = Color(0xFF1565C0)
+
+    LaunchedEffect(isSpinning) {
+        if (!isSpinning) {
+            viewModel.setSpinFinished()
+            viewModel.evaluateCombination()
+        }
+    }
 
     Card(
         modifier = Modifier

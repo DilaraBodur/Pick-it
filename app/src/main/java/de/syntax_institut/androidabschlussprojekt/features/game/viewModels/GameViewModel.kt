@@ -93,6 +93,9 @@ class GameViewModel(
     private val _jokerUnlocked = MutableStateFlow(false)
     val jokerUnlocked: StateFlow<Boolean> = _jokerUnlocked
 
+    private val _isSpinFinished = MutableStateFlow(false)
+    val isSpinFinished = _isSpinFinished.asStateFlow()
+
 
     init {
         loadAllPackages()
@@ -113,7 +116,6 @@ class GameViewModel(
 
         if (!isAutoSpin) {
             _spinCount.value += 1
-            _isSpinning.value = true
         }
 
         viewModelScope.launch {
@@ -122,7 +124,6 @@ class GameViewModel(
             }
             delay(timeMillis = 2000)
             spinReels()
-            evaluateCombination()
 
             _isSpinning.value = false
 
@@ -135,6 +136,10 @@ class GameViewModel(
                 _jokerUnlocked.value = true
             }
         }
+    }
+
+    fun setSpinFinished() {
+        _isSpinFinished.value = true
     }
 
     private fun resetSpinCountAndJoker() {
@@ -161,6 +166,7 @@ class GameViewModel(
             }
             _currentReels.value = newReels
         }
+       _isSpinFinished.value = true
     }
 
     fun updateRequiredPointsForRound(round: Int) {
@@ -278,7 +284,6 @@ class GameViewModel(
         _missionItems.value = generatedMissions
 
         spinReels()
-        evaluateCombination()
     }
 
 
@@ -305,7 +310,9 @@ class GameViewModel(
         _bonusProgress.value = 0f
     }
 
-    private fun evaluateCombination() {
+    fun evaluateCombination() {
+
+        if (!_isSpinFinished.value) return
         val currentSymbols = _currentReels.value.mapNotNull { it.getOrNull(1) }
         if (currentSymbols.isEmpty()) return
 
