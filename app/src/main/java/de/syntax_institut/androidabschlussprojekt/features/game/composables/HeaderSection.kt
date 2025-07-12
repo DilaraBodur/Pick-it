@@ -27,7 +27,6 @@ import org.koin.androidx.compose.koinViewModel
 @Composable
 fun HeaderSection(
     viewModel: GameViewModel,
-    onExit: () -> Unit,
     modifier: Modifier = Modifier
 ) {
 
@@ -64,7 +63,7 @@ fun HeaderSection(
             horizontalArrangement = Arrangement.SpaceBetween,
             modifier = Modifier.fillMaxWidth()
         ) {
-            ExitButton(onExit = onExit, modifier = headerButtonSizeModifier)
+            ExitButton(onExit = { viewModel.openExitDialog() }, modifier = headerButtonSizeModifier)
 
             TimeProgressBar(
                 progress = progress,

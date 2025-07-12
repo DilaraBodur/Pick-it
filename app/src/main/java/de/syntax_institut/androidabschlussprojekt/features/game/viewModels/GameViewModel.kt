@@ -96,9 +96,25 @@ class GameViewModel(
     private val _isSpinFinished = MutableStateFlow(false)
     val isSpinFinished = _isSpinFinished.asStateFlow()
 
+    private val _showExitDialog = MutableStateFlow(false)
+    val showExitDialog: StateFlow<Boolean> = _showExitDialog
+
 
     init {
         loadAllPackages()
+    }
+
+    fun openExitDialog() {
+        _showExitDialog.value = true
+    }
+
+    fun closeExitDialog() {
+        _showExitDialog.value = false
+    }
+
+    fun exitGame() {
+        _showExitDialog.value = false
+        resetGame()
     }
 
     fun toggleHold(index: Int) {

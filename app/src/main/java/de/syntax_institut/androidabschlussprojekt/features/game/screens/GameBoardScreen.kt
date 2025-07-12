@@ -9,8 +9,13 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.Button
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
@@ -27,6 +32,8 @@ fun GameBoardScreen(
     onExit: () -> Unit
 ) {
     val backgroundColor = Color(0xFF083A8C)
+
+    val showDialog by viewModel.showExitDialog.collectAsState()
 
     LaunchedEffect(Unit) {
         viewModel.startSpin(isAutoSpin = true)
@@ -50,7 +57,6 @@ fun GameBoardScreen(
             ) {
                 HeaderSection(
                     viewModel = viewModel,
-                    onExit = onExit,
                     modifier = Modifier.fillMaxWidth()
                 )
 
@@ -76,5 +82,25 @@ fun GameBoardScreen(
                     .fillMaxHeight()
             )
         }
+    }
+    if (showDialog) {
+        AlertDialog(
+            onDismissRequest = { viewModel.closeExitDialog() },
+            title = { Text("Spiel beenden?") },
+            text = { Text("Möchtest du das Spiel wirklich verlassen? Alle Punkte gehen verloren.") },
+            confirmButton = {
+                Button(onClick = {
+                    viewModel.exitGame()
+                    onExit()
+                }) {
+                    Text("Beenden")
+                }
+            },
+            dismissButton = {
+                Button(onClick = { viewModel.closeExitDialog() }) {
+                    Text("Abbrechen")
+                }
+            }
+        )
     }
 }
