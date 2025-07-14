@@ -1,5 +1,6 @@
 package de.syntax_institut.androidabschlussprojekt.features.game.viewModels
 
+import android.util.Log
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableFloatStateOf
 import androidx.lifecycle.ViewModel
@@ -25,7 +26,7 @@ class GameViewModel(
     private val symbolsRepository: SymbolsRepository,
     private val userRepository: UserRepository,
     private val calculatePointsUseCase: CalculatePointsUseCase,
-    private val authViewModel: AuthViewModel
+    val authViewModel: AuthViewModel
 ) : ViewModel() {
 
     private val _allPackages = MutableStateFlow<List<SymbolPackage>>(emptyList())
@@ -99,9 +100,25 @@ class GameViewModel(
     private val _showExitDialog = MutableStateFlow(false)
     val showExitDialog: StateFlow<Boolean> = _showExitDialog
 
+    private val _showNextRoundDialog = MutableStateFlow(false)
+    val showNextRoundDialog: StateFlow<Boolean> = _showNextRoundDialog
+
+    private val _isPaused = MutableStateFlow(false)
+    val isPaused: StateFlow<Boolean> = _isPaused
+
 
     init {
         loadAllPackages()
+    }
+
+    private fun openNextRoundDialog() {
+        _showNextRoundDialog.value = true
+    }
+
+    fun closeNextRoundDialogAndStart() {
+        _showNextRoundDialog.value = false
+        _isPaused.value = false
+        triggerNextRound()
     }
 
     fun openExitDialog() {
@@ -159,6 +176,10 @@ class GameViewModel(
                 _missionItems.value = updatedMissions
                 _jokerUnlocked.value = true
             }
+
+            if (isAutoSpin) {
+                checkAndHandleRoundEnd()
+            }
         }
     }
 
@@ -193,7 +214,7 @@ class GameViewModel(
        _isSpinFinished.value = true
     }
 
-    
+
     private fun checkAndApplyBonus() {
         val current = _currentPoints.value
         val required = _requiredPoints.value
@@ -207,8 +228,54 @@ class GameViewModel(
         }
     }
 
+    private fun checkAndHandleRoundEnd() {
+        val allMissionsCompleted = _missionItems.value.all { it.isCompleted }
+        val jokerUsed = _jokerUnlocked.value
+        val twoSpinsDone = _spinCount.value >= 2
+        val timeIsOver = _progress.value == 0f
+        val noMissionPossible = !isAnyMissionStillPossible()
+
+        Log.d("GameDebug", "checkAndHandleRoundEnd → Joker: $jokerUsed | Spins: $twoSpinsDone | Zeit: $timeIsOver | Noch möglich: ${!noMissionPossible}")
+
+        val shouldEndRound =
+            timeIsOver ||
+                    (jokerUsed && twoSpinsDone && noMissionPossible) ||
+                    (allMissionsCompleted && jokerUsed)
+
+        if (shouldEndRound) {
+            viewModelScope.launch {
+                delay(1500)
+                _isPaused.value = true
+                openNextRoundDialog()
+            }
+        }
+    }
+
+    private fun updateRequiredPointsForRound(round: Int) {
+        val required = 100 + (round - 1) * 300
+        val bonus = calculateBonusForRound(round)
+        _requiredPoints.value = required
+        _roundBonus.value = bonus
+    }
+
+    private fun triggerNextRound() {
+        resetSpinCountAndJoker()
+        _heldSymbols.value = emptySet()
+        _bonusGivenForRound.value = false
+        _currentPoints.value = 0
+        _progress.value = 1f
+        _timeProgress.value = 1f
+        _roundBonus.value = 0
+        _isSpinFinished.value = false
+
+        updateRequiredPointsForRound(_currentRound.value + 1)
+        loadActivePackage()
+        startTimer()
+        nextRound()
+    }
+
     private fun calculateBonusForRound(round: Int): Int {
-        return 1000 + (round - 1) * 500
+        return 100 + (round - 1) * 50
     }
 
     private fun loadAllPackages() {
@@ -432,6 +499,26 @@ class GameViewModel(
         }
 
         _missionItems.value = updatedMissions
+        checkAndHandleRoundEnd()
+    }
+
+    private fun isAnyMissionStillPossible(): Boolean {
+        val currentSymbols = _currentReels.value.mapNotNull { it.getOrNull(1) }
+        if (currentSymbols.isEmpty()) return false
+
+        val symbolCounts = currentSymbols.groupingBy { it.id }.eachCount()
+        val distinctCount = symbolCounts.size
+
+        return _missionItems.value.any { mission ->
+            !mission.isCompleted && !mission.isClaimed && when (mission.type) {
+                MissionType.FIVE -> symbolCounts.values.any { it >= 5 }
+                MissionType.FOUR -> symbolCounts.values.any { it >= 4 }
+                MissionType.THREE -> symbolCounts.values.any { it >= 3 }
+                MissionType.FULLHOUSE -> symbolCounts.values.contains(3) && symbolCounts.values.contains(2)
+                MissionType.FIVE_DIFF -> distinctCount == 5
+                MissionType.JOKER -> true
+            }
+        }
     }
 
     fun claimMission(mission: MissionItem) {
@@ -533,9 +620,11 @@ class GameViewModel(
         _heldSymbols.value = emptySet()
         resetSpinCountAndJoker()
         startSpin(isAutoSpin = true)
+
+        checkAndHandleRoundEnd()
     }
 
-    fun resetGame() {
+    private fun resetGame() {
         _currentRound.value = 1
         _totalPoints.value = 0
         spinReels()
@@ -545,51 +634,24 @@ class GameViewModel(
         viewModelScope.launch {
             val steps = totalTimeMs / intervalMs
             for (i in steps downTo 0) {
+                if (_isPaused.value) return@launch
                 _progress.value = i / steps.toFloat()
                 delay(intervalMs)
             }
             _progress.value = 0f
+
+            checkAndHandleRoundEnd()
         }
     }
 
-
-
-
-
-    /*fun resetTimer() {
-        _progress.value = 1f
-    }*/
-
-    /*fun updateRequiredPointsForRound(round: Int) {
-        val calculatedPoints = 10000 + (round - 1) * 3000
-        _requiredPoints.value = calculatedPoints
-        _currentRound.value = round
-
-        _bonusGivenForRound.value = false
-    }*/
-
-    /*fun nextRound() {
+    private fun nextRound() {
         if (_currentRound.value < 5) {
             _currentRound.value += 1
-            spinReels()
+            startSpin(isAutoSpin = true)
         } else {
             _gameFinished.value = true
         }
-    }*/
-
-    /*fun decreaseTimeProgress(step: Float) {
-        val newProgress = (_timeProgress.value - step).coerceIn(0f, 1f)
-        _timeProgress.value = newProgress
-    }*/
-
-    /*fun resetProgress() {
-        _timeProgress.value = 1f
-        _bonusProgress.value = 0f
-    }*/
-
-    /*fun updateRequiredPoints(newRequired: Int) {
-        _requiredPoints.value = newRequired
-    }*/
+    }
 
 }
 

@@ -33,11 +33,16 @@ fun GameBoardScreen(
 ) {
     val backgroundColor = Color(0xFF083A8C)
 
+    val currentPoints = viewModel.currentPoints.collectAsState().value
+    val roundBonus = viewModel.roundBonus.collectAsState().value
+    val displayedPoints = currentPoints + roundBonus
+
     val showDialog by viewModel.showExitDialog.collectAsState()
 
     LaunchedEffect(Unit) {
         viewModel.startSpin(isAutoSpin = true)
     }
+
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -99,6 +104,26 @@ fun GameBoardScreen(
             dismissButton = {
                 Button(onClick = { viewModel.closeExitDialog() }) {
                     Text("Abbrechen")
+                }
+            }
+        )
+    }
+
+    if (viewModel.showNextRoundDialog.collectAsState().value) {
+        AlertDialog(
+            onDismissRequest = { },
+            title = {
+                Text("Runde beendet")
+            },
+            text = {
+                Column {
+                    Text("Spieler: ${viewModel.authViewModel.currentUserModel.value?.username ?: "?"}")
+                    Text("Punkte: $displayedPoints")
+                }
+            },
+            confirmButton = {
+                Button(onClick = { viewModel.closeNextRoundDialogAndStart() }) {
+                    Text("Nächste Runde")
                 }
             }
         )
