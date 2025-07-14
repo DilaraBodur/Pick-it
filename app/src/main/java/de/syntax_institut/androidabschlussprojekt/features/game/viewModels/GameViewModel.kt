@@ -193,14 +193,7 @@ class GameViewModel(
        _isSpinFinished.value = true
     }
 
-    fun updateRequiredPointsForRound(round: Int) {
-        val calculatedPoints = 10000 + (round - 1) * 3000
-        _requiredPoints.value = calculatedPoints
-        _currentRound.value = round
-
-        _bonusGivenForRound.value = false
-    }
-
+    
     private fun checkAndApplyBonus() {
         val current = _currentPoints.value
         val required = _requiredPoints.value
@@ -315,24 +308,12 @@ class GameViewModel(
         _currentPoints.value = newPoints
     }
 
-    fun updateRequiredPoints(newRequired: Int) {
-        _requiredPoints.value = newRequired
-    }
 
     private fun increaseBonusProgress(points: Float) {
         val newProgress = (_bonusProgress.value + points).coerceIn(0f, 1f)
         _bonusProgress.value = newProgress
     }
 
-    fun decreaseTimeProgress(step: Float) {
-        val newProgress = (_timeProgress.value - step).coerceIn(0f, 1f)
-        _timeProgress.value = newProgress
-    }
-
-    fun resetProgress() {
-        _timeProgress.value = 1f
-        _bonusProgress.value = 0f
-    }
 
     fun evaluateCombination() {
 
@@ -554,21 +535,11 @@ class GameViewModel(
         startSpin(isAutoSpin = true)
     }
 
-    fun nextRound() {
-        if (_currentRound.value < 5) {
-            _currentRound.value += 1
-            spinReels()
-        } else {
-            _gameFinished.value = true
-        }
-    }
-
     fun resetGame() {
         _currentRound.value = 1
         _totalPoints.value = 0
         spinReels()
     }
-
 
     fun startTimer() {
         viewModelScope.launch {
@@ -581,9 +552,44 @@ class GameViewModel(
         }
     }
 
-    fun resetTimer() {
+
+
+
+
+    /*fun resetTimer() {
         _progress.value = 1f
-    }
+    }*/
+
+    /*fun updateRequiredPointsForRound(round: Int) {
+        val calculatedPoints = 10000 + (round - 1) * 3000
+        _requiredPoints.value = calculatedPoints
+        _currentRound.value = round
+
+        _bonusGivenForRound.value = false
+    }*/
+
+    /*fun nextRound() {
+        if (_currentRound.value < 5) {
+            _currentRound.value += 1
+            spinReels()
+        } else {
+            _gameFinished.value = true
+        }
+    }*/
+
+    /*fun decreaseTimeProgress(step: Float) {
+        val newProgress = (_timeProgress.value - step).coerceIn(0f, 1f)
+        _timeProgress.value = newProgress
+    }*/
+
+    /*fun resetProgress() {
+        _timeProgress.value = 1f
+        _bonusProgress.value = 0f
+    }*/
+
+    /*fun updateRequiredPoints(newRequired: Int) {
+        _requiredPoints.value = newRequired
+    }*/
 
 }
 
