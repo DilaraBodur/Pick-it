@@ -19,7 +19,9 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavHostController
 import de.syntax_institut.androidabschlussprojekt.features.game.composables.DrawButtons
+import de.syntax_institut.androidabschlussprojekt.features.game.composables.GameEndDialog
 import de.syntax_institut.androidabschlussprojekt.features.game.composables.HeaderSection
 import de.syntax_institut.androidabschlussprojekt.features.game.composables.MissionBoard
 import de.syntax_institut.androidabschlussprojekt.features.game.composables.SlotComposableWithReels
@@ -28,6 +30,7 @@ import de.syntax_institut.androidabschlussprojekt.features.game.viewModels.GameV
 
 @Composable
 fun GameBoardScreen(
+    navController: NavHostController,
     viewModel: GameViewModel,
     onExit: () -> Unit
 ) {
@@ -36,8 +39,10 @@ fun GameBoardScreen(
     val currentPoints = viewModel.currentPoints.collectAsState().value
     val roundBonus = viewModel.roundBonus.collectAsState().value
     val displayedPoints = currentPoints + roundBonus
+    val totalPoints = viewModel.totalPoints.collectAsState().value
 
     val showDialog by viewModel.showExitDialog.collectAsState()
+    val showGameEndDialog by viewModel.showGameEndDialog.collectAsState()
 
     LaunchedEffect(Unit) {
         viewModel.startSpin(isAutoSpin = true)
@@ -126,6 +131,15 @@ fun GameBoardScreen(
                     Text("Nächste Runde")
                 }
             }
+        )
+    }
+
+    if (showGameEndDialog) {
+        GameEndDialog(
+            username = viewModel.authViewModel.currentUserModel.collectAsState().value?.username ?: "",
+            totalPoints = totalPoints,
+            onRestart = { viewModel.closeGameEndDialog() },
+            onExit = { navController.navigate("lobby") }
         )
     }
 }

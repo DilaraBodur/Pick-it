@@ -106,9 +106,23 @@ class GameViewModel(
     private val _isPaused = MutableStateFlow(false)
     val isPaused: StateFlow<Boolean> = _isPaused
 
+    private val _showGameEndDialog = MutableStateFlow(false)
+    val showGameEndDialog: StateFlow<Boolean> = _showGameEndDialog
+
 
     init {
         loadAllPackages()
+    }
+
+    fun checkGameEnd() {
+        if (_currentRound.value >= 5) {
+            _gameFinished.value = true
+            _showGameEndDialog.value = true
+        }
+    }
+
+    fun closeGameEndDialog() {
+        _showGameEndDialog.value = false
     }
 
     private fun openNextRoundDialog() {
@@ -245,7 +259,11 @@ class GameViewModel(
             viewModelScope.launch {
                 delay(1500)
                 _isPaused.value = true
-                openNextRoundDialog()
+                if (_currentRound.value >= 5) {
+                    checkGameEnd()
+                } else {
+                    openNextRoundDialog()
+                }
             }
         }
     }
@@ -652,6 +670,18 @@ class GameViewModel(
         } else {
             _gameFinished.value = true
         }
+    }
+
+    fun restartGame() {
+        _currentRound.value = 1
+        _totalPoints.value = 0
+        _currentPoints.value = 0
+        _bonusProgress.value = 0f
+        _bonusGivenForRound.value = false
+        _missionItems.value = emptyList()
+        _gameFinished.value = false
+        _showGameEndDialog.value = false
+        startSpin(isAutoSpin = true)
     }
 
 }

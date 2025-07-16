@@ -105,7 +105,17 @@ fun AppStart(authViewModel: AuthViewModel) {
                     }
 
                     composable("game_solo") {
-                        GameBoardScreen(viewModel = koinViewModel(), onExit = { navController.navigate("lobby") { popUpTo("lobby") { inclusive = true } } })
+                        GameBoardScreen(
+                            viewModel = koinViewModel(),
+                            onExit = {
+                                navController.navigate("lobby") {
+                                    popUpTo("lobby") {
+                                        inclusive = true
+                                    }
+                                }
+                            },
+                            navController = navController
+                        )
                     }
                 }
             }
