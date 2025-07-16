@@ -132,6 +132,9 @@ fun GameBoardScreen(
     }
 
     if (showGameEndDialog) {
+        LaunchedEffect(Unit) {
+            viewModel.finishGameIfNeeded()
+        }
         GameEndDialog(
             username = viewModel.authViewModel.currentUserModel.collectAsState().value?.username ?: "",
             totalPoints = totalPoints,

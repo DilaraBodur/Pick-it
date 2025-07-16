@@ -684,6 +684,17 @@ class GameViewModel(
         startSpin(isAutoSpin = true)
     }
 
+    fun finishGameIfNeeded() {
+        if (_currentRound.value >= 5) {
+            viewModelScope.launch {
+                val user = authViewModel.currentUserModel.value ?: return@launch
+                val pointsThisGame = _totalPoints.value
+
+                userRepository.addToTotalPoints(user.uid, pointsThisGame)
+            }
+        }
+    }
+
 }
 
 

@@ -109,8 +109,21 @@ class UserRepository {
         }.await()
     }
 
-    suspend fun updateActivePackage(userId: String, packageId: String) {
+    fun updateActivePackage(userId: String, packageId: String) {
         val userDoc = FirebaseFirestore.getInstance().collection("users").document(userId)
         userDoc.update("activePackageId", packageId)
+    }
+
+    suspend fun addToTotalPoints(userId: String, additionalPoints: Int) {
+        val userDoc = FirebaseFirestore.getInstance()
+            .collection("users")
+            .document(userId)
+
+        FirebaseFirestore.getInstance().runTransaction { transaction ->
+            val snapshot = transaction.get(userDoc)
+            val currentPoints = snapshot.getLong("totalPoints") ?: 0L
+            val newPoints = currentPoints + additionalPoints
+            transaction.update(userDoc, "totalPoints", newPoints)
+        }.await()
     }
 }
