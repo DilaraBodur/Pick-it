@@ -38,7 +38,6 @@ fun GameBoardScreen(
 
     val currentPoints = viewModel.currentPoints.collectAsState().value
     val roundBonus = viewModel.roundBonus.collectAsState().value
-    val displayedPoints = currentPoints + roundBonus
     val totalPoints = viewModel.totalPoints.collectAsState().value
 
     val showDialog by viewModel.showExitDialog.collectAsState()
@@ -123,7 +122,7 @@ fun GameBoardScreen(
             text = {
                 Column {
                     Text("Spieler: ${viewModel.authViewModel.currentUserModel.value?.username ?: "?"}")
-                    Text("Punkte: $displayedPoints")
+                    Text("Punkte: $totalPoints")
                 }
             },
             confirmButton = {
@@ -138,7 +137,7 @@ fun GameBoardScreen(
         GameEndDialog(
             username = viewModel.authViewModel.currentUserModel.collectAsState().value?.username ?: "",
             totalPoints = totalPoints,
-            onRestart = { viewModel.closeGameEndDialog() },
+            onRestart = { viewModel.restartGame() },
             onExit = { navController.navigate("lobby") }
         )
     }
