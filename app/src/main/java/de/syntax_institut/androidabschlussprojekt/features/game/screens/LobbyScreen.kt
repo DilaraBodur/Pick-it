@@ -56,6 +56,7 @@ import de.syntax_institut.androidabschlussprojekt.features.user.screens.EditProf
 import de.syntax_institut.androidabschlussprojekt.features.user.screens.ProfileDialog
 import de.syntax_institut.androidabschlussprojekt.features.auth.viewModels.AuthViewModel
 import de.syntax_institut.androidabschlussprojekt.features.game.composables.GameModeCard
+import de.syntax_institut.androidabschlussprojekt.features.game.viewModels.RankingViewModel
 import de.syntax_institut.androidabschlussprojekt.features.user.friends.screens.FriendsDialog
 import de.syntax_institut.androidabschlussprojekt.features.user.friends.viewModels.FriendsViewModel
 import org.koin.androidx.compose.koinViewModel
@@ -84,6 +85,9 @@ fun LobbyScreen(
     var isNotificationsEnabled by remember { mutableStateOf(true) }
     val showProfileDialog = remember { mutableStateOf(false) }
     val showEditDialog = remember { mutableStateOf(false) }
+
+    val rankingViewModel: RankingViewModel = koinViewModel()
+    val topUsers by rankingViewModel.topUsers.collectAsState()
 
     val showFriendsDialog = remember { mutableStateOf(false) }
 
@@ -261,19 +265,13 @@ fun LobbyScreen(
     }
 
     if (showRankingSheet) {
-        ModalBottomSheet(
-            onDismissRequest = { showRankingSheet = false },
-            sheetState = rememberModalBottomSheetState()
-        ) {
-            Column(modifier = Modifier.padding(16.dp)) {
-                Text("Rangliste", fontSize = 24.sp, fontWeight = FontWeight.Bold)
-                Spacer(Modifier.height(12.dp))
-                // TODO: Ranglisten daten einbauen
-                repeat(10) { i ->
-                    Text(text = "${i + 1}. Spielername - Punkte", color = Color.White)
-                }
-            }
+        LaunchedEffect(Unit) {
+            rankingViewModel.loadTopUsers()
         }
+        RankingDialog(
+            topUsers = topUsers,
+            onDismiss = { showRankingSheet = false }
+        )
     }
 
     if (showDeleteDialog) {

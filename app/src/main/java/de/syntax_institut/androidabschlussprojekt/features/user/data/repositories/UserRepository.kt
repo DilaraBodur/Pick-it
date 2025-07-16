@@ -2,6 +2,7 @@ package de.syntax_institut.androidabschlussprojekt.features.user.data.repositori
 
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.Query
 import de.syntax_institut.androidabschlussprojekt.features.user.data.models.User
 import kotlinx.coroutines.tasks.await
 
@@ -125,5 +126,16 @@ class UserRepository {
             val newPoints = currentPoints + additionalPoints
             transaction.update(userDoc, "totalPoints", newPoints)
         }.await()
+    }
+
+    suspend fun getTopUsersByPoints(limit: Long = 10): List<User> {
+        val snapshot = FirebaseFirestore.getInstance()
+            .collection("users")
+            .orderBy("totalPoints", Query.Direction.DESCENDING)
+            .limit(limit)
+            .get()
+            .await()
+
+        return snapshot.documents.mapNotNull { it.toObject(User::class.java) }
     }
 }

@@ -9,6 +9,7 @@ import de.syntax_institut.androidabschlussprojekt.features.game.data.repositorie
 import de.syntax_institut.androidabschlussprojekt.features.game.domain.usecases.CalculatePointsUseCase
 import de.syntax_institut.androidabschlussprojekt.features.game.viewModels.GameViewModel
 import de.syntax_institut.androidabschlussprojekt.features.game.viewModels.InventoryViewModel
+import de.syntax_institut.androidabschlussprojekt.features.game.viewModels.RankingViewModel
 import de.syntax_institut.androidabschlussprojekt.features.game.viewModels.ShopViewModel
 import de.syntax_institut.androidabschlussprojekt.features.user.data.repositories.UserRepository
 import de.syntax_institut.androidabschlussprojekt.features.user.data.repositories.UsernameRepository
@@ -84,4 +85,7 @@ val appModule = module {
         GameViewModel(get(), get(), get(), get())
     }
 
+    viewModel {
+        RankingViewModel(get())
+    }
 }
