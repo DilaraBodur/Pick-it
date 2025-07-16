@@ -114,15 +114,11 @@ class GameViewModel(
         loadAllPackages()
     }
 
-    fun checkGameEnd() {
+    private fun checkGameEnd() {
         if (_currentRound.value >= 5) {
             _gameFinished.value = true
             _showGameEndDialog.value = true
         }
-    }
-
-    fun closeGameEndDialog() {
-        _showGameEndDialog.value = false
     }
 
     private fun openNextRoundDialog() {
@@ -252,7 +248,7 @@ class GameViewModel(
 
         val shouldEndRound =
             timeIsOver ||
-                    (jokerUsed && twoSpinsDone && noMissionPossible && !isAnyMissionSelectable()) ||
+                    (jokerUsed && twoSpinsDone && noMissionPossible) ||
                     (allMissionsCompleted && jokerUsed)
 
         if (shouldEndRound) {
@@ -268,25 +264,7 @@ class GameViewModel(
         }
     }
 
-    private fun isAnyMissionSelectable(): Boolean {
-        val currentSymbols = _currentReels.value.mapNotNull { it.getOrNull(1) }
-        if (currentSymbols.isEmpty()) return false
 
-        val symbolCounts = currentSymbols.groupingBy { it.id }.eachCount()
-        val distinctCount = symbolCounts.size
-        val maxCount = symbolCounts.values.maxOrNull() ?: 0
-
-        return _missionItems.value.any { mission ->
-            when (mission.type) {
-                MissionType.THREE -> maxCount >= 3
-                MissionType.FOUR -> maxCount >= 4
-                MissionType.FIVE -> maxCount >= 5
-                MissionType.FULLHOUSE -> symbolCounts.values.contains(3) && symbolCounts.values.contains(2)
-                MissionType.FIVE_DIFF -> distinctCount >= 5
-                MissionType.JOKER -> false
-            } && !mission.isCompleted
-        }
-    }
 
 
     private fun triggerNextRound() {
