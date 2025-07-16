@@ -38,9 +38,6 @@ class GameViewModel(
     private val _currentRound = MutableStateFlow(1)
     val currentRound: StateFlow<Int> = _currentRound
 
-    private val _totalPoints = MutableStateFlow(0)
-    val totalPoints: StateFlow<Int> = _totalPoints
-
     private val _currentSymbols = MutableStateFlow<List<Symbol>>(emptyList())
     val currentSymbols: StateFlow<List<Symbol>> = _currentSymbols
 
@@ -69,6 +66,9 @@ class GameViewModel(
 
     private val _timeProgress = MutableStateFlow(1f)
     val timeProgress: StateFlow<Float> = _timeProgress.asStateFlow()
+
+    private val _totalPoints = MutableStateFlow(0)
+    val totalPoints: StateFlow<Int> = _totalPoints
 
     private val _bonusProgress = MutableStateFlow(0f)
     val bonusProgress: StateFlow<Float> =
@@ -219,12 +219,11 @@ class GameViewModel(
         val current = _currentPoints.value
         val required = _requiredPoints.value
 
-        if (current >= required) {
+        if (current >= required && !_bonusGivenForRound.value) {
             val bonus = calculateBonusForRound(_currentRound.value)
             _roundBonus.value = bonus
             _totalPoints.value += bonus
-
-            _bonusGivenForRound
+            _bonusGivenForRound.value = true
         }
     }
 
@@ -251,12 +250,6 @@ class GameViewModel(
         }
     }
 
-    private fun updateRequiredPointsForRound(round: Int) {
-        val required = 100 + (round - 1) * 300
-        val bonus = calculateBonusForRound(round)
-        _requiredPoints.value = required
-        _roundBonus.value = bonus
-    }
 
     private fun triggerNextRound() {
         resetSpinCountAndJoker()
@@ -272,6 +265,13 @@ class GameViewModel(
         loadActivePackage()
         startTimer()
         nextRound()
+    }
+
+    private fun updateRequiredPointsForRound(round: Int) {
+        val required = 100 + (round - 1) * 300
+        val bonus = calculateBonusForRound(round)
+        _requiredPoints.value = required
+        _roundBonus.value = bonus
     }
 
     private fun calculateBonusForRound(round: Int): Int {
@@ -615,6 +615,7 @@ class GameViewModel(
 
         increaseBonusProgress(calculatedPoints.toFloat())
         updatePoints(newPoints = _currentPoints.value + calculatedPoints)
+        _totalPoints.value += calculatedPoints
         checkAndApplyBonus()
 
         _heldSymbols.value = emptySet()
