@@ -36,8 +36,6 @@ fun GameBoardScreen(
 ) {
     val backgroundColor = Color(0xFF083A8C)
 
-    val currentPoints = viewModel.currentPoints.collectAsState().value
-    val roundBonus = viewModel.roundBonus.collectAsState().value
     val totalPoints = viewModel.totalPoints.collectAsState().value
 
     val showDialog by viewModel.showExitDialog.collectAsState()
