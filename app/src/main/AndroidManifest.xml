@@ -30,7 +30,7 @@
             android:exported="true"
             android:screenOrientation="landscape"
             android:label="@string/app_name"
-            android:theme="@style/Theme.AndroidAbschlussprojekt"
+            android:theme="@style/Theme.App.Splash"
             tools:ignore="DiscouragedApi">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
