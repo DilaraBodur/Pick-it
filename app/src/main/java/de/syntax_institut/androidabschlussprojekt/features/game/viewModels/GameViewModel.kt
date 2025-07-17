@@ -410,6 +410,8 @@ class GameViewModel(
 
         val updatedMissions = _missionItems.value.map { mission ->
 
+            if (mission.isClaimed) return@map mission
+
             when (mission.type) {
 
                 MissionType.FIVE -> {
@@ -477,7 +479,7 @@ class GameViewModel(
                 }
 
                 MissionType.JOKER -> {
-                    if (!mission.isCompleted) {
+                    if (!mission.isCompleted && !mission.isClaimed) {
                         val (jokerPoints, combinationType) = when {
                             maxCount >= 5 -> calculatePointsUseCase.calculatePoints(
                                 symbol = currentSymbols.firstOrNull() ?: mission.symbol!!,
