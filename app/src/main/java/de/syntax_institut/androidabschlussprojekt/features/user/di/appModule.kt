@@ -29,6 +29,8 @@ val appModule = module {
     single { FriendsRepository() }
     single { SymbolsRepository(get()) }
     single { CalculatePointsUseCase() }
+    single { UsernameRepository(get()) }
+
 
     single {
         Moshi.Builder()
