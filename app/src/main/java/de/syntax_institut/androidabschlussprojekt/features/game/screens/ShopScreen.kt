@@ -51,7 +51,11 @@ fun ShopScreen(
             )
         }
 
-        LazyColumn {
+        LazyColumn(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(bottom = 84.dp)
+        ) {
             items(packages) { symbolPackage ->
                 val alreadyBought = boughtTitles.contains(symbolPackage.packageId)
                 val isActive = symbolPackage.packageId == activePackageId.value
@@ -101,7 +105,7 @@ fun ShopScreen(
                                     Text("Verwenden")
                                 }
 
-                                "Aktiv" -> Text(text = "Aktiv", color = Color.Green, fontWeight = FontWeight.Bold)
+                                "Aktiv" -> Text(text = "Aktiv", color = Color.Blue, fontWeight = FontWeight.Bold)
                             }
                         }
                     }

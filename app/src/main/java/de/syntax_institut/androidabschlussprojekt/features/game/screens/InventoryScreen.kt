@@ -50,7 +50,11 @@ fun InventoryScreen(
         if (packages.isEmpty()) {
             Text("Du hast keine gekauften Pakete.", color = Color.Gray)
         } else {
-            LazyColumn {
+            LazyColumn(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(bottom = 84.dp)
+            ) {
                 items(packages) { symbolPackage ->
                     val isActive = symbolPackage.packageId == activePackageId
 
