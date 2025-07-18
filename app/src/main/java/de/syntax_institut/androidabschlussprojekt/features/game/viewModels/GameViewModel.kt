@@ -188,6 +188,7 @@ class GameViewModel(
             }
 
             if (isAutoSpin) {
+                delay(timeMillis = 300)
                 checkAndHandleRoundEnd()
             }
         }
@@ -244,7 +245,7 @@ class GameViewModel(
         val timeIsOver = _progress.value == 0f
         val noMissionPossible = !isAnyMissionStillPossible()
 
-        Log.d("GameDebug", "checkAndHandleRoundEnd → Joker: $jokerUsed | Spins: $twoSpinsDone | Zeit: $timeIsOver | Noch möglich: ${!noMissionPossible}")
+        Log.d("RoundEndDebug", "JokerUsed: $jokerUsed | 2SpinsDone: $twoSpinsDone | TimeOver: $timeIsOver | NoMissionPossible: $noMissionPossible | AllCompleted: $allMissionsCompleted")
 
         val shouldEndRound =
             timeIsOver ||
@@ -263,6 +264,7 @@ class GameViewModel(
             }
         }
     }
+
 
 
 
@@ -534,7 +536,7 @@ class GameViewModel(
                 MissionType.THREE -> symbolCounts.values.any { it >= 3 }
                 MissionType.FULLHOUSE -> symbolCounts.values.contains(3) && symbolCounts.values.contains(2)
                 MissionType.FIVE_DIFF -> distinctCount == 5
-                MissionType.JOKER -> true
+                MissionType.JOKER -> !mission.isClaimed
             }
         }
     }
