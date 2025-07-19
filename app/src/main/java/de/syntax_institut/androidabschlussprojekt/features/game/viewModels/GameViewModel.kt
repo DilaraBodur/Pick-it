@@ -240,7 +240,9 @@ class GameViewModel(
 
     private fun checkAndHandleRoundEnd() {
         val allMissionsCompleted = _missionItems.value.all { it.isCompleted }
-        val jokerUsed = _jokerUnlocked.value
+        val jokerUsed = _missionItems.value.count {
+            it.type == MissionType.JOKER && it.isClaimed
+        } >= 2
         val twoSpinsDone = _spinCount.value >= 2
         val timeIsOver = _progress.value == 0f
         val noMissionPossible = !isAnyMissionStillPossible()
@@ -264,10 +266,6 @@ class GameViewModel(
             }
         }
     }
-
-
-
-
 
     private fun triggerNextRound() {
         resetSpinCountAndJoker()

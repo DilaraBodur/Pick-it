@@ -1,5 +1,6 @@
 package de.syntax_institut.androidabschlussprojekt.features.game.composables
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -13,6 +14,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import de.syntax_institut.androidabschlussprojekt.features.game.viewModels.GameViewModel
 
@@ -23,7 +25,7 @@ fun DrawButtons(viewModel: GameViewModel, modifier: Modifier = Modifier) {
     Row(
         modifier = modifier
             .fillMaxWidth()
-            .padding(horizontal =48.dp),
+            .padding(horizontal = 48.dp),
         horizontalArrangement = Arrangement.spacedBy(60.dp, Alignment.CenterHorizontally),
         verticalAlignment = Alignment.CenterVertically
     ) {
@@ -31,7 +33,8 @@ fun DrawButtons(viewModel: GameViewModel, modifier: Modifier = Modifier) {
             onClick = { viewModel.startSpin() },
             enabled = spinCount < 1,
             modifier = Modifier.height(40.dp).weight(1f).fillMaxWidth(),
-            shape = RoundedCornerShape(12.dp)
+            shape = RoundedCornerShape(12.dp),
+            border = BorderStroke(1.dp, Color.Black)
         ) {
             Text(text = "Draw")
         }
@@ -40,7 +43,8 @@ fun DrawButtons(viewModel: GameViewModel, modifier: Modifier = Modifier) {
             onClick = { viewModel.startSpin() },
             enabled = spinCount < 2,
             modifier = Modifier.height(40.dp).weight(1f).fillMaxWidth(),
-            shape = RoundedCornerShape(12.dp)
+            shape = RoundedCornerShape(12.dp),
+            border = BorderStroke(1.dp, Color.Black)
         ) {
             Text(text = "Draw")
         }

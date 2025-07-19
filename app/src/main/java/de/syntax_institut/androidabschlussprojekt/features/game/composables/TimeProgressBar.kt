@@ -3,6 +3,7 @@ package de.syntax_institut.androidabschlussprojekt.features.game.composables
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -27,25 +28,28 @@ fun TimeProgressBar(
             Color(0xFFFFA500),
             Color.Yellow,
             Color.Green,
-            Color.Cyan,
-            Color.Blue,
-            Color(0xFF8B00FF)
+            Color.Cyan
         )
     )
 
     Box(
         modifier = modifier
+            .fillMaxWidth()
             .height(40.dp)
             .clip(RoundedCornerShape(8.dp))
-            .background(Color.LightGray),
-        contentAlignment = Alignment.CenterStart
     ) {
         Box(
             modifier = Modifier
-                .fillMaxHeight()
-                .fillMaxWidth(coercedProgress)
-                .clip(RoundedCornerShape(8.dp))
+                .fillMaxSize()
                 .background(rainbowBrush)
+        )
+
+        Box(
+            modifier = Modifier
+                .fillMaxHeight()
+                .fillMaxWidth(1f - coercedProgress)
+                .align(Alignment.CenterEnd)
+                .background(Color.LightGray)
         )
     }
 }

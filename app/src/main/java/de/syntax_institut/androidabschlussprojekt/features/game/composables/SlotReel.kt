@@ -32,7 +32,7 @@ fun SlotReel(
             .width(90.dp)
             .height(150.dp)
             .clip(RoundedCornerShape(12.dp))
-            .background(Color(0xFF222222))
+            .background(Color(0xFF2A2A2A))
             .clickable { onToggleHold() }
             .border(
                 width = if (isHeld) 3.dp else 0.dp,
