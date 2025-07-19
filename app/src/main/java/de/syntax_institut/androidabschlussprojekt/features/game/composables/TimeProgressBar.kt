@@ -61,7 +61,7 @@ fun TimeProgressBar(
                 .fillMaxHeight()
                 .fillMaxWidth(1f - coercedProgress)
                 .align(Alignment.CenterEnd)
-                .background(Color.LightGray)
+                .background(Color.Gray)
         )
     }
 }

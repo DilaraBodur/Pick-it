@@ -33,15 +33,13 @@ fun MissionItemBox(
     val backgroundColor = Color(0xFF1565C0)
     val darkGray = Color(0xFF2E2E2E)
 
-    val blueCyanGlossyBrush = Brush.verticalGradient(
+    val buttonBrush = Brush.verticalGradient(
         colors = listOf(
-            Color(0xFF00BCD4),
-            Color(0xFF00BCD4),
-            Color(0xFF80DEEA),
-            Color(0xFFE1F5FE),
-            Color(0xFF80DEEA),
-            Color(0xFF00BCD4),
-            Color(0xFF00BCD4)
+            Color(0xFFD8F9FF),
+            Color(0xFF1778C5),
+            Color(0xFF3CB5E5),
+            Color(0xFF63D4FF),
+            Color(0xFFD8F9FF)
         ),
         startY = 0f,
         endY = Float.POSITIVE_INFINITY
@@ -50,7 +48,7 @@ fun MissionItemBox(
     val backgroundBrush = if (mission.isClaimed) {
         SolidColor(darkGray)
     } else if (mission.isCompleted) {
-        blueCyanGlossyBrush
+        buttonBrush
     } else {
         SolidColor(backgroundColor)
     }

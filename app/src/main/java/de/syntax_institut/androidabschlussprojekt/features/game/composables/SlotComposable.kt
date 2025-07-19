@@ -1,6 +1,5 @@
 package de.syntax_institut.androidabschlussprojekt.features.game.composables
 
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
@@ -40,15 +39,14 @@ fun SlotComposableWithReels(viewModel: GameViewModel, modifier: Modifier = Modif
         modifier = Modifier
             .fillMaxWidth()
             .height(180.dp)
-            .padding(8.dp)
-            .border(width = 1.dp, color = Color.Black, shape = RoundedCornerShape(16.dp)),
+            .padding(8.dp),
         shape = RoundedCornerShape(16.dp),
         colors = CardDefaults.cardColors(containerColor = backgroundColor)
     ) {
         Row(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(horizontal = 12.dp),
+                .padding(horizontal = 18.dp),
             horizontalArrangement = Arrangement.SpaceEvenly,
             verticalAlignment = Alignment.CenterVertically
         ) {
@@ -74,7 +72,7 @@ fun SlotComposableWithReels(viewModel: GameViewModel, modifier: Modifier = Modif
 
                 if (index < lastIndex) {
                     DiamondShape(
-                        size = 14.dp,
+                        size = 12.dp,
                         color = Color.White
                     )
                 }
