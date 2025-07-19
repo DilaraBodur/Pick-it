@@ -90,7 +90,6 @@ fun MissionItemBox(
                         Text(
                             text = mission.symbol?.emoji ?: "❓",
                             fontSize = 22.sp,
-                            modifier = Modifier.alpha(if (mission.isCompleted) 1f else 0.5f),
                             color = Color.White
                         )
                     }
