@@ -29,13 +29,14 @@ fun MissionItemBox(
 ) {
     val shape = RoundedCornerShape(12.dp)
     val backgroundColor = Color(0xFF1565C0)
+    val metallicSilver = Color(0xFFBFC1C2)
 
     Box(
         contentAlignment = Alignment.Center,
         modifier = modifier
             .clip(RoundedCornerShape(12.dp))
             .clickable(enabled = mission.isCompleted && !mission.isClaimed) { onClick() }
-            .border(width = 1.dp, color = if (mission.isCompleted && !mission.isClaimed) Color.Yellow else Color.Black, shape = shape)
+            .border(width = 1.dp, color = if (mission.isCompleted && !mission.isClaimed) metallicSilver else Color.Black, shape = shape)
             .shadow(
                 elevation = if (mission.isCompleted) 8.dp else 0.dp,
                 shape = shape,
@@ -46,8 +47,8 @@ fun MissionItemBox(
         when {
             mission.isClaimed -> {
                 Text(
-                    text = "+${mission.basePoints} Punkte",
-                    color = Color.Yellow,
+                    text = "${mission.basePoints} Punkte",
+                    color = Color.Green,
                     fontWeight = FontWeight.Bold
                 )
             }
@@ -56,7 +57,7 @@ fun MissionItemBox(
                     repeat(3) {
                         Text(
                             text = mission.symbol?.emoji ?: "❓",
-                            fontSize = 20.sp,
+                            fontSize = 22.sp,
                             modifier = Modifier.alpha(if (mission.isCompleted) 1f else 0.3f),
                             color = Color.White
                         )

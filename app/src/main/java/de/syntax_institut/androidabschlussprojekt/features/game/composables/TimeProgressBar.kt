@@ -10,6 +10,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 
@@ -19,7 +20,18 @@ fun TimeProgressBar(
     modifier: Modifier = Modifier
 ) {
     val coercedProgress = progress.coerceIn(0f, 1f)
-    val purpleColor = Color(0xFF9C27B0)
+
+    val rainbowBrush = Brush.horizontalGradient(
+        colors = listOf(
+            Color.Red,
+            Color(0xFFFFA500),
+            Color.Yellow,
+            Color.Green,
+            Color.Cyan,
+            Color.Blue,
+            Color(0xFF8B00FF)
+        )
+    )
 
     Box(
         modifier = modifier
@@ -33,7 +45,7 @@ fun TimeProgressBar(
                 .fillMaxHeight()
                 .fillMaxWidth(coercedProgress)
                 .clip(RoundedCornerShape(8.dp))
-                .background(purpleColor)
+                .background(rainbowBrush)
         )
     }
 }
