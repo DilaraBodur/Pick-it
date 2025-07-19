@@ -12,6 +12,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.drawBehind
+import androidx.compose.ui.geometry.CornerRadius
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -28,12 +32,21 @@ fun BonusProgressBar(
 ) {
     Box(
         modifier = modifier
+            .drawBehind {
+                drawRoundRect(
+                    color = Color.Black.copy(alpha = 0.7f),
+                    topLeft = Offset(6f, 6f),
+                    size = Size(size.width, size.height),
+                    cornerRadius = CornerRadius(24f)
+                )
+            }
             .height(40.dp)
             .clip(RoundedCornerShape(8.dp))
             .background(Color.Gray)
     ) {
         Box(
             modifier = Modifier
+
                 .fillMaxHeight()
                 .fillMaxWidth(progress)
                 .clip(RoundedCornerShape(8.dp))

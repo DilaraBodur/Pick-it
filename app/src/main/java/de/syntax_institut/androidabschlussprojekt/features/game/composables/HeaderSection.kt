@@ -1,5 +1,6 @@
 package de.syntax_institut.androidabschlussprojekt.features.game.composables
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -17,8 +18,13 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.drawBehind
+import androidx.compose.ui.geometry.CornerRadius
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import de.syntax_institut.androidabschlussprojekt.features.auth.viewModels.AuthViewModel
 import de.syntax_institut.androidabschlussprojekt.features.game.viewModels.GameViewModel
 import org.koin.androidx.compose.koinViewModel
@@ -75,12 +81,24 @@ fun HeaderSection(
 
             Box(
                 modifier = headerButtonSizeModifier
-                    .border(1.dp, Color.Black, RoundedCornerShape(12.dp)),
+                    .drawBehind {
+                        drawRoundRect(
+                            color = Color.Black.copy(alpha = 0.7f),
+                            topLeft = Offset(6f, 6f),
+                            size = Size(size.width, size.height),
+                            cornerRadius = CornerRadius(30f)
+                        )
+                    }
+                    .background(
+                        color = Color(0xFF1565C0),
+                        shape = RoundedCornerShape(12.dp)
+                    ),
                 contentAlignment = Alignment.Center
             ) {
                 Text(
                     text = username,
-                    color = Color.White
+                    fontSize = 16.sp,
+                    color = Color.Black
                 )
             }
         }
@@ -92,7 +110,18 @@ fun HeaderSection(
         ) {
             Box(
                 modifier = headerButtonSizeModifier
-                    .border(1.dp, Color.Black, RoundedCornerShape(12.dp)),
+                    .drawBehind {
+                        drawRoundRect(
+                            color = Color.Black.copy(alpha = 0.7f),
+                            topLeft = Offset(6f, 6f),
+                            size = Size(size.width, size.height),
+                            cornerRadius = CornerRadius(30f)
+                        )
+                    }
+                    .background(
+                        color = Color(0xFF1565C0),
+                        shape = RoundedCornerShape(12.dp)
+                    ),
                 contentAlignment = Alignment.Center
             ) {
                 RoundInfo(viewModel)
@@ -111,12 +140,24 @@ fun HeaderSection(
 
             Box(
                 modifier = headerButtonSizeModifier
-                    .border(1.dp, Color.Black, RoundedCornerShape(12.dp)),
+                    .drawBehind {
+                        drawRoundRect(
+                            color = Color.Black.copy(alpha = 0.7f),
+                            topLeft = Offset(6f, 6f),
+                            size = Size(size.width, size.height),
+                            cornerRadius = CornerRadius(30f)
+                        )
+                    }
+                    .background(
+                        color = Color(0xFF1565C0),
+                        shape = RoundedCornerShape(12.dp)
+                    ),
                 contentAlignment = Alignment.Center
             ) {
                 Text(
                     text = "$totalPoints",
-                    color = Color.White
+                    fontSize = 16.sp,
+                    color = Color.Black
                 )
             }
         }

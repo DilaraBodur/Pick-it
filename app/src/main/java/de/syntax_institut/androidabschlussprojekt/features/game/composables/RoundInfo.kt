@@ -12,9 +12,9 @@ import de.syntax_institut.androidabschlussprojekt.features.game.viewModels.GameV
 fun RoundInfo(viewModel: GameViewModel, modifier: Modifier = Modifier) {
     val round = viewModel.currentRound.collectAsState().value
     Text(
-        text = "Runde $round / 5",
+        text = "Runde $round/5",
         fontSize = 16.sp,
-        color = Color.White,
+        color = Color.Black,
         modifier = modifier
     )
 }
