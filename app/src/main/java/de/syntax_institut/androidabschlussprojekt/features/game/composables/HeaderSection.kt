@@ -1,7 +1,6 @@
 package de.syntax_institut.androidabschlussprojekt.features.game.composables
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -57,7 +56,6 @@ fun HeaderSection(
     LaunchedEffect(Unit) {
         viewModel.startTimer()
     }
-
 
     Column(
         modifier = modifier
@@ -157,7 +155,7 @@ fun HeaderSection(
                 Text(
                     text = "$totalPoints",
                     fontSize = 16.sp,
-                    color = Color.Black
+                    color = Color.Black,
                 )
             }
         }

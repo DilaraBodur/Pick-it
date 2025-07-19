@@ -31,14 +31,18 @@ import de.syntax_institut.androidabschlussprojekt.features.game.viewModels.GameV
 fun DrawButtons(viewModel: GameViewModel, modifier: Modifier = Modifier) {
     val spinCount by viewModel.spinCount.collectAsState()
 
-    val silverBrush = Brush.verticalGradient(
+    val blueCyanGlossyBrush = Brush.verticalGradient(
         colors = listOf(
-            Color(0xFF9E9E9E),
-            Color(0xFFE0E0E0),
-            Color(0xFFFFFFFF),
-            Color(0xFFB0B0B0),
-            Color(0xFF8A8A8A)
-        ),
+            Color(0xFF00BCD4),
+            Color(0xFF00BCD4),
+            Color(0xFF80DEEA),
+            Color(0xFFE1F5FE),
+            Color(0xFF80DEEA),
+            Color(0xFF00BCD4),
+            Color(0xFF00BCD4),
+
+
+            ),
         startY = 0f,
         endY = Float.POSITIVE_INFINITY
     )
@@ -65,7 +69,7 @@ fun DrawButtons(viewModel: GameViewModel, modifier: Modifier = Modifier) {
                     )
                 }
                 .clip(shape)
-                .background(silverBrush, shape)
+                .background(blueCyanGlossyBrush, shape)
                 .border(BorderStroke(1.dp, Color.Black), shape)
                 .height(40.dp)
                 .weight(1f)
@@ -92,7 +96,7 @@ fun DrawButtons(viewModel: GameViewModel, modifier: Modifier = Modifier) {
                     )
                 }
                 .clip(shape)
-                .background(silverBrush, shape)
+                .background(blueCyanGlossyBrush, shape)
                 .border(BorderStroke(1.dp, Color.Black), shape)
                 .height(40.dp)
                 .weight(1f)

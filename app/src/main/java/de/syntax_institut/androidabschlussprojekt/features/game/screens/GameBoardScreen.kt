@@ -1,6 +1,6 @@
 package de.syntax_institut.androidabschlussprojekt.features.game.screens
 
-import androidx.compose.foundation.background
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -14,9 +14,11 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
+import de.syntax_institut.androidabschlussprojekt.R
 import de.syntax_institut.androidabschlussprojekt.features.game.composables.DrawButtons
 import de.syntax_institut.androidabschlussprojekt.features.game.composables.ExitDialog
 import de.syntax_institut.androidabschlussprojekt.features.game.composables.GameEndDialog
@@ -33,8 +35,6 @@ fun GameBoardScreen(
     viewModel: GameViewModel,
     onExit: () -> Unit
 ) {
-    val backgroundColor = Color(0xFF083A8C)
-
     val totalPoints = viewModel.totalPoints.collectAsState().value
 
     val showDialog by viewModel.showExitDialog.collectAsState()
@@ -47,12 +47,19 @@ fun GameBoardScreen(
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(backgroundColor)
-            .padding(16.dp)
     ) {
+
+        Image(
+            painter = painterResource(id = R.drawable.photo_2025_07_19_05_06_40),
+            contentDescription = null,
+            contentScale = ContentScale.Crop,
+            modifier = Modifier.matchParentSize()
+        )
+
         Row(
             modifier = Modifier
-                .fillMaxSize(),
+                .fillMaxSize()
+                .padding(16.dp),
             horizontalArrangement = Arrangement.spacedBy(14.dp)
         ) {
             Column(

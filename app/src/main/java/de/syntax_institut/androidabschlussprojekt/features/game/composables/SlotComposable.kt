@@ -1,6 +1,5 @@
 package de.syntax_institut.androidabschlussprojekt.features.game.composables
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
@@ -17,10 +16,6 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.drawBehind
-import androidx.compose.ui.geometry.CornerRadius
-import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import de.syntax_institut.androidabschlussprojekt.features.game.viewModels.GameViewModel
@@ -31,6 +26,8 @@ fun SlotComposableWithReels(viewModel: GameViewModel, modifier: Modifier = Modif
     val isSpinning by viewModel.isSpinning.collectAsState()
 
     val backgroundColor = Color(0xFF1565C0)
+
+    val lastIndex = currentReels.lastIndex
 
     LaunchedEffect(isSpinning) {
         if (!isSpinning) {
@@ -55,6 +52,7 @@ fun SlotComposableWithReels(viewModel: GameViewModel, modifier: Modifier = Modif
             horizontalArrangement = Arrangement.SpaceEvenly,
             verticalAlignment = Alignment.CenterVertically
         ) {
+
             currentReels.forEachIndexed { index, reel ->
                 val isHeld = viewModel.heldSymbols.collectAsState().value.contains(index)
 
@@ -71,6 +69,13 @@ fun SlotComposableWithReels(viewModel: GameViewModel, modifier: Modifier = Modif
                         reelSymbols = reel,
                         isHeld = isHeld,
                         onToggleHold = { viewModel.toggleHold(index) }
+                    )
+                }
+
+                if (index < lastIndex) {
+                    DiamondShape(
+                        size = 14.dp,
+                        color = Color.White
                     )
                 }
             }

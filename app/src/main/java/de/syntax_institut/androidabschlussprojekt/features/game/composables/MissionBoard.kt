@@ -36,12 +36,9 @@ fun MissionBoard(viewModel: GameViewModel, modifier: Modifier = Modifier) {
         MissionType.FIVE
     )
 
-    val backgroundColor = Color(0xFF083A8C)
-
-
     Card(
         modifier = modifier,
-        colors = CardDefaults.cardColors(containerColor = backgroundColor)
+        colors = CardDefaults.cardColors(containerColor = Color.Transparent)
     ) {
         Column(
             modifier = Modifier

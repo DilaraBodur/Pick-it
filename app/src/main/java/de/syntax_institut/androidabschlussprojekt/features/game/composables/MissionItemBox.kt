@@ -1,12 +1,10 @@
 package de.syntax_institut.androidabschlussprojekt.features.game.composables
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -15,14 +13,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.drawBehind
-import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.geometry.CornerRadius
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import de.syntax_institut.androidabschlussprojekt.features.game.data.models.MissionItem
@@ -36,16 +32,31 @@ fun MissionItemBox(
 ) {
     val shape = RoundedCornerShape(12.dp)
     val backgroundColor = Color(0xFF1565C0)
+    val darkGray = Color(0xFF2E2E2E)
 
-    val metallicSilverBrush = Brush.verticalGradient(
+    val blueCyanGlossyBrush = Brush.verticalGradient(
         colors = listOf(
-            Color(0xFF9E9E9E),
-            Color(0xFFE0E0E0),
-            Color(0xFFFFFFFF),
-            Color(0xFFB0B0B0),
-            Color(0xFF8A8A8A)
-        )
+            Color(0xFF00BCD4),
+            Color(0xFF00BCD4),
+            Color(0xFF80DEEA),
+            Color(0xFFE1F5FE),
+            Color(0xFF80DEEA),
+            Color(0xFF00BCD4),
+            Color(0xFF00BCD4)
+        ),
+        startY = 0f,
+        endY = Float.POSITIVE_INFINITY
     )
+
+    val backgroundBrush = if (mission.isClaimed) {
+        SolidColor(darkGray)
+    } else if (mission.isCompleted) {
+        blueCyanGlossyBrush
+    } else {
+        SolidColor(backgroundColor)
+    }
+
+    val textColor = if (mission.isClaimed) Color.White else Color.Black
 
     Box(
         contentAlignment = Alignment.Center,
@@ -59,7 +70,7 @@ fun MissionItemBox(
                 )
             }
             .background(
-                brush = if (mission.isCompleted && !mission.isClaimed) metallicSilverBrush else SolidColor(backgroundColor),
+                brush = backgroundBrush,
                 shape = shape
             )
             .clip(shape)
@@ -70,8 +81,7 @@ fun MissionItemBox(
             mission.isClaimed -> {
                 Text(
                     text = "${mission.basePoints} Punkte",
-                    color = Color.Green,
-                    fontWeight = FontWeight.Bold
+                    color = textColor
                 )
             }
             mission.type == MissionType.THREE -> {

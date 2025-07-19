@@ -10,14 +10,13 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.geometry.CornerRadius
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
@@ -30,6 +29,17 @@ fun BonusProgressBar(
     rondBonus: Int,
     modifier: Modifier = Modifier
 ) {
+
+    val shinyCyan = Brush.verticalGradient(
+        colors = listOf(
+            Color(0xFFB2FFFF),
+            Color(0xFF00E5FF),
+            Color(0xFF0097A7),
+            Color(0xFF00E5FF),
+            Color(0xFFB2FFFF)
+        )
+    )
+
     Box(
         modifier = modifier
             .drawBehind {
@@ -46,18 +56,15 @@ fun BonusProgressBar(
     ) {
         Box(
             modifier = Modifier
-
                 .fillMaxHeight()
                 .fillMaxWidth(progress)
-                .clip(RoundedCornerShape(8.dp))
-                .background(Color.Cyan)
+                .background(shinyCyan)
         )
 
         Text(
             text = "$currentPoints / $requiredPoints",
             color = Color.Black,
             fontSize = 16.sp,
-            fontWeight = FontWeight.Bold,
             modifier = Modifier.align(Alignment.Center)
         )
     }
