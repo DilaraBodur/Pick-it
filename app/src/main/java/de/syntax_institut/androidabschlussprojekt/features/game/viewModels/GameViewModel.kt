@@ -640,7 +640,7 @@ class GameViewModel(
         resetSpinCountAndJoker()
         startSpin(isAutoSpin = true)
 
-        checkAndHandleRoundEnd()
+        //checkAndHandleRoundEnd()
     }
 
     private fun resetGame() {
