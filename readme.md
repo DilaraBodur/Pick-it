@@ -19,7 +19,15 @@ Ideal für Zwischendurch, aber mit Langzeitmotivation durch Symbolauswahl und Ra
 
 ## 🧑‍🎨 Design
 
-> Screenshots folgen …
+> <img width="3101" height="1466" alt="Startseite" src="https://github.com/user-attachments/assets/d38ef953-eb57-41e2-ba97-6eb691e005ba" />
+<img width="3101" height="1466" alt="Ladenseite" src="https://github.com/user-attachments/assets/99ed62a3-2eb3-4c91-9602-98ca20453d0c" />
+<img width="3101" height="1466" alt="Inventar_Seite" src="https://github.com/user-attachments/assets/0cbd65a5-2a22-4733-beb9-48f5e7c78421" />
+<img width="3101" height="1466" alt="Rangliste" src="https://github.com/user-attachments/assets/55d8cfb3-2fda-41f8-9c2c-24d4161d909d" />
+<img width="3101" height="1466" alt="Einstellungen" src="https://github.com/user-attachments/assets/2e4d9d0e-7739-4a8e-808e-323b3aca3b3a" />
+<img width="3101" height="1466" alt="Einstellungen2" src="https://github.com/user-attachments/assets/cfabc82a-9789-4aba-b2cc-d318b74ca273" />
+<img width="3101" height="1466" alt="Profil_Seite" src="https://github.com/user-attachments/assets/3a5f1569-9304-4e3e-adaf-2e372232fdc3" />
+<img width="3101" height="1466" alt="Profil_bearbeiten" src="https://github.com/user-attachments/assets/9bb872cf-b3dd-4aa5-b07a-2608bcc14ec5" />
+<img width="3101" height="1466" alt="Spiel_Seite" src="https://github.com/user-attachments/assets/39966778-e890-4551-a20f-b0e9543de119" />
 
 ---
 
