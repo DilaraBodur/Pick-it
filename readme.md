@@ -33,7 +33,7 @@ Ideal für Zwischendurch, aber mit Langzeitmotivation durch Symbolauswahl und Ra
 
 <p align="left">
 <img width="350" alt="Profil_Seite" src="https://github.com/user-attachments/assets/3a5f1569-9304-4e3e-adaf-2e372232fdc3" />
-<img width="350" alt="Profil_bearbeiten" src="https://github.com/user-attachments/assets/9bb872cf-b3dd-4aa5-b07a-2608bcc14ec5" />
+<img width="350" hight="150" alt="Profil_bearbeiten" src="https://github.com/user-attachments/assets/9bb872cf-b3dd-4aa5-b07a-2608bcc14ec5" />
 <img width="350" alt="Spiel_Seite" src="https://github.com/user-attachments/assets/39966778-e890-4551-a20f-b0e9543de119" />
 </p>
 
