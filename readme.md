@@ -116,5 +116,5 @@ Ideal für Zwischendurch, aber mit Langzeitmotivation durch Symbolauswahl und Ra
 
 **Dilara Öztas**  
 📍 Deutschland  
-🔗 GitHub: [github.com/dilaraoeztas](https://github.com/dilaraoeztas)  
+🔗 GitHub: [github.com/DilaraBodur](https://github.com/DilaraBodur)  
 🔗 LinkedIn: [linkedin.com/in/dilara-bodur](https://www.linkedin.com/in/dilara-bodur19)
