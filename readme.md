@@ -26,9 +26,9 @@ Ideal für Zwischendurch, aber mit Langzeitmotivation durch Symbolauswahl und Ra
 </p>
 
 <p align="left">
-<img width="300" alt="Rangliste" src="https://github.com/user-attachments/assets/55d8cfb3-2fda-41f8-9c2c-24d4161d909d" />
-<img width="300" alt="Einstellungen" src="https://github.com/user-attachments/assets/2e4d9d0e-7739-4a8e-808e-323b3aca3b3a" />
-<img width="300" alt="Einstellungen2" src="https://github.com/user-attachments/assets/cfabc82a-9789-4aba-b2cc-d318b74ca273" />
+<img width="320" alt="Rangliste" src="https://github.com/user-attachments/assets/55d8cfb3-2fda-41f8-9c2c-24d4161d909d" />
+<img width="320" alt="Einstellungen" src="https://github.com/user-attachments/assets/2e4d9d0e-7739-4a8e-808e-323b3aca3b3a" />
+<img width="320" alt="Einstellungen2" src="https://github.com/user-attachments/assets/cfabc82a-9789-4aba-b2cc-d318b74ca273" />
 </p>
 
 <p align="left">
