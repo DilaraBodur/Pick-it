@@ -20,9 +20,9 @@ Ideal für Zwischendurch, aber mit Langzeitmotivation durch Symbolauswahl und Ra
 ## 🧑‍🎨 Design
 
 <p align="left">
-<img width="320" alt="Startseite" src="https://github.com/user-attachments/assets/d38ef953-eb57-41e2-ba97-6eb691e005ba" />
-<img width="320" alt="Ladenseite" src="https://github.com/user-attachments/assets/99ed62a3-2eb3-4c91-9602-98ca20453d0c" />
-<img width="320" alt="Inventar_Seite" src="https://github.com/user-attachments/assets/0cbd65a5-2a22-4733-beb9-48f5e7c78421" />
+<img width="300" alt="Startseite" src="https://github.com/user-attachments/assets/d38ef953-eb57-41e2-ba97-6eb691e005ba" />
+<img width="300" alt="Ladenseite" src="https://github.com/user-attachments/assets/99ed62a3-2eb3-4c91-9602-98ca20453d0c" />
+<img width="300" alt="Inventar_Seite" src="https://github.com/user-attachments/assets/0cbd65a5-2a22-4733-beb9-48f5e7c78421" />
 </p>
 
 <p align="left">
