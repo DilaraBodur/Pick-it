@@ -26,15 +26,15 @@ Ideal für Zwischendurch, aber mit Langzeitmotivation durch Symbolauswahl und Ra
 </p>
 
 <p align="left">
-<img width="320" alt="Rangliste" src="https://github.com/user-attachments/assets/55d8cfb3-2fda-41f8-9c2c-24d4161d909d" />
-<img width="320" alt="Einstellungen" src="https://github.com/user-attachments/assets/2e4d9d0e-7739-4a8e-808e-323b3aca3b3a" />
-<img width="320" alt="Einstellungen2" src="https://github.com/user-attachments/assets/cfabc82a-9789-4aba-b2cc-d318b74ca273" />
+<img width="280" alt="Rangliste" src="https://github.com/user-attachments/assets/55d8cfb3-2fda-41f8-9c2c-24d4161d909d" />
+<img width="280" alt="Einstellungen" src="https://github.com/user-attachments/assets/2e4d9d0e-7739-4a8e-808e-323b3aca3b3a" />
+<img width="280" alt="Einstellungen2" src="https://github.com/user-attachments/assets/cfabc82a-9789-4aba-b2cc-d318b74ca273" />
 </p>
 
 <p align="left">
-<img width="320" alt="Profil_Seite" src="https://github.com/user-attachments/assets/3a5f1569-9304-4e3e-adaf-2e372232fdc3" />
-<img width="320" alt="Profil_bearbeiten" src="https://github.com/user-attachments/assets/9bb872cf-b3dd-4aa5-b07a-2608bcc14ec5" />
-<img width="320" alt="Spiel_Seite" src="https://github.com/user-attachments/assets/39966778-e890-4551-a20f-b0e9543de119" />
+<img width="280" alt="Profil_Seite" src="https://github.com/user-attachments/assets/3a5f1569-9304-4e3e-adaf-2e372232fdc3" />
+<img width="280" alt="Profil_bearbeiten" src="https://github.com/user-attachments/assets/9bb872cf-b3dd-4aa5-b07a-2608bcc14ec5" />
+<img width="280" alt="Spiel_Seite" src="https://github.com/user-attachments/assets/39966778-e890-4551-a20f-b0e9543de119" />
 </p>
 
 ---
